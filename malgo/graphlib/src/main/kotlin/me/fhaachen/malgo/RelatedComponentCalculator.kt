@@ -20,6 +20,7 @@ class RelatedComponentCalculator {
             visitingQueue.add(firstUnvisitedId)
             while (visitingQueue.isNotEmpty()) {
                 currentId = visitingQueue.pollFirst()
+                //todo: Markiere Knoten beim ersten "Kontakt"
                 visitedIds[currentId] = true
                 val adjacentVertices = graph.getVertex(currentId).getAdjacentVertices().iterator()
                 while (adjacentVertices.hasNext()) {
@@ -30,6 +31,7 @@ class RelatedComponentCalculator {
                     }
                 }
                 if (visitingQueue.isEmpty()) {
+                    //todo als äußere Schleife
                     firstUnvisitedId = getFirstUnvisited(visitedIds, firstUnvisitedId)
                     if (firstUnvisitedId < allVertexIds.size) {
                         visitingQueue.add(allVertexIds[firstUnvisitedId])
@@ -79,11 +81,12 @@ class RelatedComponentCalculator {
             val visitedIds = BooleanArray(graph.getIds().size)
             var componentCount = 0
             var firstUnvisitedId = 0
+            //todo for schleife
             while (firstUnvisitedId < visitedIds.size) {
                 firstUnvisitedId = getFirstUnvisited(visitedIds, firstUnvisitedId)
                 if (firstUnvisitedId < visitedIds.size) {
                     depthFirstSearchRecursive(graph, firstUnvisitedId, visitedIds)
-                    componentCount++;
+                    componentCount++
                 }
             }
             return componentCount
