@@ -1,0 +1,23 @@
+vboxmanage --version
+# 6.1.32r149290
+vboxmanage createvm --name VCC1 --register
+# Virtual machine 'VCC1' is created and registered.
+# UUID: 23b88af3-9e11-43f1-8bf7-c27352274061
+# Settings file: 'C:\Users\steff\VirtualBox VMs\VCC1\VCC1.vbox'
+vboxmanage modifyvm VCC1 --memory 1500 --vram 32 --acpi on --ostype Debian_64 --nic1 nat
+vboxmanage storagectl VCC1 --name idecntrl --add ide
+vboxmanage createmedium dvd --filename vcc1.dvd --size 500
+# 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+# Medium created. UUID: 0db7da7e-0c47-41aa-abd9-cff1c1d5e95b
+vboxmanage storageattach VCC1 --storagectl idecntrl --type dvddrive --medium vcc1.dvd --port 0 --device 0
+vboxmanage storagectl VCC1 --name satacntrl --add sata --controller IntelAHCI
+vboxmanage createmedium disk --filename vcc1.vdi --size 4000000
+# 0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+# Medium created. UUID: 7b4daea0-3dd3-404c-8909-94e27861a852
+vboxmanage storageattach VCC1 --storagectl satacntrl --port 0 --device 0 --medium vcc1.vdi --type hdd
+vboxmanage storageattach VCC1 --storagectl idecntrl --type dvddrive --medium "C:\Users\steff\Desktop\vcc\debian-11.3.0-amd64-netinst.iso" --port 0 --device 0
+vboxmanage startvm VCC1
+Waiting for VM "VCC1" to power on...
+VM "VCC1" has been successfully started.
+vboxmanage controlvm VCC1 poweroff
+0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
