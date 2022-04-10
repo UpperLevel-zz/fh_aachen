@@ -1,4 +1,8 @@
 # fh_aachen
 
-[Ausarbeitung](https://github.com/UpperLevel-zz/fh_aachen/blob/main/malgo/ausarbeitung.md)
-[Ausarbeitung](malgo/ausarbeitung.md)
+This repository contains docs and code used and created during my master studies at FH Aachen / Germany.
+
+1. [Mathematic algortihms](malgo/)
+
+      [Minimum Cost Flow](malgo/ausarbeitung.md)
+3. [Virtualization / Cloud Computing](vcc/)
