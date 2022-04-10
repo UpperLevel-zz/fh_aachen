@@ -1,3 +1,4 @@
 # fh_aachen
 
-[a relative link](ausarbeitung.md)
+[Ausarbeitung](https://github.com/UpperLevel-zz/fh_aachen/blob/main/malgo/ausarbeitung.md)
+[Ausarbeitung](malgo/ausarbeitung.md)
