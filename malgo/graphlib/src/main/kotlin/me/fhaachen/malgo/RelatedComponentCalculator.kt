@@ -9,19 +9,32 @@ class RelatedComponentCalculator {
             if (graph.isEmpty()) {
                 return 0
             }
-            var currentId: Int
-            var currentAdjacentVertexId: Int
-            var componentCount = 1
+            var componentCount = 0
             val visitingQueue = LinkedList<Int>()
             val allVertexIds = graph.getIds()
             val visitedIds = BooleanArray(allVertexIds.size)
-            var firstUnvisitedId = 0
+            var nextUnvisitedId = 0
+            while (nextUnvisitedId < allVertexIds.size) {
+                visitedIds[nextUnvisitedId] = true
+                visitingQueue.add(allVertexIds[nextUnvisitedId])
+                breadthFirstSearch(graph, nextUnvisitedId, visitedIds)
+                nextUnvisitedId = getNextUnvisitedId(visitedIds, nextUnvisitedId)
+                componentCount++
+            }
+            return componentCount
+        }
 
-            visitingQueue.add(firstUnvisitedId)
+        private fun breadthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray) {
+            if (graph.isEmpty()) {
+                return
+            }
+            var currentAdjacentVertexId: Int
+            val visitingQueue = LinkedList<Int>()
+            var currentId = startId
+            visitedIds[currentId] = true
+            visitingQueue.add(currentId)
             while (visitingQueue.isNotEmpty()) {
                 currentId = visitingQueue.pollFirst()
-                //todo: Markiere Knoten beim ersten "Kontakt"
-                visitedIds[currentId] = true
                 val adjacentVertices = graph.getVertex(currentId).getAdjacentVertices().iterator()
                 while (adjacentVertices.hasNext()) {
                     currentAdjacentVertexId = adjacentVertices.next().getId()
@@ -30,16 +43,7 @@ class RelatedComponentCalculator {
                         visitedIds[currentAdjacentVertexId] = true
                     }
                 }
-                if (visitingQueue.isEmpty()) {
-                    //todo als äußere Schleife
-                    firstUnvisitedId = getFirstUnvisited(visitedIds, firstUnvisitedId)
-                    if (firstUnvisitedId < allVertexIds.size) {
-                        visitingQueue.add(allVertexIds[firstUnvisitedId])
-                        componentCount++
-                    }
-                }
             }
-            return componentCount
         }
 
         fun depthFirstSearch(graph: Graph): Int {
@@ -56,15 +60,17 @@ class RelatedComponentCalculator {
             stack.push(firstUnvisitedId)
             while (stack.isNotEmpty()) {
                 currentId = stack.pop()
-                if(!visitedIds[currentId]) {
+                if (!visitedIds[currentId]) {
                     visitedIds[currentId] = true
                     val adjacentVertices = graph.getVertex(currentId).getAdjacentVertices().iterator()
                     for (adjacentVertex in adjacentVertices) {
                         stack.push(adjacentVertex.getId())
+                        visitedIds[adjacentVertex.getId()] = true
                     }
                 }
+                // todo auserhalb der schleife
                 if (stack.isEmpty()) {
-                    firstUnvisitedId = getFirstUnvisited(visitedIds, firstUnvisitedId)
+                    firstUnvisitedId = getNextUnvisitedId(visitedIds, firstUnvisitedId)
                     if (firstUnvisitedId < allVertexIds.size) {
                         stack.push(allVertexIds[firstUnvisitedId])
                         componentCount++
@@ -83,7 +89,7 @@ class RelatedComponentCalculator {
             var firstUnvisitedId = 0
             //todo for schleife
             while (firstUnvisitedId < visitedIds.size) {
-                firstUnvisitedId = getFirstUnvisited(visitedIds, firstUnvisitedId)
+                firstUnvisitedId = getNextUnvisitedId(visitedIds, firstUnvisitedId)
                 if (firstUnvisitedId < visitedIds.size) {
                     depthFirstSearchRecursive(graph, firstUnvisitedId, visitedIds)
                     componentCount++
@@ -93,7 +99,7 @@ class RelatedComponentCalculator {
         }
 
         private fun depthFirstSearchRecursive(graph: Graph, currentId: Int, visitedIndices: BooleanArray) {
-            if(visitedIndices[currentId]){
+            if (visitedIndices[currentId]) {
                 println("Recursion Failure @$currentId")
                 return
             }
@@ -106,7 +112,7 @@ class RelatedComponentCalculator {
             }
         }
 
-        private fun getFirstUnvisited(visitedIndices: BooleanArray, lastPointer: Int): Int {
+        private fun getNextUnvisitedId(visitedIndices: BooleanArray, lastPointer: Int): Int {
             for (curIndex in lastPointer until visitedIndices.size) {
                 if (!visitedIndices[curIndex]) {
                     return curIndex

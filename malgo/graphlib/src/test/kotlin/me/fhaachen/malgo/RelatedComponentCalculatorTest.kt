@@ -1,7 +1,6 @@
 package me.fhaachen.malgo
 
 import me.fhaachen.malgo.GraphTest.Companion.toGraph
-import me.fhaachen.malgo.GraphTest.Companion.undirectedGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -11,21 +10,21 @@ class RelatedComponentCalculatorTest {
 
     @Test
     fun only_isolated_vertices_BFS() {
-        val V = 10;
+        val V = 10
         val graph = UndirectedGraph(V)
         assertThat(RelatedComponentCalculator.breadthFirstSearch(graph)).isEqualTo(V)
     }
 
     @Test
     fun only_isolated_vertices_DFS() {
-        val V = 10;
+        val V = 10
         val graph = UndirectedGraph(V)
         assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(V)
     }
 
     @Test
     fun only_isolated_vertices_DFS_recursive() {
-        val V = 10;
+        val V = 10
         val graph = UndirectedGraph(V)
         assertThat(RelatedComponentCalculator.depthFirstSearchRecursive(graph)).isEqualTo(V)
     }
