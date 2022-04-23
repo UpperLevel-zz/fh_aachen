@@ -10,9 +10,9 @@ class UndirectedGraph(size: Int) : Graph {
 
     override fun connectVertices(edge: Edge) {
         val current = vertices.getOrDefault(edge.source.getId(), edge.source)
-        val currentAdjacent = vertices.getOrDefault(edge.target.getId(), edge.target)
+        //todo graph wird noch nicht richtig angelegt
         when {
-            current.addAdjacentVertex(currentAdjacent) -> {
+            current.addEdge(edge) -> {
                 edges.add(edge)
             }
         }
@@ -22,12 +22,20 @@ class UndirectedGraph(size: Int) : Graph {
         return LinkedList(vertices.values.sortedBy { x -> x.getId() }.stream().map { x -> x.getId() }.toList())
     }
 
+    override fun getVertices(): LinkedList<Vertex> {
+        return LinkedList(vertices.values)
+    }
+
     override fun getVertex(id: Int): Vertex {
         return vertices[id]!!
     }
 
     override fun getEdgeCount(): Int {
         return edges.size
+    }
+
+    override fun getEdges(): LinkedList<Edge> {
+        return LinkedList(edges)
     }
 
     override fun isEmpty(): Boolean {

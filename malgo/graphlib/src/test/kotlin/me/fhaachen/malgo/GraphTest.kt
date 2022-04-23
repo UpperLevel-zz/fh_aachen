@@ -48,7 +48,7 @@ class GraphTest {
             .containsExactly(5, 6)
     }
 
-    companion object{
+    companion object {
         fun toGraph(resourceName: String): Graph {
             val file = File(javaClass.classLoader.getResource(resourceName)!!.file)
             println("Read: $resourceName")
@@ -59,7 +59,10 @@ class GraphTest {
             val graph = UndirectedGraph(numberOfVertices.toInt())
             for (line in lines) {
                 val split = line.split("\t")
-                graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1])))
+                if (split.size == 2)
+                    graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1])))
+                else if (split.size == 3)
+                    graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1]), split[2]))
             }
             val end = System.currentTimeMillis()
             Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())

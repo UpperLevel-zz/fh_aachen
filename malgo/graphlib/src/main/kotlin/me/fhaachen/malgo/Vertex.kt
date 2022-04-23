@@ -1,19 +1,26 @@
 package me.fhaachen.malgo
 
+import main.kotlin.me.fhaachen.malgo.Edge
+
 class Vertex(private val id: Int) {
     constructor(id: String) : this(
         id.toInt()
     )
 
-    var adjacentVertices = HashSet<Vertex>()
+    val adjacentVertices = HashSet<Vertex>()
+    val edges = HashSet<Edge>()
 
-    fun addAdjacentVertex(vertex: Vertex): Boolean {
-        vertex.adjacentVertices.add(this)
-        return adjacentVertices.add(vertex)
+    fun addEdge(edge: Edge): Boolean {
+        if (edge.source != this) {
+            return false
+        }
+        edge.target.adjacentVertices.add(this)
+        edge.source.adjacentVertices.add(edge.target)
+        return edges.add(edge)
     }
 
-    fun removeAdjacentVertex(vertex: Vertex): Boolean {
-        return adjacentVertices.remove(vertex)
+    fun getEdges(): MutableSet<Edge> {
+        return edges
     }
 
     fun getAdjacentVertices(): MutableSet<Vertex> {

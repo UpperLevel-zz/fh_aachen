@@ -6,7 +6,9 @@ import java.util.*
 interface Graph {
     fun connectVertices(edge: Edge)
     fun getIds(): LinkedList<Int>
-    fun getVertex(id: Int) : Vertex
+    fun getVertices(): LinkedList<Vertex>
+    fun getVertex(id: Int): Vertex
     fun getEdgeCount(): Int
+    fun getEdges(): LinkedList<Edge>
     fun isEmpty(): Boolean
 }
