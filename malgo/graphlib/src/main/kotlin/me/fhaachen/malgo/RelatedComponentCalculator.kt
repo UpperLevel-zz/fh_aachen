@@ -10,13 +10,11 @@ class RelatedComponentCalculator {
                 return 0
             }
             var componentCount = 0
-            val visitingQueue = LinkedList<Int>()
             val allVertexIds = graph.getIds()
             val visitedIds = BooleanArray(allVertexIds.size)
             var nextUnvisitedId = 0
             while (nextUnvisitedId < allVertexIds.size) {
                 visitedIds[nextUnvisitedId] = true
-                visitingQueue.add(allVertexIds[nextUnvisitedId])
                 breadthFirstSearch(graph, nextUnvisitedId, visitedIds)
                 nextUnvisitedId = getNextUnvisitedId(visitedIds, nextUnvisitedId)
                 componentCount++
@@ -50,14 +48,22 @@ class RelatedComponentCalculator {
             if (graph.isEmpty()) {
                 return 0
             }
-            var currentId: Int
-            var componentCount = 1
-            val stack = Stack<Int>()
+            var componentCount = 0
             val allVertexIds = graph.getIds()
             val visitedIds = BooleanArray(allVertexIds.size)
-            var firstUnvisitedId = 0
+            var nextUnvisitedId = 0
+            while (nextUnvisitedId < allVertexIds.size) {
+                depthFirstSearch(graph, nextUnvisitedId, visitedIds)
+                nextUnvisitedId = getNextUnvisitedId(visitedIds, nextUnvisitedId)
+                componentCount++
+            }
+            return componentCount
+        }
 
-            stack.push(firstUnvisitedId)
+        private fun depthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray) {
+            val stack = Stack<Int>()
+            var currentId: Int
+            stack.push(startId)
             while (stack.isNotEmpty()) {
                 currentId = stack.pop()
                 if (!visitedIds[currentId]) {
@@ -65,19 +71,9 @@ class RelatedComponentCalculator {
                     val adjacentVertices = graph.getVertex(currentId).getAdjacentVertices().iterator()
                     for (adjacentVertex in adjacentVertices) {
                         stack.push(adjacentVertex.getId())
-                        visitedIds[adjacentVertex.getId()] = true
-                    }
-                }
-                // todo auserhalb der schleife
-                if (stack.isEmpty()) {
-                    firstUnvisitedId = getNextUnvisitedId(visitedIds, firstUnvisitedId)
-                    if (firstUnvisitedId < allVertexIds.size) {
-                        stack.push(allVertexIds[firstUnvisitedId])
-                        componentCount++
                     }
                 }
             }
-            return componentCount
         }
 
         fun depthFirstSearchRecursive(graph: Graph): Int {
@@ -87,7 +83,6 @@ class RelatedComponentCalculator {
             val visitedIds = BooleanArray(graph.getIds().size)
             var componentCount = 0
             var firstUnvisitedId = 0
-            //todo for schleife
             while (firstUnvisitedId < visitedIds.size) {
                 firstUnvisitedId = getNextUnvisitedId(visitedIds, firstUnvisitedId)
                 if (firstUnvisitedId < visitedIds.size) {

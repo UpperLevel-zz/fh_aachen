@@ -1,5 +1,6 @@
 package me.fhaachen.malgo
 
+import main.kotlin.me.fhaachen.malgo.Edge
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -58,7 +59,7 @@ class GraphTest {
             val graph = UndirectedGraph(numberOfVertices.toInt())
             for (line in lines) {
                 val split = line.split("\t")
-                graph.connectVertices(Vertex(split[0]), Vertex(split[1]))
+                graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1])))
             }
             val end = System.currentTimeMillis()
             Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
@@ -68,16 +69,16 @@ class GraphTest {
 
         fun undirectedGraph(): UndirectedGraph {
             val graph = UndirectedGraph(10)
-            graph.connectVertices(Vertex(0), Vertex(1))
-            graph.connectVertices(Vertex(0), Vertex(2))
-            graph.connectVertices(Vertex(0), Vertex(3))
-            graph.connectVertices(Vertex(3), Vertex(3))
-            graph.connectVertices(Vertex(0), Vertex(4))
-            graph.connectVertices(Vertex(5), Vertex(6))
-            graph.connectVertices(Vertex(6), Vertex(7))
-            graph.connectVertices(Vertex(5), Vertex(7))
-            graph.connectVertices(Vertex(5), Vertex(8))
-            graph.connectVertices(Vertex(5), Vertex(9))
+            graph.connectVertices(Edge(Vertex(0), Vertex(1)))
+            graph.connectVertices(Edge(Vertex(0), Vertex(2)))
+            graph.connectVertices(Edge(Vertex(0), Vertex(3)))
+            graph.connectVertices(Edge(Vertex(3), Vertex(3)))
+            graph.connectVertices(Edge(Vertex(0), Vertex(4)))
+            graph.connectVertices(Edge(Vertex(5), Vertex(6)))
+            graph.connectVertices(Edge(Vertex(6), Vertex(7)))
+            graph.connectVertices(Edge(Vertex(5), Vertex(7)))
+            graph.connectVertices(Edge(Vertex(5), Vertex(8)))
+            graph.connectVertices(Edge(Vertex(5), Vertex(9)))
             return graph
         }
     }

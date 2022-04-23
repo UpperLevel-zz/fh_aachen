@@ -1,5 +1,6 @@
 package me.fhaachen.malgo
 
+import main.kotlin.me.fhaachen.malgo.Edge
 import me.fhaachen.malgo.GraphTest.Companion.toGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -32,63 +33,63 @@ class RelatedComponentCalculatorTest {
     @Test
     fun sling_BFS() {
         val graph = UndirectedGraph(1)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.breadthFirstSearch(graph)).isEqualTo(1)
     }
 
     @Test
     fun sling_DFS() {
         val graph = UndirectedGraph(1)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(1)
     }
 
     @Test
     fun sling_DFS_recursive() {
         val graph = UndirectedGraph(1)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.depthFirstSearchRecursive(graph)).isEqualTo(1)
     }
 
     @Test
     fun one_sling_one_isolated_BFS() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.breadthFirstSearch(graph)).isEqualTo(2)
     }
 
     @Test
     fun one_sling_one_isolated_DFS() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(2)
     }
 
     @Test
     fun one_sling_one_isolated_DFS_recursive() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(0))
+        graph.connectVertices(Edge(Vertex(0), Vertex(0)))
         assertThat(RelatedComponentCalculator.depthFirstSearchRecursive(graph)).isEqualTo(2)
     }
 
     @Test
     fun one_edge_two_vertices_BFS() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(1))
+        graph.connectVertices(Edge(Vertex(0), Vertex(1)))
         assertThat(RelatedComponentCalculator.breadthFirstSearch(graph)).isEqualTo(1)
     }
 
     @Test
     fun one_edge_two_vertices_DFS() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(1))
+        graph.connectVertices(Edge(Vertex(0), Vertex(1)))
         assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(1)
     }
 
     @Test
     fun one_edge_two_vertices_DFS_recursive() {
         val graph = UndirectedGraph(2)
-        graph.connectVertices(Vertex(0), Vertex(1))
+        graph.connectVertices(Edge(Vertex(0), Vertex(1)))
         assertThat(RelatedComponentCalculator.depthFirstSearchRecursive(graph)).isEqualTo(1)
     }
 

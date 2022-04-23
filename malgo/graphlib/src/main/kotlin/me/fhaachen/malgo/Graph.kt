@@ -1,9 +1,10 @@
 package me.fhaachen.malgo
 
+import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
 interface Graph {
-    fun connectVertices(vertex: Vertex, adjacent: Vertex)
+    fun connectVertices(edge: Edge)
     fun getIds(): LinkedList<Int>
     fun getVertex(id: Int) : Vertex
     fun getEdgeCount(): Int

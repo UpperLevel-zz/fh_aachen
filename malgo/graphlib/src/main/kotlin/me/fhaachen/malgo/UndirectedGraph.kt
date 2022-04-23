@@ -1,19 +1,19 @@
 package me.fhaachen.malgo
 
+import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
-import kotlin.collections.HashMap
 
 class UndirectedGraph(size: Int) : Graph {
 
     private var vertices: HashMap<Int, Vertex> = HashMap()
-    var edges = 0
+    private var edges: ArrayList<Edge> = ArrayList()
 
-    override fun connectVertices(vertex: Vertex, adjacent: Vertex) {
-        val current = vertices.getOrDefault(vertex.getId(), vertex)
-        val currentAdjacent = vertices.getOrDefault(adjacent.getId(), adjacent)
+    override fun connectVertices(edge: Edge) {
+        val current = vertices.getOrDefault(edge.source.getId(), edge.source)
+        val currentAdjacent = vertices.getOrDefault(edge.target.getId(), edge.target)
         when {
             current.addAdjacentVertex(currentAdjacent) -> {
-                edges++
+                edges.add(edge)
             }
         }
     }
@@ -27,7 +27,7 @@ class UndirectedGraph(size: Int) : Graph {
     }
 
     override fun getEdgeCount(): Int {
-        return edges
+        return edges.size
     }
 
     override fun isEmpty(): Boolean {
