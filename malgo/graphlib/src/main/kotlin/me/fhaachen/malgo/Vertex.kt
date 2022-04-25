@@ -8,19 +8,21 @@ class Vertex(private val id: Int) {
     )
 
     val adjacentVertices = HashSet<Vertex>()
-    val edges = HashSet<Edge>()
+    val outgoingEdges = HashSet<Edge>()
+    val incomingEdges = HashSet<Edge>()
 
     fun addEdge(edge: Edge): Boolean {
-        if (edge.source != this) {
-            return false
-        }
         edge.target.adjacentVertices.add(this)
         edge.source.adjacentVertices.add(edge.target)
-        return edges.add(edge)
+        edge.target.incomingEdges.add(edge)
+        edge.target.outgoingEdges.add(edge)
+        incomingEdges.add(edge)
+        val add = outgoingEdges.add(edge)
+        return add
     }
 
     fun getEdges(): MutableSet<Edge> {
-        return edges
+        return HashSet(outgoingEdges)
     }
 
     fun getAdjacentVertices(): MutableSet<Vertex> {

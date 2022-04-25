@@ -9,11 +9,12 @@ class UndirectedGraph(size: Int) : Graph {
     private var edges: ArrayList<Edge> = ArrayList()
 
     override fun connectVertices(edge: Edge) {
-        val current = vertices.getOrDefault(edge.source.getId(), edge.source)
-        //todo graph wird noch nicht richtig angelegt
+        val source = vertices.getOrDefault(edge.source.getId(), edge.source)
+        val target = vertices.getOrDefault(edge.target.getId(), edge.target)
+        val edgeCopy = Edge(source, target, edge.capacity)
         when {
-            current.addEdge(edge) -> {
-                edges.add(edge)
+            source.addEdge(edgeCopy) -> {
+                edges.add(edgeCopy)
             }
         }
     }
@@ -32,6 +33,10 @@ class UndirectedGraph(size: Int) : Graph {
 
     override fun getEdgeCount(): Int {
         return edges.size
+    }
+
+    override fun size(): Int {
+        return vertices.size
     }
 
     override fun getEdges(): LinkedList<Edge> {

@@ -9,6 +9,7 @@ interface Graph {
     fun getVertices(): LinkedList<Vertex>
     fun getVertex(id: Int): Vertex
     fun getEdgeCount(): Int
+    fun size(): Int
     fun getEdges(): LinkedList<Edge>
     fun isEmpty(): Boolean
 }
