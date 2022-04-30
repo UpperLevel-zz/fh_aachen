@@ -35,7 +35,7 @@ class UndirectedGraph(size: Int) : Graph {
         return edges.size
     }
 
-    override fun size(): Int {
+    override fun getVertexCount(): Int {
         return vertices.size
     }
 

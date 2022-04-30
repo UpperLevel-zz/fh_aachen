@@ -3,10 +3,14 @@ package me.fhaachen.malgo
 import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
-class MinimumSpanningTree {
+class MinimumSpanningTree : Graph {
+
+    val edges = HashSet<Edge>()
+    val vertices = LinkedHashSet<Vertex>()
+
     companion object {
-        fun prim(graph: Graph): HashSet<Edge> {
-            val mst = HashSet<Edge>()
+        fun prim(graph: Graph): MinimumSpanningTree {
+            val mst = MinimumSpanningTree()
             val capacityWeighted: Comparator<Edge> = compareBy { it.capacity }
             //todo knotenbasierte queue anschauen
             val priorityQueue = PriorityQueue(capacityWeighted)
@@ -26,54 +30,86 @@ class MinimumSpanningTree {
             return mst
         }
 
-        fun kruskal(graph: Graph): HashSet<Edge> {
-            val mst = HashSet<Edge>()
-            val map = HashMap<Int, List<Vertex>>()
-            val visited = IntArray(graph.size())
+        fun kruskal(graph: Graph): MinimumSpanningTree {
+            val mst = MinimumSpanningTree()
+            val map = HashMap<Int, Collection<Vertex>>()
+            val visited = IntArray(graph.getVertexCount())
             for (vertex in graph.getVertices()) {
-                map[vertex.getId()] = arrayListOf(vertex)
+                map[vertex.getId()] = hashSetOf(vertex)
                 //todo eventuell eine verkettete Liste nehmen
                 visited[vertex.getId()] = vertex.getId()
             }
             val edges = graph.getEdges().sortedBy { it.capacity }
             for (edge in edges) {
-                if (mst.size == graph.size() - 1) {
+                if (mst.getEdgeCount() == graph.getVertexCount() - 1) {
                     break
                 }
                 val sourceId = edge.source.getId()
                 val targetId = edge.target.getId()
-                val s = map[visited[sourceId]] as ArrayList<Vertex>
-                val t = map[visited[targetId]] as ArrayList<Vertex>
-                //todo größen der beachten
+                val s = map[visited[sourceId]] as HashSet<Vertex>
+                val t = map[visited[targetId]] as HashSet<Vertex>
                 if (s != t) {
-                    mst.add(edge)
+                    mst.connectVertices(edge)
                     if (s.size < t.size) {
-                        s.addAll(t)
-                        map[sourceId] = s
-                        t.forEach { vertex -> visited[vertex.getId()] = sourceId }
-                    } else {
                         t.addAll(s)
                         map[sourceId] = t
                         s.forEach { vertex -> visited[vertex.getId()] = sourceId }
+                    } else {
+                        s.addAll(t)
+                        map[sourceId] = s
+                        t.forEach { vertex -> visited[vertex.getId()] = sourceId }
                     }
-//                    visited[sourceId] = sourceId
-//                    visited[targetId] = sourceId
                 }
             }
             return mst
         }
 
         private fun addVertexAndNextEdges(
-            mst: HashSet<Edge>,
+            mst: MinimumSpanningTree,
             currentEdge: Edge,
             vertex: Vertex,
             connected: BooleanArray,
             priorityQueue: PriorityQueue<Edge>
         ) {
-            mst.add(currentEdge)
+            mst.connectVertices(currentEdge)
             connected[vertex.getId()] = true
-            //todo edges herauslassen, zu knoten die bereits besucht wurden
-            vertex.getEdges().forEach { edge -> priorityQueue.add(edge) }
+            vertex.getEdges().forEach { edge ->
+                if (!connected[edge.source.getId()] || !connected[edge.target.getId()]) priorityQueue.add(edge)
+            }
         }
+    }
+
+    override fun connectVertices(edge: Edge) {
+        edges.add(edge)
+        vertices.add(edge.source)
+        vertices.add(edge.target)
+    }
+
+    override fun getIds(): LinkedList<Int> {
+        return LinkedList(vertices.stream().map { v -> v.getId() }.toList())
+    }
+
+    override fun getVertices(): LinkedList<Vertex> {
+        return LinkedList(vertices)
+    }
+
+    override fun getVertex(id: Int): Vertex {
+        return vertices.elementAt(id)
+    }
+
+    override fun getEdgeCount(): Int {
+        return edges.size
+    }
+
+    override fun getVertexCount(): Int {
+        return vertices.size
+    }
+
+    override fun getEdges(): LinkedList<Edge> {
+        return LinkedList(edges)
+    }
+
+    override fun isEmpty(): Boolean {
+        return edges.isEmpty()
     }
 }
