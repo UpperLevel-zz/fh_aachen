@@ -1,6 +1,7 @@
 package me.fhaachen.malgo
 
 import main.kotlin.me.fhaachen.malgo.Edge
+import java.util.*
 
 class Vertex(private val id: Int) {
     constructor(id: String) : this(
@@ -8,21 +9,31 @@ class Vertex(private val id: Int) {
     )
 
     val adjacentVertices = HashSet<Vertex>()
-    val outgoingEdges = HashSet<Edge>()
-    val incomingEdges = HashSet<Edge>()
+    val outgoingEdges = TreeSet<Edge>()
+    val incomingEdges = TreeSet<Edge>()
 
     fun addEdge(edge: Edge): Boolean {
         edge.target.adjacentVertices.add(this)
         edge.source.adjacentVertices.add(edge.target)
+        val reversedEdge = Edge(edge.target, edge.source, capacity = edge.capacity)
         edge.target.incomingEdges.add(edge)
-        edge.target.outgoingEdges.add(edge)
-        incomingEdges.add(edge)
-        val add = outgoingEdges.add(edge)
-        return add
+        edge.target.outgoingEdges.add(reversedEdge)
+        incomingEdges.add(reversedEdge)
+        return outgoingEdges.add(edge)
     }
 
     fun getEdges(): MutableSet<Edge> {
         return HashSet(outgoingEdges)
+    }
+
+    fun getEdge(targetId: Int): Edge? {
+        return try {
+            outgoingEdges.stream().filter { e -> e.target.getId() == targetId }.findFirst().get()
+        } catch (e: NoSuchElementException) {
+            println("Previous ${this.getId()}")
+            println("Current $targetId")
+            null
+        }
     }
 
     fun getAdjacentVertices(): MutableSet<Vertex> {

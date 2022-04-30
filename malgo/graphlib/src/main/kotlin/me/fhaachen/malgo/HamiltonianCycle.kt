@@ -3,20 +3,18 @@ package me.fhaachen.malgo
 import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
-class UndirectedGraph(size: Int) : Graph {
+class HamiltonianCycle : Graph, Cycle {
 
     private var vertices: HashMap<Int, Vertex> = HashMap()
     private var edges: ArrayList<Edge> = ArrayList()
 
     override fun connectVertices(edge: Edge) {
-        val source = vertices.getOrDefault(edge.source.getId(), edge.source)
-        val target = vertices.getOrDefault(edge.target.getId(), edge.target)
-        val edgeCopy = Edge(source, target, edge.capacity)
-        when {
-            source.addEdge(edgeCopy) -> {
-                edges.add(edgeCopy)
-            }
+        if (vertices.contains(edge.target.getId())) {
+            throw ArithmeticException("Hamiltonian Cycles must not contain duplicate vertices")
         }
+        vertices.put(edge.source.getId(), edge.source)
+        vertices.put(edge.target.getId(), edge.target)
+        edges.add(edge)
     }
 
     override fun getIds(): LinkedList<Int> {
@@ -48,13 +46,7 @@ class UndirectedGraph(size: Int) : Graph {
     }
 
     override fun toString(): String {
-        return "UndirectedGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
-    }
-
-    init {
-        for (i in 0 until size) {
-            this.vertices[i] = Vertex(i)
-        }
+        return "HamiltonianCyle(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
     }
 
 }

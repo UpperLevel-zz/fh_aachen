@@ -8,8 +8,8 @@ interface Graph {
     fun getIds(): LinkedList<Int>
     fun getVertices(): LinkedList<Vertex>
     fun getVertex(id: Int): Vertex
+    fun getEdges(): LinkedList<Edge>
     fun getEdgeCount(): Int
     fun getVertexCount(): Int
-    fun getEdges(): LinkedList<Edge>
     fun isEmpty(): Boolean
 }

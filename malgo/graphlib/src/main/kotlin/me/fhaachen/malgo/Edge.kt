@@ -1,8 +1,9 @@
 package main.kotlin.me.fhaachen.malgo
 
 import me.fhaachen.malgo.Vertex
+import java.util.*
 
-class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) {
+class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) : Comparable<Edge> {
     constructor(source: Vertex, target: Vertex) : this(
         source, target, null
     )
@@ -10,6 +11,10 @@ class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) {
     constructor(source: Vertex, target: Vertex, capacity: String) : this(
         source, target, capacity.toDouble()
     )
+
+    override fun compareTo(other: Edge): Int {
+        return Objects.compare(this, other, compareBy(Edge::capacity))
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

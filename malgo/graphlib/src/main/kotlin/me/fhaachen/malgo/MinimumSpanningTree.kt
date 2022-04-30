@@ -3,7 +3,7 @@ package me.fhaachen.malgo
 import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
-class MinimumSpanningTree : Graph {
+class MinimumSpanningTree : Graph, Tree {
 
     val edges = HashSet<Edge>()
     val vertices = LinkedHashSet<Vertex>()
@@ -94,7 +94,7 @@ class MinimumSpanningTree : Graph {
     }
 
     override fun getVertex(id: Int): Vertex {
-        return vertices.elementAt(id)
+        return vertices.find { v -> v.getId() == id }!!
     }
 
     override fun getEdgeCount(): Int {
