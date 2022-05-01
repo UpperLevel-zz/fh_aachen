@@ -20,7 +20,7 @@ class RelatedComponentCalculatorTest {
     fun only_isolated_vertices_DFS() {
         val V = 10
         val graph = UndirectedGraph(V)
-        assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(V)
+        assertThat(RelatedComponentCalculator.depthFirstSearch(graph).size).isEqualTo(V)
     }
 
     @Test
@@ -41,7 +41,7 @@ class RelatedComponentCalculatorTest {
     fun sling_DFS() {
         val graph = UndirectedGraph(1)
         graph.connectVertices(Edge(Vertex(0), Vertex(0)))
-        assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(1)
+        assertThat(RelatedComponentCalculator.depthFirstSearch(graph).size).isEqualTo(1)
     }
 
     @Test
@@ -62,7 +62,7 @@ class RelatedComponentCalculatorTest {
     fun one_sling_one_isolated_DFS() {
         val graph = UndirectedGraph(2)
         graph.connectVertices(Edge(Vertex(0), Vertex(0)))
-        assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(2)
+        assertThat(RelatedComponentCalculator.depthFirstSearch(graph).size).isEqualTo(2)
     }
 
     @Test
@@ -83,7 +83,7 @@ class RelatedComponentCalculatorTest {
     fun one_edge_two_vertices_DFS() {
         val graph = UndirectedGraph(2)
         graph.connectVertices(Edge(Vertex(0), Vertex(1)))
-        assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(1)
+        assertThat(RelatedComponentCalculator.depthFirstSearch(graph).size).isEqualTo(1)
     }
 
     @Test
@@ -147,7 +147,7 @@ class RelatedComponentCalculatorTest {
         var end = System.currentTimeMillis()
         println("Calc time BFS= " + (end - start))
         start = System.currentTimeMillis()
-        assertThat(RelatedComponentCalculator.depthFirstSearch(graph)).isEqualTo(zuKomp)
+        assertThat(RelatedComponentCalculator.depthFirstSearch(graph).size).isEqualTo(zuKomp)
         end = System.currentTimeMillis()
         println("Calc time DFS= " + (end - start))
         if (time != null) {

@@ -10,7 +10,8 @@ class HamiltonianCycle : Graph, Cycle {
 
     override fun connectVertices(edge: Edge) {
         if (vertices.contains(edge.target.getId())) {
-            throw ArithmeticException("Hamiltonian Cycles must not contain duplicate vertices")
+            return
+//            throw ArithmeticException("Hamiltonian Cycles must not contain duplicate vertices")
         }
         vertices.put(edge.source.getId(), edge.source)
         vertices.put(edge.target.getId(), edge.target)

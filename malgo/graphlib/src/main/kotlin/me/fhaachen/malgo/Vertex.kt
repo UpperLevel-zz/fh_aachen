@@ -1,7 +1,6 @@
 package me.fhaachen.malgo
 
 import main.kotlin.me.fhaachen.malgo.Edge
-import java.util.*
 
 class Vertex(private val id: Int) {
     constructor(id: String) : this(
@@ -9,8 +8,8 @@ class Vertex(private val id: Int) {
     )
 
     val adjacentVertices = HashSet<Vertex>()
-    val outgoingEdges = TreeSet<Edge>()
-    val incomingEdges = TreeSet<Edge>()
+    val outgoingEdges = ArrayList<Edge>()
+    val incomingEdges = ArrayList<Edge>()
 
     fun addEdge(edge: Edge): Boolean {
         edge.target.adjacentVertices.add(this)
@@ -30,8 +29,8 @@ class Vertex(private val id: Int) {
         return try {
             outgoingEdges.stream().filter { e -> e.target.getId() == targetId }.findFirst().get()
         } catch (e: NoSuchElementException) {
-            println("Previous ${this.getId()}")
-            println("Current $targetId")
+//            println("Vertex.getEdge: Previous ${this.getId()}")
+//            println("Vertex.getEdge: Current $targetId")
             null
         }
     }

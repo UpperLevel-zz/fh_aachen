@@ -44,11 +44,11 @@ class RelatedComponentCalculator {
             }
         }
 
-        fun depthFirstSearch(graph: Graph): Set<Graph> {
+        fun depthFirstSearch(graph: Graph): Set<LinkedList<Vertex>> {
             if (graph.isEmpty()) {
                 return emptySet()
             }
-            val components = HashSet<Graph>()
+            val components = HashSet<LinkedList<Vertex>>()
             val allVertexIds = graph.getIds()
             val visitedIds = BooleanArray(allVertexIds.size)
             var nextUnvisitedId = 0
@@ -59,7 +59,7 @@ class RelatedComponentCalculator {
             return components
         }
 
-        private fun depthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray): Graph {
+        private fun depthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray): LinkedList<Vertex> {
             val stack = Stack<Int>()
             val searchTree = LinkedList<Vertex>()
             var currentId: Int
@@ -68,9 +68,7 @@ class RelatedComponentCalculator {
             while (stack.isNotEmpty()) {
                 currentId = stack.pop()
                 currentVertex = graph.getVertex(currentId)
-                if (!searchTree.contains(currentVertex)) {
-                    searchTree.push(currentVertex)
-                }
+                searchTree.push(currentVertex)
                 if (!visitedIds[currentId]) {
                     visitedIds[currentId] = true
                     val adjacentVertices = currentVertex.getAdjacentVertices().iterator()
@@ -79,7 +77,7 @@ class RelatedComponentCalculator {
                     }
                 }
             }
-            return translateToGraph(searchTree)
+            return searchTree
         }
 
         fun depthFirstSearchRecursive(graph: Graph): Int {
@@ -122,16 +120,6 @@ class RelatedComponentCalculator {
             return visitedIndices.size
         }
 
-        private fun translateToGraph(searchTree: LinkedList<Vertex>): Graph {
-            val result = HamiltonianCycle()
-            var previousVertex = searchTree.pollFirst()
-            for (currentVertex in searchTree) {
-                val edge = previousVertex.getEdge(currentVertex.getId())
-                edge.let { it?.let { it1 -> result.connectVertices(it1) } }
-                previousVertex = currentVertex
-            }
-            return result
-        }
     }
 
 }

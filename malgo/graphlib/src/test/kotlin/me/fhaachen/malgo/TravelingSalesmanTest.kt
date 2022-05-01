@@ -4,17 +4,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
+import kotlin.test.Ignore
 
 class TravelingSalesmanTest {
 
+    @Ignore("Only for test usage")
     @Test
     fun G_1_2() {
         val resourceName = "G_1_2.txt"
         val graph = GraphTest.toGraph(resourceName)
         val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph)
         println(hamiltonianCycle)
-        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(171)
-        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(170)
+        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(1000)
+        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(999)
     }
 
     @ParameterizedTest
@@ -37,7 +39,7 @@ class TravelingSalesmanTest {
         val start = System.currentTimeMillis()
         val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph)
         val end = System.currentTimeMillis()
-        println("Calc time= " + (end - start))
+        println("${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
         assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
         assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
     }
@@ -62,7 +64,7 @@ class TravelingSalesmanTest {
         val start = System.currentTimeMillis()
         val hamiltonianCycle = TravelingSalesman.doppelterBaum(graph)
         val end = System.currentTimeMillis()
-        println("Calc time= " + (end - start))
+        println("${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
         assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
         assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
     }

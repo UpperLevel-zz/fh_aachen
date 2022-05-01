@@ -1,5 +1,7 @@
 package me.fhaachen.malgo
 
+import java.util.*
+
 class TravelingSalesman {
 
     companion object {
@@ -25,7 +27,17 @@ class TravelingSalesman {
             val mst = MinimumSpanningTree.prim(graph)
             val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst)
             val result = depthFirstSearch.first()
-//            result.connectVertices(result.getVertices().last.getEdge(result.getVertices().first.getId()))
+            return translateToGraph(result)
+        }
+
+        private fun translateToGraph(searchTree: LinkedList<Vertex>): Graph {
+            val result = HamiltonianCycle()
+            var previousVertex = searchTree.pollFirst()
+            for (currentVertex in searchTree) {
+                val edge = previousVertex.getEdge(currentVertex.getId())
+                edge.let { it?.let { it1 -> result.connectVertices(it1) } }
+                previousVertex = currentVertex
+            }
             return result
         }
     }
