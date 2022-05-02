@@ -25,14 +25,8 @@ class Vertex(private val id: Int) {
         return HashSet(outgoingEdges)
     }
 
-    fun getEdge(targetId: Int): Edge? {
-        return try {
-            outgoingEdges.stream().filter { e -> e.target.getId() == targetId }.findFirst().get()
-        } catch (e: NoSuchElementException) {
-//            println("Vertex.getEdge: Previous ${this.getId()}")
-//            println("Vertex.getEdge: Current $targetId")
-            null
-        }
+    fun getEdge(targetId: Int): Edge {
+        return outgoingEdges.stream().filter { e -> e.target.getId() == targetId }.findFirst().get()
     }
 
     fun getAdjacentVertices(): MutableSet<Vertex> {

@@ -51,7 +51,7 @@ class GraphTest {
     companion object {
         fun toGraph(resourceName: String): Graph {
             val file = File(javaClass.classLoader.getResource(resourceName)!!.file)
-            println("Read: $resourceName")
+//            println("Read: $resourceName")
 
             val start = System.currentTimeMillis()
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
@@ -66,7 +66,7 @@ class GraphTest {
             }
             val end = System.currentTimeMillis()
             Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
-            println("Read time = " + (end - start))
+//            println("Read time = " + (end - start))
             return graph
         }
 

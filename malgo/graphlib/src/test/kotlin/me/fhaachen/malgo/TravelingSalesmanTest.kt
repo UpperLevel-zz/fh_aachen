@@ -1,23 +1,10 @@
 package me.fhaachen.malgo
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import kotlin.test.Ignore
 
 class TravelingSalesmanTest {
-
-    @Ignore("Only for test usage")
-    @Test
-    fun G_1_2() {
-        val resourceName = "G_1_2.txt"
-        val graph = GraphTest.toGraph(resourceName)
-        val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph)
-        println(hamiltonianCycle)
-        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(1000)
-        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(999)
-    }
 
     @ParameterizedTest
     @ValueSource(
@@ -39,9 +26,14 @@ class TravelingSalesmanTest {
         val start = System.currentTimeMillis()
         val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph)
         val end = System.currentTimeMillis()
-        println("${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
+        print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
         assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
         assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
+        var amount = 0.0
+        for (edge in hamiltonianCycle.getEdges()) {
+            amount += edge.capacity!!
+        }
+        println("\tCapacity: $amount")
     }
 
     @ParameterizedTest
@@ -64,9 +56,44 @@ class TravelingSalesmanTest {
         val start = System.currentTimeMillis()
         val hamiltonianCycle = TravelingSalesman.doppelterBaum(graph)
         val end = System.currentTimeMillis()
-        println("${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
+        print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
         assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
         assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
+        var amount = 0.0
+        for (edge in hamiltonianCycle.getEdges()) {
+            amount += edge.capacity!!
+        }
+        println("\tCapacity: $amount")
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "K_10.txt",
+            "K_10e.txt",
+            "K_12.txt",
+            "K_12e.txt",
+            "K_15.txt",
+            "K_15e.txt",
+            "K_20.txt",
+            "K_30.txt",
+            "K_50.txt",
+            "K_100.txt"
+        ]
+    )
+    fun bruteForce(resourceName: String) {
+        val graph = GraphTest.toGraph(resourceName)
+        val start = System.currentTimeMillis()
+        val hamiltonianCycle = TravelingSalesman.bruteForce(graph)
+        val end = System.currentTimeMillis()
+        print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
+        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
+        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
+        var amount = 0.0
+        for (edge in hamiltonianCycle.getEdges()) {
+            amount += edge.capacity!!
+        }
+        println("\tCapacity: $amount")
     }
 
 }

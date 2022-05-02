@@ -3,7 +3,7 @@ package me.fhaachen.malgo
 import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
-class HamiltonianCycle : Graph, Cycle {
+class HamiltonianCycle : Graph {
 
     private var vertices: HashMap<Int, Vertex> = HashMap()
     private var edges: ArrayList<Edge> = ArrayList()
@@ -11,7 +11,6 @@ class HamiltonianCycle : Graph, Cycle {
     override fun connectVertices(edge: Edge) {
         if (vertices.contains(edge.target.getId())) {
             return
-//            throw ArithmeticException("Hamiltonian Cycles must not contain duplicate vertices")
         }
         vertices.put(edge.source.getId(), edge.source)
         vertices.put(edge.target.getId(), edge.target)
