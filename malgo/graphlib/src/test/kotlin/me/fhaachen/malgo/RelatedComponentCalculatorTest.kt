@@ -1,6 +1,5 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import me.fhaachen.malgo.GraphTest.Companion.toGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

@@ -1,6 +1,5 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import org.assertj.core.api.Assertions
 import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.Test

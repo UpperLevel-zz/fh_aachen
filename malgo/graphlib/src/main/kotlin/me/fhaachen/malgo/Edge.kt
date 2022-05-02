@@ -1,6 +1,5 @@
-package main.kotlin.me.fhaachen.malgo
+package me.fhaachen.malgo
 
-import me.fhaachen.malgo.Vertex
 import java.util.*
 
 class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) : Comparable<Edge> {

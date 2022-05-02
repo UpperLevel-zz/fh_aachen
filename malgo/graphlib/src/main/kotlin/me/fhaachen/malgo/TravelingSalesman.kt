@@ -63,7 +63,7 @@ class TravelingSalesman {
             return result
         }
 
-        fun <T> getPermutationsWithDistinctValues(original: List<T>): Set<List<T>> {
+        private fun <T> getPermutationsWithDistinctValues(original: List<T>): Set<List<T>> {
             if (original.isEmpty())
                 return emptySet()
             val permutationInstructions = original.toSet()

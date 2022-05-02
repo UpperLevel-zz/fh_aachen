@@ -1,6 +1,5 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
 interface Graph {

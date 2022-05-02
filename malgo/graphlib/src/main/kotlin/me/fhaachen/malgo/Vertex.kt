@@ -1,15 +1,13 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
-
 class Vertex(private val id: Int) {
     constructor(id: String) : this(
         id.toInt()
     )
 
-    val adjacentVertices = HashSet<Vertex>()
+    private val adjacentVertices = HashSet<Vertex>()
     val outgoingEdges = ArrayList<Edge>()
-    val incomingEdges = ArrayList<Edge>()
+    private val incomingEdges = ArrayList<Edge>()
 
     fun addEdge(edge: Edge): Boolean {
         edge.target.adjacentVertices.add(this)

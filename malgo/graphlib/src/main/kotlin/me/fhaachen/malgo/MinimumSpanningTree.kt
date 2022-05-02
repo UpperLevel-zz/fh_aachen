@@ -1,12 +1,11 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
-class MinimumSpanningTree : Graph, Tree {
+class MinimumSpanningTree : Graph {
 
-    val edges = HashSet<Edge>()
-    val vertices = LinkedHashSet<Vertex>()
+    private val edges = HashSet<Edge>()
+    private val vertices = LinkedHashSet<Vertex>()
 
     companion object {
         fun prim(graph: Graph): MinimumSpanningTree {

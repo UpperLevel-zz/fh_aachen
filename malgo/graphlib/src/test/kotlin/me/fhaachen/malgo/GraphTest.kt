@@ -1,6 +1,5 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -50,10 +49,10 @@ class GraphTest {
 
     companion object {
         fun toGraph(resourceName: String): Graph {
-            val file = File(javaClass.classLoader.getResource(resourceName)!!.file)
+            val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
 //            println("Read: $resourceName")
 
-            val start = System.currentTimeMillis()
+//            val start = System.currentTimeMillis()
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
             val numberOfVertices = lines.removeAt(0)
             val graph = UndirectedGraph(numberOfVertices.toInt())
@@ -64,7 +63,7 @@ class GraphTest {
                 else if (split.size == 3)
                     graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1]), split[2]))
             }
-            val end = System.currentTimeMillis()
+//            val end = System.currentTimeMillis()
             Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
 //            println("Read time = " + (end - start))
             return graph

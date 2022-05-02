@@ -1,6 +1,5 @@
 package me.fhaachen.malgo
 
-import main.kotlin.me.fhaachen.malgo.Edge
 import java.util.*
 
 class HamiltonianCycle : Graph {
@@ -12,8 +11,8 @@ class HamiltonianCycle : Graph {
         if (vertices.contains(edge.target.getId())) {
             return
         }
-        vertices.put(edge.source.getId(), edge.source)
-        vertices.put(edge.target.getId(), edge.target)
+        vertices[edge.source.getId()] = edge.source
+        vertices[edge.target.getId()] = edge.target
         edges.add(edge)
     }
 
