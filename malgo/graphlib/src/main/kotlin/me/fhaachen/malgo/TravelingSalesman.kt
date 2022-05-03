@@ -3,29 +3,37 @@ package me.fhaachen.malgo
 class TravelingSalesman {
 
     companion object {
-        fun nearestNeighbor(graph: Graph): Graph {
+        fun nearestNeighbor(graph: Graph, startVertex: Vertex): Graph {
             val hc = HamiltonianCycle()
             val vertices = graph.getVertices()
             val visited = BooleanArray(vertices.size)
-            var currentVertex = vertices.poll()
+            var currentVertex = startVertex
+            var amount: Double
+            var lowestEdge: Edge?
             while (!visited[currentVertex.getId()]) {
+                lowestEdge = null
                 visited[currentVertex.getId()] = true
+                amount = Double.MAX_VALUE
                 for (outgoingEdge in currentVertex.outgoingEdges) {
-                    if (!visited[outgoingEdge.target.getId()]) {
-                        hc.connectVertices(outgoingEdge)
-                        currentVertex = outgoingEdge.target
-                        break
+                    if (!visited[outgoingEdge.target.getId()] && outgoingEdge.capacity!! < amount) {
+                        lowestEdge = outgoingEdge
+                        amount = lowestEdge.capacity!!
                     }
                 }
+                if (lowestEdge != null) {
+                    hc.connectVertices(lowestEdge)
+                    currentVertex = lowestEdge.target
+                }
             }
+            hc.connectVertices(currentVertex.getEdge(startVertex.getId()))
             return hc
         }
 
-        fun doppelterBaum(graph: Graph): Graph {
-            val mst = MinimumSpanningTree.prim(graph)
+        fun doppelterBaum(graph: Graph, startVertex: Vertex): Graph {
+            val mst = MinimumSpanningTree.prim(graph, startVertex)
             val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst)
             val result = depthFirstSearch.first()
-            return translateToGraph(result)
+            return translateToDistinctGraph(result)
         }
 
         fun bruteForce(graph: Graph): Graph {
@@ -36,7 +44,7 @@ class TravelingSalesman {
             var lowestAmount = Double.MAX_VALUE
             for (vertexList in permutations) {
                 amount = 0.0
-                val hamiltonianCycle = translateToGraph(vertexList)
+                val hamiltonianCycle = translateToDistinctGraph(vertexList)
                 for (edge in hamiltonianCycle.getEdges()) {
                     amount += edge.capacity!!
                 }
@@ -48,7 +56,7 @@ class TravelingSalesman {
             return result
         }
 
-        private fun translateToGraph(searchTree: List<Vertex>): HamiltonianCycle {
+        private fun translateToDistinctGraph(searchTree: List<Vertex>): HamiltonianCycle {
             val result = HamiltonianCycle()
             val visited = BooleanArray(searchTree.size)
             var previousVertex = searchTree.first()
@@ -60,9 +68,13 @@ class TravelingSalesman {
                 }
                 previousVertex = currentVertex
             }
+            result.connectVertices(previousVertex.getEdge(searchTree.first().getId()))
             return result
         }
 
+        /**
+         * @see <a href=https://stackoverflow.com/a/59737650 >Permutations</a>
+         */
         private fun <T> getPermutationsWithDistinctValues(original: List<T>): Set<List<T>> {
             if (original.isEmpty())
                 return emptySet()

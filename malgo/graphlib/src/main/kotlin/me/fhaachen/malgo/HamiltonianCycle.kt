@@ -8,9 +8,6 @@ class HamiltonianCycle : Graph {
     private var edges: ArrayList<Edge> = ArrayList()
 
     override fun connectVertices(edge: Edge) {
-        if (vertices.contains(edge.target.getId())) {
-            return
-        }
         vertices[edge.source.getId()] = edge.source
         vertices[edge.target.getId()] = edge.target
         edges.add(edge)

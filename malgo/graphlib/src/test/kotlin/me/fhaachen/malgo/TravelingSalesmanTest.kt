@@ -23,17 +23,28 @@ class TravelingSalesmanTest {
     )
     fun nearestNeighbor(resourceName: String) {
         val graph = GraphTest.toGraph(resourceName)
-        val start = System.currentTimeMillis()
-        val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph)
-        val end = System.currentTimeMillis()
-        print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
-        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
-        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
-        var amount = 0.0
-        for (edge in hamiltonianCycle.getEdges()) {
-            amount += edge.capacity!!
+        for (currentVertex in graph.getVertices()) {
+            val start = System.nanoTime()
+            val hamiltonianCycle = TravelingSalesman.nearestNeighbor(graph, currentVertex)
+            val end = System.nanoTime()
+            assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
+            assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount())
+            var amount = 0.0
+            for (edge in hamiltonianCycle.getEdges()) {
+                amount += edge.capacity!!
+            }
+            println(
+                getFormattedOutput(
+                    resourceName,
+                    currentVertex,
+                    object {}.javaClass.enclosingMethod.name,
+                    end,
+                    start,
+                    amount
+                )
+            )
         }
-        println("\tCapacity: $amount")
+        println("______________________________________")
     }
 
     @ParameterizedTest
@@ -53,17 +64,28 @@ class TravelingSalesmanTest {
     )
     fun doppelterBaum(resourceName: String) {
         val graph = GraphTest.toGraph(resourceName)
-        val start = System.currentTimeMillis()
-        val hamiltonianCycle = TravelingSalesman.doppelterBaum(graph)
-        val end = System.currentTimeMillis()
-        print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
-        assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
-        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
-        var amount = 0.0
-        for (edge in hamiltonianCycle.getEdges()) {
-            amount += edge.capacity!!
+        for (currentVertex in graph.getVertices()) {
+            val start = System.currentTimeMillis()
+            val hamiltonianCycle = TravelingSalesman.doppelterBaum(graph, currentVertex)
+            val end = System.currentTimeMillis()
+            assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
+            assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount())
+            var amount = 0.0
+            for (edge in hamiltonianCycle.getEdges()) {
+                amount += edge.capacity!!
+            }
+            println(
+                getFormattedOutput(
+                    resourceName,
+                    currentVertex,
+                    object {}.javaClass.enclosingMethod.name,
+                    end,
+                    start,
+                    amount
+                )
+            )
         }
-        println("\tCapacity: $amount")
+        println("______________________________________")
     }
 
     @ParameterizedTest
@@ -88,12 +110,32 @@ class TravelingSalesmanTest {
         val end = System.currentTimeMillis()
         print("Graph in: $resourceName\t${object {}.javaClass.enclosingMethod.name}: Calc time= " + (end - start))
         assertThat(hamiltonianCycle.getVertexCount()).isEqualTo(graph.getVertexCount())
-        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount() - 1)
+        assertThat(hamiltonianCycle.getEdgeCount()).isEqualTo(graph.getVertexCount())
         var amount = 0.0
         for (edge in hamiltonianCycle.getEdges()) {
             amount += edge.capacity!!
         }
-        println("\tCapacity: $amount")
+        println(getFormattedOutput(resourceName, null, object {}.javaClass.enclosingMethod.name, end, start, amount))
+        println()
+    }
+
+    private fun getFormattedOutput(
+        resourceName: String,
+        currentVertex: Vertex?,
+        algorithm: String,
+        end: Long,
+        start: Long,
+        amount: Double
+    ): String {
+        val format = String.format(
+            "Graph in: %-10s starting at: %s\t %s: \tcalc time= %sns\tCapacity: %s",
+            resourceName,
+            currentVertex,
+            algorithm,
+            (end - start),
+            amount
+        )
+        return format
     }
 
 }

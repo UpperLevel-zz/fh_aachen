@@ -9,12 +9,15 @@ class MinimumSpanningTree : Graph {
 
     companion object {
         fun prim(graph: Graph): MinimumSpanningTree {
+            return prim(graph, graph.getVertices().first)
+        }
+
+        fun prim(graph: Graph, startVertex: Vertex): MinimumSpanningTree {
             val mst = MinimumSpanningTree()
             val capacityWeighted: Comparator<Edge> = compareBy { it.capacity }
             //todo knotenbasierte queue anschauen
             val priorityQueue = PriorityQueue(capacityWeighted)
             val connected = BooleanArray(graph.getIds().size)
-            val startVertex = graph.getVertices().first
             var currentEdge: Edge
             startVertex.getEdges().forEach { edge -> priorityQueue.add(edge) }
             connected[startVertex.getId()] = true
