@@ -4,8 +4,8 @@ import java.util.*
 
 class MinimumSpanningTree : Graph {
 
-    private val edges = HashSet<Edge>()
-    private val vertices = LinkedHashSet<Vertex>()
+    private val edges = LinkedList<Edge>()
+    private var vertices: HashMap<Int, Vertex> = HashMap()
 
     companion object {
         fun prim(graph: Graph): MinimumSpanningTree {
@@ -82,21 +82,27 @@ class MinimumSpanningTree : Graph {
     }
 
     override fun connectVertices(edge: Edge) {
-        edges.add(edge)
-        vertices.add(edge.source)
-        vertices.add(edge.target)
+//        val source = Vertex(edge.source.getId())
+//        val target = Vertex(edge.target.getId())
+        val source = vertices.getOrDefault(edge.source.getId(), Vertex(edge.source.getId()))
+        vertices[source.getId()] = source
+        val target = vertices.getOrDefault(edge.target.getId(), Vertex(edge.target.getId()))
+        vertices[target.getId()] = target
+        val edgeCopy = Edge(source, target, edge.capacity)
+        source.addEdge(edgeCopy)
+        edges.add(edgeCopy)
     }
 
     override fun getIds(): LinkedList<Int> {
-        return LinkedList(vertices.stream().map { v -> v.getId() }.toList())
+        return LinkedList(vertices.keys)
     }
 
     override fun getVertices(): LinkedList<Vertex> {
-        return LinkedList(vertices)
+        return LinkedList(vertices.values)
     }
 
     override fun getVertex(id: Int): Vertex {
-        return vertices.find { v -> v.getId() == id }!!
+        return vertices[id]!!
     }
 
     override fun getEdgeCount(): Int {
@@ -114,4 +120,9 @@ class MinimumSpanningTree : Graph {
     override fun isEmpty(): Boolean {
         return edges.isEmpty()
     }
+
+    override fun toString(): String {
+        return "MinimumSpanningTree(edges=$edges)"
+    }
+
 }

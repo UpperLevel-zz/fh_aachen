@@ -42,7 +42,7 @@ class HamiltonianCycle : Graph {
     }
 
     override fun toString(): String {
-        return "HamiltonianCyle(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
+        return "HamiltonianCyle(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}"
     }
 
 }

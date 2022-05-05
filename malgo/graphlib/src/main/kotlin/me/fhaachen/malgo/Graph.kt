@@ -10,5 +10,13 @@ interface Graph {
     fun getEdges(): LinkedList<Edge>
     fun getEdgeCount(): Int
     fun getVertexCount(): Int
+    fun capacity(): Double {
+        var amount = 0.0
+        for (edge in getEdges()) {
+            amount += edge.capacity!!
+        }
+        return amount
+    }
+
     fun isEmpty(): Boolean
 }

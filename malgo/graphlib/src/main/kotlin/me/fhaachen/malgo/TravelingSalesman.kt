@@ -1,12 +1,13 @@
 package me.fhaachen.malgo
 
+import java.util.*
+
 class TravelingSalesman {
 
     companion object {
         fun nearestNeighbor(graph: Graph, startVertex: Vertex): Graph {
             val hc = HamiltonianCycle()
-            val vertices = graph.getVertices()
-            val visited = BooleanArray(vertices.size)
+            val visited = BooleanArray(graph.getVertexCount())
             var currentVertex = startVertex
             var amount: Double
             var lowestEdge: Edge?
@@ -30,24 +31,29 @@ class TravelingSalesman {
         }
 
         fun doppelterBaum(graph: Graph, startVertex: Vertex): Graph {
-            val mst = MinimumSpanningTree.prim(graph, startVertex)
-            val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst)
-            val result = depthFirstSearch.first()
-            return translateToDistinctGraph(result)
+            var mst = MinimumSpanningTree.prim(graph, startVertex)
+//            println("Capacity MST: ${mst.capacity()}")
+//            mst = MinimumSpanningTree.kruskal(graph)
+//            println("Capacity MST: ${mst.capacity()}")
+            val visitedIds = BooleanArray(graph.getVertexCount())
+            val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst, startVertex.getId(), visitedIds)
+            val distinctOrderedVertices = distinct(depthFirstSearch)
+            return hamiltonianCycle(distinctOrderedVertices, graph)
         }
 
         fun bruteForce(graph: Graph): Graph {
             var result = HamiltonianCycle()
             val vertices = graph.getVertices()
-            val permutations = getPermutationsWithDistinctValues(vertices)
+            val permutations = allPermutations(HashSet(vertices))
             var amount: Double
             var lowestAmount = Double.MAX_VALUE
-            for (vertexList in permutations) {
-                amount = 0.0
-                val hamiltonianCycle = translateToDistinctGraph(vertexList)
-                for (edge in hamiltonianCycle.getEdges()) {
-                    amount += edge.capacity!!
-                }
+            for (permutation in permutations) {
+                val vertexList = ArrayList(permutation)
+                vertexList.add(
+                    permutation.first()
+                )
+                val hamiltonianCycle = hamiltonianCycle(vertexList, graph)
+                amount = hamiltonianCycle.capacity()
                 if (lowestAmount > amount) {
                     lowestAmount = amount
                     result = hamiltonianCycle
@@ -56,45 +62,53 @@ class TravelingSalesman {
             return result
         }
 
-        private fun translateToDistinctGraph(searchTree: List<Vertex>): HamiltonianCycle {
+        private fun hamiltonianCycle(
+            distinctOrderedVertices: List<Vertex>,
+            graph: Graph
+        ): HamiltonianCycle {
+            var previousVertex = distinctOrderedVertices.first()
             val result = HamiltonianCycle()
-            val visited = BooleanArray(searchTree.size)
-            var previousVertex = searchTree.first()
-            for (currentVertex in searchTree) {
-                visited[previousVertex.getId()] = true
-                if (!visited[currentVertex.getId()]) {
-                    val edge = previousVertex.getEdge(currentVertex.getId())
-                    edge.let { it.let { it1 -> result.connectVertices(it1) } }
+            for (currentVertex in distinctOrderedVertices) {
+                if (currentVertex != previousVertex) {
+                    result.connectVertices(graph.getVertex(previousVertex.getId()).getEdge(currentVertex.getId()))
                 }
                 previousVertex = currentVertex
             }
-            result.connectVertices(previousVertex.getEdge(searchTree.first().getId()))
+            return result
+        }
+
+        private fun distinct(searchTree: List<Vertex>): LinkedList<Vertex> {
+            val result = LinkedList<Vertex>()
+            val visited = BooleanArray(searchTree.size)
+            for (currentVertex in searchTree) {
+                if (!visited[currentVertex.getId()]) {
+                    result.add(currentVertex)
+                }
+                visited[currentVertex.getId()] = true
+            }
+            result.add(searchTree.first())
             return result
         }
 
         /**
-         * @see <a href=https://stackoverflow.com/a/59737650 >Permutations</a>
+         * @see <a href=https://stackoverflow.com/a/63532094 >Permutations</a>
          */
-        private fun <T> getPermutationsWithDistinctValues(original: List<T>): Set<List<T>> {
-            if (original.isEmpty())
-                return emptySet()
-            val permutationInstructions = original.toSet()
-                .map { it to original.count { x -> x == it } }
-                .fold(listOf(setOf<Pair<T, Int>>())) { acc, (value, valueCount) ->
-                    mutableListOf<Set<Pair<T, Int>>>().apply {
-                        for (set in acc) for (retainIndex in 0 until valueCount) add(set + (value to retainIndex))
+        private fun <T> allPermutations(set: Set<T>): Set<List<T>> {
+            if (set.isEmpty()) return emptySet()
+
+            fun <T> _allPermutations(list: List<T>): Set<List<T>> {
+                if (list.isEmpty()) return setOf(emptyList())
+
+                val result: MutableSet<List<T>> = mutableSetOf()
+                for (i in list.indices) {
+                    _allPermutations(list - list[i]).forEach { item ->
+                        result.add(item + list[i])
                     }
                 }
-            return mutableSetOf<List<T>>().also { outSet ->
-                for (instructionSet in permutationInstructions) {
-                    outSet += original.toMutableList().apply {
-                        for ((value, retainIndex) in instructionSet) {
-                            repeat(retainIndex) { removeAt(indexOfFirst { it == value }) }
-                            repeat(count { it == value } - 1) { removeAt(indexOfLast { it == value }) }
-                        }
-                    }
-                }
+                return result
             }
+
+            return _allPermutations(set.toList())
         }
     }
 }

@@ -49,17 +49,16 @@ class RelatedComponentCalculator {
                 return emptySet()
             }
             val components = HashSet<LinkedList<Vertex>>()
-            val allVertexIds = graph.getIds()
-            val visitedIds = BooleanArray(allVertexIds.size)
+            val visitedIds = BooleanArray(graph.getVertexCount())
             var nextUnvisitedId = 0
-            while (nextUnvisitedId < allVertexIds.size) {
+            while (nextUnvisitedId < graph.getVertexCount()) {
                 components.add(depthFirstSearch(graph, nextUnvisitedId, visitedIds))
                 nextUnvisitedId = getNextUnvisitedId(visitedIds, nextUnvisitedId)
             }
             return components
         }
 
-        private fun depthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray): LinkedList<Vertex> {
+        fun depthFirstSearch(graph: Graph, startId: Int, visitedIds: BooleanArray): LinkedList<Vertex> {
             val stack = Stack<Int>()
             val searchTree = LinkedList<Vertex>()
             var currentId: Int
@@ -68,12 +67,14 @@ class RelatedComponentCalculator {
             while (stack.isNotEmpty()) {
                 currentId = stack.pop()
                 currentVertex = graph.getVertex(currentId)
-                searchTree.push(currentVertex)
+//                println(currentId)
+                searchTree.add(currentVertex)
                 if (!visitedIds[currentId]) {
                     visitedIds[currentId] = true
                     val adjacentVertices = currentVertex.getAdjacentVertices().iterator()
                     for (adjacentVertex in adjacentVertices) {
-                        stack.push(adjacentVertex.getId())
+                        if (!visitedIds[adjacentVertex.getId()])
+                            stack.push(adjacentVertex.getId())
                     }
                 }
             }
