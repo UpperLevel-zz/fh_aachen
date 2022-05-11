@@ -31,10 +31,7 @@ class TravelingSalesman {
         }
 
         fun doppelterBaum(graph: Graph, startVertex: Vertex): Graph {
-            var mst = MinimumSpanningTree.prim(graph, startVertex)
-//            println("Capacity MST: ${mst.capacity()}")
-//            mst = MinimumSpanningTree.kruskal(graph)
-//            println("Capacity MST: ${mst.capacity()}")
+            val mst = MinimumSpanningTree.prim(graph, startVertex)
             val visitedIds = BooleanArray(graph.getVertexCount())
             val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst, startVertex.getId(), visitedIds)
             val distinctOrderedVertices = distinct(depthFirstSearch)
@@ -44,7 +41,8 @@ class TravelingSalesman {
         fun bruteForce(graph: Graph): Graph {
             var result = HamiltonianCycle()
             val vertices = graph.getVertices()
-            val permutations = allPermutations(HashSet(vertices))
+            val permutations = mutableListOf<List<Vertex>>()
+            Permutation.heapsAlgorithmRekursive(vertices, vertices.size, permutations)
             var amount: Double
             var lowestAmount = Double.MAX_VALUE
             for (permutation in permutations) {
@@ -89,26 +87,6 @@ class TravelingSalesman {
             result.add(searchTree.first())
             return result
         }
-
-        /**
-         * @see <a href=https://stackoverflow.com/a/63532094 >Permutations</a>
-         */
-        private fun <T> allPermutations(set: Set<T>): Set<List<T>> {
-            if (set.isEmpty()) return emptySet()
-
-            fun <T> _allPermutations(list: List<T>): Set<List<T>> {
-                if (list.isEmpty()) return setOf(emptyList())
-
-                val result: MutableSet<List<T>> = mutableSetOf()
-                for (i in list.indices) {
-                    _allPermutations(list - list[i]).forEach { item ->
-                        result.add(item + list[i])
-                    }
-                }
-                return result
-            }
-
-            return _allPermutations(set.toList())
-        }
     }
+
 }

@@ -50,9 +50,6 @@ class GraphTest {
     companion object {
         fun toGraph(resourceName: String): Graph {
             val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
-//            println("Read: $resourceName")
-
-//            val start = System.currentTimeMillis()
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
             val numberOfVertices = lines.removeAt(0)
             val graph = UndirectedGraph(numberOfVertices.toInt())
@@ -63,9 +60,7 @@ class GraphTest {
                 else if (split.size == 3)
                     graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1]), split[2]))
             }
-//            val end = System.currentTimeMillis()
             Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
-//            println("Read time = " + (end - start))
             return graph
         }
 
@@ -82,6 +77,24 @@ class GraphTest {
             graph.connectVertices(Edge(Vertex(5), Vertex(8)))
             graph.connectVertices(Edge(Vertex(5), Vertex(9)))
             return graph
+        }
+
+        fun getFormattedOutput(
+            resourceName: String,
+            currentVertex: Vertex?,
+            algorithm: String,
+            end: Long,
+            start: Long,
+            amount: Double
+        ): String {
+            return String.format(
+                "Graph in: %-10s starting at: %s\t %s: \tcalc time= %sms\tCapacity: %s",
+                resourceName,
+                currentVertex,
+                algorithm,
+                (end - start) / 1000000,
+                amount
+            )
         }
     }
 }

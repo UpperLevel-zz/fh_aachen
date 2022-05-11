@@ -8,6 +8,7 @@ class Vertex(private val id: Int) {
     private val adjacentVertices = HashSet<Vertex>()
     val outgoingEdges = ArrayList<Edge>()
     private val incomingEdges = ArrayList<Edge>()
+    private val edges = HashMap<Int, Edge>()
 
     fun addEdge(edge: Edge): Boolean {
         edge.target.adjacentVertices.add(this)
@@ -15,8 +16,11 @@ class Vertex(private val id: Int) {
         val reversedEdge = Edge(edge.target, edge.source, capacity = edge.capacity)
         edge.target.incomingEdges.add(edge)
         edge.target.outgoingEdges.add(reversedEdge)
+        edge.target.edges[edge.source.getId()] = edge
         incomingEdges.add(reversedEdge)
-        return outgoingEdges.add(edge)
+        outgoingEdges.add(edge)
+        edges[edge.target.getId()] = edge
+        return true
     }
 
     fun getEdges(): MutableSet<Edge> {
@@ -24,7 +28,7 @@ class Vertex(private val id: Int) {
     }
 
     fun getEdge(targetId: Int): Edge {
-        return outgoingEdges.stream().filter { e -> e.target.getId() == targetId }.findFirst().get()
+        return edges[targetId]!!
     }
 
     fun getAdjacentVertices(): MutableSet<Vertex> {
