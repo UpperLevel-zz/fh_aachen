@@ -7,13 +7,18 @@ class HamiltonianTour {
     var lowestAmount = Double.POSITIVE_INFINITY
 
     fun findMostFavorable(graph: Graph, useBound: Boolean) {
+        val visitedIndices = BooleanArray(graph.getVertexCount())
+        val startVertex = graph.getVertices().first
+        visitedIndices[startVertex.getId()] = true
+        val hamiltonianCycle = LinkedList<Vertex>()
+        hamiltonianCycle.add(startVertex)
         findMostFavorable(
             useBound,
             graph,
-            graph.getVertices().first,
-            BooleanArray(graph.getVertexCount()),
+            startVertex,
+            visitedIndices,
             0.0,
-            LinkedList()
+            hamiltonianCycle
         )
     }
 
@@ -25,18 +30,17 @@ class HamiltonianTour {
         amount: Double,
         hamiltonianCycle: LinkedList<Vertex>
     ) {
-        hamiltonianCycle.add(currentVertex)
         if (hamiltonianCycle.size == graph.getVertexCount()) {
             hamiltonianCycle.add(graph.getVertices().first)
             val edge = currentVertex.getEdge(graph.getVertices().first.getId())
             val newAmout = amount + edge.capacity!!
             if ((lowestAmount > newAmout)) {
-                optimalCycle = hamiltonianCycle
+                optimalCycle = LinkedList(hamiltonianCycle)
                 lowestAmount = newAmout
             }
+            hamiltonianCycle.removeLast()
         }
 
-        visitedIndices[currentVertex.getId()] = true
         for (adjecentVertex in currentVertex.getAdjacentVertices()) {
             if (!visitedIndices[adjecentVertex.getId()]) {
                 val edge = currentVertex.getEdge(adjecentVertex.getId())
@@ -44,14 +48,19 @@ class HamiltonianTour {
                 if (useBound && amount + edge.capacity!! > lowestAmount) {
                     continue
                 }
+
+                visitedIndices[adjecentVertex.getId()] = true
+                hamiltonianCycle.add(adjecentVertex)
                 findMostFavorable(
                     useBound,
                     graph,
                     adjecentVertex,
-                    visitedIndices.clone(),
+                    visitedIndices,
                     amount + edge.capacity!!,
-                    LinkedList(hamiltonianCycle)
+                    hamiltonianCycle
                 )
+                hamiltonianCycle.removeLast()
+                visitedIndices[adjecentVertex.getId()] = false
             }
         }
     }
