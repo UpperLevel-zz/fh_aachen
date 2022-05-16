@@ -11,19 +11,20 @@ class UndirectedGraph(size: Int) : Graph {
         val source = vertices.getOrDefault(edge.source.getId(), edge.source)
         val target = vertices.getOrDefault(edge.target.getId(), edge.target)
         val edgeCopy = Edge(source, target, edge.capacity)
-        when {
-            source.addEdge(edgeCopy) -> {
-                edges.add(edgeCopy)
-            }
-        }
+        val reversedEdge = Edge(target, source, edge.capacity)
+        source.addOutgoingEdge(edgeCopy)
+        source.addIncomingEdge(reversedEdge)
+        target.addIncomingEdge(edgeCopy)
+        target.addOutgoingEdge(reversedEdge)
+        edges.add(edgeCopy)
     }
 
     override fun getIds(): LinkedList<Int> {
         return LinkedList(vertices.values.sortedBy { x -> x.getId() }.stream().map { x -> x.getId() }.toList())
     }
 
-    override fun getVertices(): LinkedList<Vertex> {
-        return LinkedList(vertices.values)
+    override fun getVertices(): LinkedList<Int> {
+        return LinkedList(vertices.keys)
     }
 
     override fun getVertex(id: Int): Vertex {

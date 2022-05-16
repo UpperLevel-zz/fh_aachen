@@ -5,17 +5,17 @@ import java.util.*
 class TravelingSalesman {
 
     companion object {
-        fun nearestNeighbor(graph: Graph, startVertex: Vertex): Graph {
+        fun nearestNeighbor(graph: Graph, startId: Int): Graph {
             val hc = HamiltonianCycle()
             val visited = BooleanArray(graph.getVertexCount())
-            var currentVertex = startVertex
+            var currentVertex = startId
             var amount: Double
             var lowestEdge: Edge?
-            while (!visited[currentVertex.getId()]) {
+            while (!visited[currentVertex]) {
                 lowestEdge = null
-                visited[currentVertex.getId()] = true
+                visited[currentVertex] = true
                 amount = Double.MAX_VALUE
-                for (outgoingEdge in currentVertex.outgoingEdges) {
+                for (outgoingEdge in graph.getVertex(currentVertex).outgoingEdges) {
                     if (!visited[outgoingEdge.target.getId()] && outgoingEdge.capacity!! < amount) {
                         lowestEdge = outgoingEdge
                         amount = lowestEdge.capacity!!
@@ -23,17 +23,17 @@ class TravelingSalesman {
                 }
                 if (lowestEdge != null) {
                     hc.connectVertices(lowestEdge)
-                    currentVertex = lowestEdge.target
+                    currentVertex = lowestEdge.target.getId()
                 }
             }
-            hc.connectVertices(currentVertex.getEdge(startVertex.getId()))
+            hc.connectVertices(graph.getVertex(currentVertex).getEdge(startId))
             return hc
         }
 
-        fun doppelterBaum(graph: Graph, startVertex: Vertex): Graph {
-            val mst = MinimumSpanningTree.prim(graph, startVertex)
+        fun doppelterBaum(graph: Graph, startId: Int): Graph {
+            val mst = MinimumSpanningTree.prim(graph, startId)
             val visitedIds = BooleanArray(graph.getVertexCount())
-            val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst, startVertex.getId(), visitedIds)
+            val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(mst, startId, visitedIds)
             val distinctOrderedVertices = distinct(depthFirstSearch)
             return hamiltonianCycle(distinctOrderedVertices, graph)
         }
@@ -41,7 +41,7 @@ class TravelingSalesman {
         fun bruteForce(graph: Graph): Graph {
             var result = HamiltonianCycle()
             val vertices = graph.getVertices()
-            val permutations = mutableListOf<List<Vertex>>()
+            val permutations = mutableListOf<List<Int>>()
             Permutation.heapsAlgorithmRekursive(vertices, vertices.size, permutations)
             var amount: Double
             var lowestAmount = Double.MAX_VALUE
@@ -61,28 +61,28 @@ class TravelingSalesman {
         }
 
         private fun hamiltonianCycle(
-            distinctOrderedVertices: List<Vertex>,
+            distinctOrderedVertices: List<Int>,
             graph: Graph
         ): HamiltonianCycle {
             var previousVertex = distinctOrderedVertices.first()
             val result = HamiltonianCycle()
             for (currentVertex in distinctOrderedVertices) {
                 if (currentVertex != previousVertex) {
-                    result.connectVertices(graph.getVertex(previousVertex.getId()).getEdge(currentVertex.getId()))
+                    result.connectVertices(graph.getVertex(previousVertex).getEdge(currentVertex))
                 }
                 previousVertex = currentVertex
             }
             return result
         }
 
-        private fun distinct(searchTree: List<Vertex>): LinkedList<Vertex> {
-            val result = LinkedList<Vertex>()
+        private fun distinct(searchTree: List<Int>): LinkedList<Int> {
+            val result = LinkedList<Int>()
             val visited = BooleanArray(searchTree.size)
             for (currentVertex in searchTree) {
-                if (!visited[currentVertex.getId()]) {
+                if (!visited[currentVertex]) {
                     result.add(currentVertex)
                 }
-                visited[currentVertex.getId()] = true
+                visited[currentVertex] = true
             }
             result.add(searchTree.first())
             return result

@@ -2,15 +2,17 @@ package me.fhaachen.malgo
 
 import java.util.*
 
-class HamiltonianCycle : Graph {
+class DiGraph(size: Int) : Graph {
 
     private var vertices: HashMap<Int, Vertex> = HashMap()
     private var edges: ArrayList<Edge> = ArrayList()
 
     override fun connectVertices(edge: Edge) {
-        vertices[edge.source.getId()] = edge.source
-        vertices[edge.target.getId()] = edge.target
-        edges.add(edge)
+        val source = vertices.getOrDefault(edge.source.getId(), edge.source)
+        val target = vertices.getOrDefault(edge.target.getId(), edge.target)
+        val edgeCopy = Edge(source, target, edge.capacity)
+        source.addOutgoingEdge(edgeCopy)
+        edges.add(edgeCopy)
     }
 
     override fun getIds(): LinkedList<Int> {
@@ -42,7 +44,13 @@ class HamiltonianCycle : Graph {
     }
 
     override fun toString(): String {
-        return "HamiltonianCyle(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}"
+        return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
+    }
+
+    init {
+        for (i in 0 until size) {
+            this.vertices[i] = Vertex(i)
+        }
     }
 
 }

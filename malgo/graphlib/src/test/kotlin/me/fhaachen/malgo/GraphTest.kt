@@ -14,36 +14,28 @@ class GraphTest {
         var index = 0
         var vertexId = graph.getIds()[index]
         Assertions.assertThat(vertexId).isEqualTo(index)
-        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices()
-            .stream()
-            .map { v -> v.getId() })
+        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices())
             .containsExactly(1, 2, 3, 4)
 
         // vertex index 5
         index = 5
         vertexId = graph.getIds()[index]
         Assertions.assertThat(vertexId).isEqualTo(index)
-        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices()
-            .stream()
-            .map { v -> v.getId() })
+        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices())
             .containsExactly(6, 7, 8, 9)
 
         // vertex index 3
         index = 3
         vertexId = graph.getIds()[index]
         Assertions.assertThat(vertexId).isEqualTo(index)
-        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices()
-            .stream()
-            .map { v -> v.getId() })
+        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices())
             .containsExactly(0, 3)
 
         // vertex index 7
         index = 7
         vertexId = graph.getIds()[index]
         Assertions.assertThat(vertexId).isEqualTo(index)
-        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices()
-            .stream()
-            .map { v -> v.getId() })
+        Assertions.assertThat(graph.getVertex(vertexId).getAdjacentVertices())
             .containsExactly(5, 6)
     }
 
@@ -81,7 +73,7 @@ class GraphTest {
 
         fun getFormattedOutput(
             resourceName: String,
-            currentVertex: Vertex?,
+            currentVertex: Int?,
             algorithm: String,
             end: Long,
             start: Long,

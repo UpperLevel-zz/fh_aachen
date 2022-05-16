@@ -7,10 +7,10 @@ internal class PermutationTest {
 
     @Test
     fun permutateSimpleList_4() {
-        val permutations = mutableListOf<List<Vertex>>()
+        val permutations = mutableListOf<List<Int>>()
         Permutation.heapsAlgorithmRekursive(
             listOf(
-                Vertex(0), Vertex(1), Vertex(2), Vertex(3)
+                0, 1, 2, 3
             ), 4, permutations
         )
         assertThat(permutations).hasSize(24)
@@ -18,10 +18,10 @@ internal class PermutationTest {
 
     @Test
     fun permutateSimpleList_5() {
-        val permutations = mutableListOf<List<Vertex>>()
+        val permutations = mutableListOf<List<Int>>()
         Permutation.heapsAlgorithmRekursive(
             listOf(
-                Vertex(0), Vertex(1), Vertex(2), Vertex(3), Vertex(4)
+                0, 1, 2, 3, 4
             ), 5, permutations
         )
         assertThat(permutations).hasSize(120)
@@ -29,11 +29,10 @@ internal class PermutationTest {
 
     @Test
     fun permutateSimpleList_10() {
-        val permutations = mutableListOf<List<Vertex>>()
+        val permutations = mutableListOf<List<Int>>()
         Permutation.heapsAlgorithmRekursive(
             listOf(
-                Vertex(0), Vertex(1), Vertex(2), Vertex(3), Vertex(4), Vertex(5),
-                Vertex(6), Vertex(7), Vertex(8), Vertex(9)
+                0, 1, 2, 3, 4, 5, 6, 7, 8, 9
             ), 10, permutations
         )
         assertThat(permutations).hasSize(3628800)

@@ -12,15 +12,14 @@ class MinimumSpanningTree : Graph {
             return prim(graph, graph.getVertices().first)
         }
 
-        fun prim(graph: Graph, startVertex: Vertex): MinimumSpanningTree {
+        fun prim(graph: Graph, startId: Int): MinimumSpanningTree {
             val mst = MinimumSpanningTree()
             val capacityWeighted: Comparator<Edge> = compareBy { it.capacity }
-            //todo knotenbasierte queue anschauen
             val priorityQueue = PriorityQueue(capacityWeighted)
             val connected = BooleanArray(graph.getIds().size)
             var currentEdge: Edge
-            startVertex.getEdges().forEach { edge -> priorityQueue.add(edge) }
-            connected[startVertex.getId()] = true
+            graph.getVertex(startId).getEdges().forEach { edge -> priorityQueue.add(edge) }
+            connected[startId] = true
             while (!priorityQueue.isEmpty()) {
                 currentEdge = priorityQueue.poll()
                 if (!connected[currentEdge.target.getId()]) {
@@ -34,12 +33,11 @@ class MinimumSpanningTree : Graph {
 
         fun kruskal(graph: Graph): MinimumSpanningTree {
             val mst = MinimumSpanningTree()
-            val map = HashMap<Int, Collection<Vertex>>()
+            val map = HashMap<Int, Collection<Int>>()
             val visited = IntArray(graph.getVertexCount())
-            for (vertex in graph.getVertices()) {
-                map[vertex.getId()] = hashSetOf(vertex)
-                //todo eventuell eine verkettete Liste nehmen
-                visited[vertex.getId()] = vertex.getId()
+            for (id in graph.getVertices()) {
+                map[id] = hashSetOf(id)
+                visited[id] = id
             }
             val edges = graph.getEdges().sortedBy { it.capacity }
             for (edge in edges) {
@@ -48,18 +46,18 @@ class MinimumSpanningTree : Graph {
                 }
                 val sourceId = edge.source.getId()
                 val targetId = edge.target.getId()
-                val s = map[visited[sourceId]] as HashSet<Vertex>
-                val t = map[visited[targetId]] as HashSet<Vertex>
+                val s = map[visited[sourceId]] as HashSet<Int>
+                val t = map[visited[targetId]] as HashSet<Int>
                 if (s != t) {
                     mst.connectVertices(edge)
                     if (s.size < t.size) {
                         t.addAll(s)
                         map[sourceId] = t
-                        s.forEach { vertex -> visited[vertex.getId()] = sourceId }
+                        s.forEach { id -> visited[id] = sourceId }
                     } else {
                         s.addAll(t)
                         map[sourceId] = s
-                        t.forEach { vertex -> visited[vertex.getId()] = sourceId }
+                        t.forEach { id -> visited[id] = sourceId }
                     }
                 }
             }
@@ -89,7 +87,7 @@ class MinimumSpanningTree : Graph {
         val target = vertices.getOrDefault(edge.target.getId(), Vertex(edge.target.getId()))
         vertices[target.getId()] = target
         val edgeCopy = Edge(source, target, edge.capacity)
-        source.addEdge(edgeCopy)
+        source.addOutgoingEdge(edgeCopy)
         edges.add(edgeCopy)
     }
 
@@ -97,8 +95,8 @@ class MinimumSpanningTree : Graph {
         return LinkedList(vertices.keys)
     }
 
-    override fun getVertices(): LinkedList<Vertex> {
-        return LinkedList(vertices.values)
+    override fun getVertices(): LinkedList<Int> {
+        return LinkedList(vertices.keys)
     }
 
     override fun getVertex(id: Int): Vertex {

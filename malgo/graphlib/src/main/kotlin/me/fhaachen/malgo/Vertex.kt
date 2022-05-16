@@ -5,22 +5,26 @@ class Vertex(private val id: Int) {
         id.toInt()
     )
 
-    private val adjacentVertices = HashSet<Vertex>()
+    private val adjacentVertices = HashMap<Int, Vertex>()
     val outgoingEdges = ArrayList<Edge>()
     private val incomingEdges = ArrayList<Edge>()
     private val edges = HashMap<Int, Edge>()
 
-    fun addEdge(edge: Edge): Boolean {
-        edge.target.adjacentVertices.add(this)
-        edge.source.adjacentVertices.add(edge.target)
-        val reversedEdge = Edge(edge.target, edge.source, capacity = edge.capacity)
-        edge.target.incomingEdges.add(edge)
-        edge.target.outgoingEdges.add(reversedEdge)
-        edge.target.edges[edge.source.getId()] = edge
-        incomingEdges.add(reversedEdge)
+    fun addOutgoingEdge(edge: Edge) {
+        if (this.id != edge.target.getId()) {
+            this.adjacentVertices[edge.target.getId()] = edge.target
+        }
         outgoingEdges.add(edge)
         edges[edge.target.getId()] = edge
-        return true
+    }
+
+    fun addIncomingEdge(edge: Edge) {
+        if (this.id != edge.target.getId()) {
+            this.adjacentVertices[edge.target.getId()] = edge.target
+        }
+        incomingEdges.add(edge)
+        if (edges[edge.target.getId()] == null)
+            edges[edge.target.getId()] = edge
     }
 
     fun getEdges(): MutableSet<Edge> {
@@ -31,8 +35,8 @@ class Vertex(private val id: Int) {
         return edges[targetId]!!
     }
 
-    fun getAdjacentVertices(): MutableSet<Vertex> {
-        return adjacentVertices
+    fun getAdjacentVertices(): MutableSet<Int> {
+        return edges.keys
     }
 
     fun getId(): Int {

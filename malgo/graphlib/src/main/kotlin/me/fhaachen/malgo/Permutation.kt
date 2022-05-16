@@ -4,19 +4,19 @@ import java.util.*
 
 class Permutation {
     companion object {
-        fun heapsAlgorithmRekursive(A: List<Vertex>, iteration: Int, permutations: MutableList<List<Vertex>>) {
+        fun heapsAlgorithmRekursive(quantity: List<Int>, iteration: Int, permutations: MutableList<List<Int>>) {
             if (iteration == 1) {
-                permutations.add(ArrayList(A))
+                permutations.add(ArrayList(quantity))
                 return
             }
-            heapsAlgorithmRekursive(A, iteration - 1, permutations)
+            heapsAlgorithmRekursive(quantity, iteration - 1, permutations)
             repeat(iteration - 1) { i ->
                 if (i % 2 == 0) {
-                    Collections.swap(A, i, iteration - 1)
+                    Collections.swap(quantity, i, iteration - 1)
                 } else {
-                    Collections.swap(A, 0, iteration - 1)
+                    Collections.swap(quantity, 0, iteration - 1)
                 }
-                heapsAlgorithmRekursive(A, iteration - 1, permutations)
+                heapsAlgorithmRekursive(quantity, iteration - 1, permutations)
             }
         }
     }
