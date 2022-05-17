@@ -56,6 +56,22 @@ class GraphTest {
             return graph
         }
 
+        fun toDiGraph(resourceName: String): Graph {
+            val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
+            val lines = file.readLines(Charsets.UTF_8).toMutableList()
+            val numberOfVertices = lines.removeAt(0)
+            val graph = DiGraph(numberOfVertices.toInt())
+            for (line in lines) {
+                val split = line.split("\t")
+                if (split.size == 2)
+                    graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1])))
+                else if (split.size == 3)
+                    graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1]), split[2]))
+            }
+            Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
+            return graph
+        }
+
         fun undirectedGraph(): UndirectedGraph {
             val graph = UndirectedGraph(10)
             graph.connectVertices(Edge(Vertex(0), Vertex(1)))

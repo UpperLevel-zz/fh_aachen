@@ -12,6 +12,7 @@ class DiGraph(size: Int) : Graph {
         val target = vertices.getOrDefault(edge.target.getId(), edge.target)
         val edgeCopy = Edge(source, target, edge.capacity)
         source.addOutgoingEdge(edgeCopy)
+        target.addIncomingEdge(edgeCopy)
         edges.add(edgeCopy)
     }
 
