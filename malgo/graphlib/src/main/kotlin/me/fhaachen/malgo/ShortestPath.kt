@@ -42,7 +42,7 @@ class ShortestPath {
 
         class ShortestPathElement(val vertexId: Int, var distance: Double, var predecessor: Int?) {
             override fun toString(): String {
-                return "DijkstaElement(vertexId=$vertexId, distance=$distance, predecessor=$predecessor)"
+                return "ShortestPathElement(vertexId=$vertexId, distance=$distance, predecessor=$predecessor)"
             }
         }
 
@@ -60,6 +60,7 @@ class ShortestPath {
 
             val shortestPathElementsLaststep = ArrayList(shortestPathElements)
             val cycleDetected = compareAndUpdateDistances(graph, shortestPathElementsLaststep)
+            // TODO Es ist nur wichtig, dass sich Werte ändern, die Vorgänger sind irrelevant
             if (cycleDetected) {
                 extractCycle(graph, shortestPathElementsLaststep)
             }
@@ -96,6 +97,7 @@ class ShortestPath {
             for (edge in graph.getEdges()) {
                 val newDistV = shortestPathElements[edge.source.getId()].distance + edge.capacity!!
                 if (newDistV < shortestPathElements[edge.target.getId()].distance) {
+                    //TODO Vereinfachung: False
                     valueStable = valueStable && (shortestPathElements[edge.target.getId()].distance == newDistV)
                     shortestPathElements[edge.target.getId()].distance = newDistV
                     predStable =
@@ -103,7 +105,7 @@ class ShortestPath {
                     shortestPathElements[edge.target.getId()].predecessor = edge.source.getId()
                 }
             }
-            return predStable && !valueStable
+            return !valueStable
         }
     }
 }

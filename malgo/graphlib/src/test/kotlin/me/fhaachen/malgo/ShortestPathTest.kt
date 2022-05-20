@@ -22,6 +22,8 @@ internal class ShortestPathTest {
         }
     }
 
+    // TODO Priority-Queue aktualisieren nach Distanzänderung?
+
     @Test
     internal fun dijkstra_G_1_2() {
         val resourceName = "G_1_2.txt"
@@ -48,5 +50,17 @@ internal class ShortestPathTest {
         for (shortestPathElement in shortestPathTree) {
             println(shortestPathElement)
         }
+    }
+
+    @Test
+    internal fun mooreBellmanFord_G_1_2() {
+        val resourceName = "G_1_2.txt"
+        var graph = GraphTest.toDiGraph(resourceName)
+        var shortestPathElement = ShortestPath.mooreBellmanFord(graph, 0)
+        println(shortestPathElement[1])
+
+        graph = GraphTest.toGraph(resourceName)
+        shortestPathElement = ShortestPath.mooreBellmanFord(graph, 0)
+        println(shortestPathElement[1])
     }
 }
