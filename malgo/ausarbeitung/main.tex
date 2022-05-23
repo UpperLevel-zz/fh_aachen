@@ -1,0 +1,259 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Beispiel für eine Bachelorarbeit mit FH Aachen
+% Titelblattstyles
+%
+%	Prof. Enning, 18.07.2013
+%   Überarbeitet, 17.06.2014
+%   Philipp Zähl, 01.02.2019
+%   Überarbeitet, 19.08.2021
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%% Präambel %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass [headheight=21pt, footheight=21pt]{scrbook}	% KOMA Klasse für Bücher
+%
+\usepackage{fhac_styling}	% Style-File für Titelblatt
+%
+% Einstellen der Optionen für die KOMA Klasse
+\KOMAoptions{parskip=true, fontsize=12pt, toc=flat, twoside=true, numbers=nodotatend}
+	
+% parskip Absätze mit Abstand
+% fontsize Standardschriftgröße 
+% toc Inhaltsverzeichnis ohne Einzüge
+% twoside Zweiseitig setzen
+% numbers Nummerierungen nicht mit Punkt abschließen
+	
+	
+%
+%%%%%% Immer benötigte Packages
+%
+\usepackage[T1]{fontenc}		% sonst funktioniert die Silbentrennung bei Umlauten nicht
+\usepackage[utf8]{inputenc}	% Eingabedekodierung
+\usepackage[ngerman]{babel}	% Silbentrennung und Sprachanpassung
+\usepackage{blindtext}		% Blindtext
+\usepackage[hidelinks]{hyperref}		% Sprungmarken, z.B. im Inhaltsverzeichnis auf Textpassagen
+\usepackage{graphicx}		% Definiert o.a. \includegraphics
+\usepackage{textcomp}		% Sonst funktioniert z.B. \texteuro nicht
+\usepackage[automark,headsepline=0.75pt]{scrlayer-scrpage}	% Package zum Definieren der Kopf- und Fußzeilen
+\usepackage{amsmath,amssymb}		% Muss sein - Mathesymbole
+\usepackage{mathrsfs} 	% Weitere Mathematik-Symbole, z.B. Laplace-L
+
+% Float für Bilderpositionierung
+\usepackage{float}
+
+% BIB
+\usepackage{natbib}
+\bibliographystyle{dinat}
+\setcitestyle{authoryear}
+%\usepackage[backend=biber,style=authoryear,]{biblatex}
+%\addbibresource{literatur.bib}
+
+% Anführungszeichen
+\usepackage{csquotes}
+
+%%%%% Anpassung an Formatvorlagen des Fachbereichs
+%
+\usepackage{helvet}		% Serifenlose Schrift ähnlich Arial
+\renewcommand{\familydefault}{\sfdefault}	% als Standardschrift serifenlose Schrift verwenden
+
+\usepackage{geometry} 		% Ränder direkt einstellen
+\geometry{a4paper, top=20mm, left=30mm, right=20mm, bottom=25mm} % nach Vorgabe
+\linespread{1.5} 		% Zeilenabstand nach Vorgabe
+
+\usepackage{chngcntr}		% Ändert Verhalten von Countern
+\counterwithout{figure}{section}	% Figure-Nummerierung nicht bei section-Wechsel zurücksetzen
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}	% im Stil 3.2
+
+
+\AtBeginEnvironment{quote}{\small\itshape}
+\AtBeginEnvironment{itemize}{\setlength{\parskip}{7pt}\small}
+\AtBeginEnvironment{enumerate}{\setlength{\parskip}{7pt}\small}
+
+%%%% für das Erzeugen von Grafiken mit Zeichenbefehlen
+%
+\usepackage{tikz}		% Grundpaket
+\usetikzlibrary{shapes,arrows}	% einige Symbolpackages
+\usepackage{tikz-cd}		% einige Symbolpackages
+%
+%%%%%% Gegebenenfalls nützliche Zusatzpackages
+%
+%\usepackage{blindtext}		% Blindtexte zum Ausprobieren von Formatierungen
+%\usepackage{color}		% Schriftfarben
+\usepackage{colortbl}		% für die Hintergrundfarbe von Tabellen
+%\usepackage{gensymb}		% Definiert Formelzeichen, die im math und im text-Modus gleich aussehen
+%\usepackage{wrapfig}		% Definiert die wrapfigure-Umgebung (Bild am Rand von Text umflossen)
+\usepackage{pdfpages}		% Einbinden von pdf-Seiten
+%
+\usepackage{booktabs} 		% Schöne Tabellen
+%\usepackage{tabu}	 	% Sehr einfach Tabellen gestalten
+%\usepackage{array} 		% Erweiterung der Tabellenumgebung, neue Spaltentypen
+\usepackage{paralist}		% Weitere Nummeriungsoptionen, z.b. alphabetisch für enumerate/itemize
+%\usepackage{verbatim}		% Verbesserte verbatim-Umgebung (z.b. Programm-Listings)
+%\usepackage{subfig}		% Unterfigures mit eigenen Bildunterschriften
+\usepackage{afterpage}      % Objekte auf die nächste Seite verschieben
+\usepackage{pdflscape}      % Blockweises landscape
+\usepackage{tabularx}       % Special Tabellen
+\usepackage{longtable}      % Mehrseitige Tabellen
+\usepackage{shellesc}       % Ermöglicht shell Befehle
+\usepackage{datatool}       % Stapelverarbeitung von Dateien
+\usepackage{catchfile}      % Datei auslesen
+\usepackage{setspace}       % Zeilenabstand
+\newcommand\loaddata[1]{\CatchFileDef\loadeddata{#1}{}}
+
+\usepackage[font={small,it}]{caption}   % Figure Caption individualisieren
+\usepackage{subcaption}                 % Kleine Bilder nebeneinander
+
+\usepackage{vcell}       % Spezielle Zellen in Tabellen
+\usepackage{multicol}   % Mehrere Spalten für Listen
+\usepackage{enumitem}   % Custom enumerate Label
+
+\newcommand{\imagewidth}{0.85\textwidth}
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} % Häkchen
+
+
+% Autoren in Kapitälchen
+\makeatletter
+\def\NAT@nmfmt#1{\textsc{#1}}
+\makeatother
+% ----
+
+
+ % Abkürzungsverzeichnis
+ 
+%\usepackage{glossaries}
+%\makeglossaries
+%\input{glossar}
+ 
+%%%%%% Sammelsurium
+%
+%\renewcommand{\labelitemii}{$\circ$} % Bullets für itemize-Listen
+%
+
+%%%%%%%%%%  Angaben für Titelseite %%%%%%%%%%%%%%%%%%%%%%
+\input{titelangaben}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+% Einige Anpassungen müssen nach \begin{document} stehen !!
+%\renewcaptionname{ngerman}{\figurename}{\textbf Bild} 	% Bild ... statt Abbildung ... 
+\renewcaptionname{ngerman}{\contentsname}{Inhalt}% Inhalt statt Inhaltsverzeichnis
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titel im FH Style
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{roman}
+\fhacmbtitle{\includegraphics[height=4cm]{img/fh_logo.png}}{30pt}{20pt}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Erklärung / Geheimhaltung
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\frontmatter 	% Wenn der Hauptteil mit Seite 1 beginnen soll
+\pagestyle{plain}
+
+%\input{abstract}
+
+%\input{erklaerung}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Verzeichnisse vorne
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+%\printglossary[type=\acronymtype,style=long,title={Abkürzungsverzeichnis}]
+%\addcontentsline{toc}{chapter}{Abkürzungsverzeichnis}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inhaltlicher Teil
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mainmatter	% Wenn der Hauptteil mit Seite 1 beginnen soll
+\clearpage
+\pagestyle{scrheadings}
+%%%%%%%%%%%%%%% Anpassung des Seitenstils an FH-Layoutvorschrift %%%%%%%%%%%%
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter\hspace{1cm}#1}{}}	% Kapitel für Headerzeile neu definieren (ohne Nummer)
+\chead{}		% Header Mitte löschen
+%\ihead{\leftmark}	% Kapitelbezeichnung links setzen 
+\renewcommand{\headfont}{\bfseries}	% Bold-Font für Headerzeile verwenden
+%\setheadsepline{0.5pt}
+\pagenumbering{arabic}
+
+
+
+% Hole alle Dateien aus dem Chapter Ordner 
+%\ShellEscape{rm -f \jobname-result.csv && echo dateinamen>>\jobname-result.csv && ls kapitel/*.tex|cut -f 1 -d '.'>>\jobname-result.csv}
+%\loaddata{\jobname-result.csv}
+%\DTLloaddb{dateinamen}{\jobname-result.csv}
+%\DTLforeach{dateinamen}{\filename=dateinamen}{
+%    \show\filename%
+%    \input{\filename}
+%}
+
+\input{kapitel/10_vorwort}
+\input{kapitel/20_philipp}
+\input{kapitel/30_steffen}
+\input{kapitel/40_leo}
+\input{kapitel/50_anton}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Verzeichnisse hinten
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\listoffigures
+\addcontentsline{toc}{chapter}{\listfigurename}
+
+\begingroup
+    \let\clearpage\relax
+    \listoftables
+\endgroup
+\addcontentsline{toc}{chapter}{\listtablename}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Literaturverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% Verschiedene Versionen, nach DIN 1505 zu zitieren
+%\bibliographystyle{plaindin}
+%\bibliographystyle{natdin}
+%\bibliographystyle{alphadin}
+%\bibliographystyle{unsrtdin}
+
+% Die DIN 1505 Styles müssen ggf. nachinstalliert werden. Bei Texlive
+% heisst das Paket texlive-bibtex-extra
+
+%Where the bibliography will be printed
+\setlength{\parskip}{2pt}
+\renewcommand{\bibname}{Quellenverzeichnis} % Umbenennung des Literaturverzeichnisses
+\footnotesize
+\bibliography{literatur}
+%\printbibliography % Biblatex
+\addcontentsline{toc}{chapter}{Quellenverzeichnis} % Eintrag ins Inhaltsverzeichnis
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Anhang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\appendix
+
+%\chapter{Anhänge}
+
+%\newcommand\includeappendixpdf[2]{}
+
+%\include{anhang/Umfrage-Datentabelle}
+
+%\includepdf{anhang/BeliebigesDokument.pdf}{Test}
+
+%\chapter{Sonstiges}
+
+\end{document}
