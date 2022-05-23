@@ -19,12 +19,12 @@ class Vertex(private val id: Int) {
     }
 
     fun addIncomingEdge(edge: Edge) {
-        if (this.id != edge.target.getId()) {
-            this.adjacentVertices[edge.target.getId()] = edge.target
+        if (this.id != edge.source.getId()) {
+            this.adjacentVertices[edge.source.getId()] = edge.source
         }
         incomingEdges.add(edge)
-        if (edges[edge.target.getId()] == null)
-            edges[edge.target.getId()] = edge
+        if (edges[edge.source.getId()] == null)
+            edges[edge.source.getId()] = edge
     }
 
     fun getEdges(): MutableSet<Edge> {

@@ -5,6 +5,7 @@ import java.util.*
 class ShortestPath {
     companion object {
         fun dijkstra(graph: Graph, startId: Int): List<ShortestPathElement> {
+            val comlexityValue = graph.getEdgeCount().times(graph.getVertexCount())
             val shortestPathElements = mutableListOf<ShortestPathElement>()
             val capacityWeighted: Comparator<ShortestPathElement> = compareBy { it.distance }
             val queue = PriorityQueue(capacityWeighted)
@@ -16,27 +17,30 @@ class ShortestPath {
             }
             shortestPathElements[startId].distance = 0.0
             shortestPathElements[startId].predecessor = startId
-            visited[startId] = true
             queue.add(shortestPathElements[startId])
+            var step = 0
             while (queue.isNotEmpty()) {
                 val currentVertex = queue.poll()
+                visited[currentVertex.vertexId] = true
                 val currentDistV = shortestPathElements[currentVertex.vertexId].distance
                 if (Double.POSITIVE_INFINITY.equals(currentDistV)) {
                     break
                 }
                 val vertex = graph.getVertex(currentVertex.vertexId)
-                for (adjacentVertex in vertex.getAdjacentVertices()) {
-                    val newDistW = currentDistV + vertex.getEdge(adjacentVertex).capacity!!
-                    if (shortestPathElements[adjacentVertex].distance > newDistW) {
-                        shortestPathElements[adjacentVertex].distance = newDistW
-                        shortestPathElements[adjacentVertex].predecessor = vertex.getId()
-                        if (!visited[adjacentVertex]) {
-                            visited[adjacentVertex] = true
-                            queue.add(shortestPathElements[adjacentVertex])
+                for (outgoingEdge in vertex.outgoingEdges) {
+                    val newDistW = currentDistV + outgoingEdge.capacity!!
+                    val targetId = outgoingEdge.target.getId()
+                    if (shortestPathElements[targetId].distance > newDistW) {
+                        shortestPathElements[targetId].distance = newDistW
+                        shortestPathElements[targetId].predecessor = vertex.getId()
+                        if (step <= comlexityValue) {
+                            queue.add(shortestPathElements[targetId])
                         }
                     }
                 }
+                step++
             }
+            println("Count steps: $step")
             return ArrayList(shortestPathElements)
         }
 
@@ -60,7 +64,6 @@ class ShortestPath {
 
             val shortestPathElementsLaststep = ArrayList(shortestPathElements)
             val cycleDetected = compareAndUpdateDistances(graph, shortestPathElementsLaststep)
-            // TODO Es ist nur wichtig, dass sich Werte ändern, die Vorgänger sind irrelevant
             if (cycleDetected) {
                 extractCycle(graph, shortestPathElementsLaststep)
             }
@@ -92,16 +95,12 @@ class ShortestPath {
             graph: Graph,
             shortestPathElements: MutableList<ShortestPathElement>
         ): Boolean {
-            var predStable = true
             var valueStable = true
             for (edge in graph.getEdges()) {
                 val newDistV = shortestPathElements[edge.source.getId()].distance + edge.capacity!!
                 if (newDistV < shortestPathElements[edge.target.getId()].distance) {
-                    //TODO Vereinfachung: False
-                    valueStable = valueStable && (shortestPathElements[edge.target.getId()].distance == newDistV)
+                    valueStable = false
                     shortestPathElements[edge.target.getId()].distance = newDistV
-                    predStable =
-                        predStable && (shortestPathElements[edge.target.getId()].predecessor == edge.source.getId())
                     shortestPathElements[edge.target.getId()].predecessor = edge.source.getId()
                 }
             }

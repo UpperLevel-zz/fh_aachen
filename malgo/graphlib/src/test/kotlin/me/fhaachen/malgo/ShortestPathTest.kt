@@ -6,6 +6,12 @@ import org.junit.jupiter.params.provider.ValueSource
 
 internal class ShortestPathTest {
 
+    // Open ToDos:
+    // Dijkstra: Aktualisierung der Prioritätsliste auch wenn Knoten bereits besucht wurde
+    // --> Landet in einer Dauerschleife, für den Graph mit negativem Zyklus --> Step-Count als Schranke
+    // MBF: DiGraph-Ergebnis == Graph-Ergebnis
+    // Eventuell Problem in der UndirectedGraph-Darstellung, hier gibt es immer zwei Kanten
+
     @ParameterizedTest
     @ValueSource(
         strings = [
@@ -21,8 +27,6 @@ internal class ShortestPathTest {
             println(shortestPathElement)
         }
     }
-
-    // TODO Priority-Queue aktualisieren nach Distanzänderung?
 
     @Test
     internal fun dijkstra_G_1_2() {
