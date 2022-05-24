@@ -44,6 +44,14 @@ class DiGraph(size: Int) : Graph {
         return vertices.isEmpty()
     }
 
+    override fun toAdjacentCapacities(): Array<DoubleArray> {
+        val result = Array(vertices.size) { DoubleArray(vertices.size) { 0.0 } }
+        for (edge in edges) {
+            result[edge.source.getId()][edge.target.getId()] = edge.capacity!!
+        }
+        return result
+    }
+
     override fun toString(): String {
         return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
     }

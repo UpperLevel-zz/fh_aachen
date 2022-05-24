@@ -119,6 +119,10 @@ class MinimumSpanningTree : Graph {
         return edges.isEmpty()
     }
 
+    override fun toAdjacentCapacities(): Array<DoubleArray> {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "MinimumSpanningTree(edges=$edges)"
     }

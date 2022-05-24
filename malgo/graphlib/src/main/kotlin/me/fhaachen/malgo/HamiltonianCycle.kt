@@ -41,6 +41,10 @@ class HamiltonianCycle : Graph {
         return vertices.isEmpty()
     }
 
+    override fun toAdjacentCapacities(): Array<DoubleArray> {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "HamiltonianCyle(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}"
     }

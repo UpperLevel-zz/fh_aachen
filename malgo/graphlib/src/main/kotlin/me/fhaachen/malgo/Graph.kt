@@ -19,4 +19,6 @@ interface Graph {
     }
 
     fun isEmpty(): Boolean
+
+    fun toAdjacentCapacities(): Array<DoubleArray>
 }

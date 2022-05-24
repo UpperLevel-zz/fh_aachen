@@ -47,6 +47,10 @@ class UndirectedGraph(size: Int) : Graph {
         return vertices.isEmpty()
     }
 
+    override fun toAdjacentCapacities(): Array<DoubleArray> {
+        TODO("Not yet implemented")
+    }
+
     override fun toString(): String {
         return "UndirectedGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
     }
