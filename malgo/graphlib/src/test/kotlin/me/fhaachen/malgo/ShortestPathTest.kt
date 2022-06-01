@@ -29,6 +29,11 @@ internal class ShortestPathTest {
     }
 
     @Test
+    internal fun name() {
+        TODO("Beispiel: siehe Foto")
+    }
+
+    @Test
     internal fun dijkstra_G_1_2() {
         val resourceName = "G_1_2.txt"
         var graph = GraphTest.toDiGraph(resourceName)
