@@ -7,10 +7,10 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class MaximumFlowTest {
 
     @Test
-    internal fun fordFulkerson_G_1_2() {
+    internal fun edmondsKarp_G_1_2() {
         val resourceName = "G_1_2.txt"
         val graph = GraphTest.toDiGraph(resourceName)
-        val maximumFlow = MaxFlow.fordFulkerson(graph, 0, 7)
+        val maximumFlow = MaxFlow.edmondsKarp(graph, 0, 7)
         println(maximumFlow)
     }
 
@@ -21,9 +21,10 @@ internal class MaximumFlowTest {
             "Fluss2.txt"
         ]
     )
-    internal fun fordFulkerson(resourceName: String) {
+    internal fun edmondsKarp(resourceName: String) {
         val graph = GraphTest.toDiGraph(resourceName)
-        val maximumFlow = MaxFlow.fordFulkerson(graph, 0, 7)
+        val maximumFlow = MaxFlow.edmondsKarp(graph, 0, 7)
         println(maximumFlow)
     }
+
 }
