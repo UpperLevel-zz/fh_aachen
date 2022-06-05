@@ -1,8 +1,12 @@
 package me.fhaachen.malgo
 
-class Vertex(private val id: Int) {
+class Vertex(private val id: Int, private val balance: Double) {
     constructor(id: String) : this(
-        id.toInt()
+        id.toInt(), 0.0
+    )
+
+    constructor(id: Int) : this(
+        id, 0.0
     )
 
     private val adjacentVertices = HashMap<Int, Vertex>()
@@ -43,10 +47,6 @@ class Vertex(private val id: Int) {
         return id
     }
 
-    override fun toString(): String {
-        return "Vertex(id='$id')"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -60,6 +60,10 @@ class Vertex(private val id: Int) {
 
     override fun hashCode(): Int {
         return id
+    }
+
+    override fun toString(): String {
+        return "Vertex(id=$id, balance=$balance)"
     }
 
 }

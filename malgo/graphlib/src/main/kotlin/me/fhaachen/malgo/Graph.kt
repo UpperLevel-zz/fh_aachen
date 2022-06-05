@@ -13,7 +13,7 @@ interface Graph {
     fun capacity(): Double {
         var amount = 0.0
         for (edge in getEdges()) {
-            amount += edge.capacity!!
+            amount += edge.capacity
         }
         return amount
     }

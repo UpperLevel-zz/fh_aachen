@@ -2,13 +2,22 @@ package me.fhaachen.malgo
 
 import java.util.*
 
-class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) : Comparable<Edge> {
+class Edge(
+    val source: Vertex,
+    val target: Vertex,
+    val capacity: Double,
+    val cost: Double
+) : Comparable<Edge> {
     constructor(source: Vertex, target: Vertex) : this(
-        source, target, null
+        source, target, 0.0, 0.0
     )
 
     constructor(source: Vertex, target: Vertex, capacity: String) : this(
-        source, target, capacity.toDouble()
+        source, target, capacity.toDouble(), 0.0
+    )
+
+    constructor(source: Vertex, target: Vertex, capacity: Double) : this(
+        source, target, capacity, 0.0
     )
 
     override fun compareTo(other: Edge): Int {
@@ -31,12 +40,13 @@ class Edge(val source: Vertex, val target: Vertex, val capacity: Double?) : Comp
     override fun hashCode(): Int {
         var result = source.hashCode()
         result = 31 * result + target.hashCode()
-        result = 31 * result + (capacity?.hashCode() ?: 0)
+        result = 31 * result + capacity.hashCode()
         return result
     }
 
     override fun toString(): String {
-        return "Edge(source=$source, target=$target, capacity=$capacity)"
+        return "Edge(source=$source, target=$target, capacity=$capacity, cost=$cost)"
     }
+
 
 }

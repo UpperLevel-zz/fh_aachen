@@ -10,7 +10,7 @@ class DiGraph(size: Int) : Graph {
     override fun connectVertices(edge: Edge) {
         val source = vertices.getOrDefault(edge.source.getId(), edge.source)
         val target = vertices.getOrDefault(edge.target.getId(), edge.target)
-        val edgeCopy = Edge(source, target, edge.capacity)
+        val edgeCopy = Edge(source, target, edge.capacity, edge.cost)
         source.addOutgoingEdge(edgeCopy)
         target.addIncomingEdge(edgeCopy)
         edges.add(edgeCopy)
@@ -47,7 +47,7 @@ class DiGraph(size: Int) : Graph {
     override fun toAdjacentCapacities(): Array<DoubleArray> {
         val result = Array(vertices.size) { DoubleArray(vertices.size) { 0.0 } }
         for (edge in edges) {
-            result[edge.source.getId()][edge.target.getId()] = edge.capacity!!
+            result[edge.source.getId()][edge.target.getId()] = edge.capacity
         }
         return result
     }

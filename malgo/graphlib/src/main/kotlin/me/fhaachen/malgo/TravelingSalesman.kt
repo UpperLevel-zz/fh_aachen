@@ -16,9 +16,9 @@ class TravelingSalesman {
                 visited[currentVertex] = true
                 amount = Double.MAX_VALUE
                 for (outgoingEdge in graph.getVertex(currentVertex).outgoingEdges) {
-                    if (!visited[outgoingEdge.target.getId()] && outgoingEdge.capacity!! < amount) {
+                    if (!visited[outgoingEdge.target.getId()] && outgoingEdge.capacity < amount) {
                         lowestEdge = outgoingEdge
-                        amount = lowestEdge.capacity!!
+                        amount = lowestEdge.capacity
                     }
                 }
                 if (lowestEdge != null) {

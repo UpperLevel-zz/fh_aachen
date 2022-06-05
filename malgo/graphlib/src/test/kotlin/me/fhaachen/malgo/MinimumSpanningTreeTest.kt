@@ -30,42 +30,42 @@ class MinimumSpanningTreeTest {
     }
 
     @Test
-    fun G_1_2() {
+    fun g_1_2() {
         val resourceName = "G_1_2.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 287.32286)
     }
 
     @Test
-    fun G_1_20() {
+    fun g_1_20() {
         val resourceName = "G_1_20.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 36.86275)
     }
 
     @Test
-    fun G_1_200() {
+    fun g_1_200() {
         val resourceName = "G_1_200.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 12.68182)
     }
 
     @Test
-    fun G_10_20() {
+    fun g_10_20() {
         val resourceName = "G_10_20.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 2785.62417)
     }
 
     @Test
-    fun G_10_200() {
+    fun g_10_200() {
         val resourceName = "G_10_200.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 372.14417)
     }
 
     @Test
-    fun G_100_200() {
+    fun g_100_200() {
         val resourceName = "G_100_200.txt"
         val graph = GraphTest.toGraph(resourceName)
         runAndAssert(graph, 27550.51488)
@@ -91,7 +91,7 @@ class MinimumSpanningTreeTest {
         Assertions.assertThat(mst.getEdgeCount()).isEqualTo(size)
         var cost = 0.0
         for (edge in mst.getEdges()) {
-            cost += edge.capacity!!
+            cost += edge.capacity
         }
         Assertions.assertThat(cost).isCloseTo(capacityCumm, Percentage.withPercentage(0.000001))
     }

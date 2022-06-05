@@ -28,10 +28,10 @@ internal class ShortestPathTest {
         }
     }
 
-    @Test
-    internal fun name() {
-        TODO("Beispiel: siehe Foto")
-    }
+//    @Test
+//    internal fun name() {
+//        TODO("Beispiel: siehe Foto")
+//    }
 
     @Test
     internal fun dijkstra_G_1_2() {

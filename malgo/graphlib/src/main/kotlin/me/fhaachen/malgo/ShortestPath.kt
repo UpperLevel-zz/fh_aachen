@@ -28,7 +28,7 @@ class ShortestPath {
                 }
                 val vertex = graph.getVertex(currentVertex.vertexId)
                 for (outgoingEdge in vertex.outgoingEdges) {
-                    val newDistW = currentDistV + outgoingEdge.capacity!!
+                    val newDistW = currentDistV + outgoingEdge.capacity
                     val targetId = outgoingEdge.target.getId()
                     if (shortestPathElements[targetId].distance > newDistW) {
                         shortestPathElements[targetId].distance = newDistW
@@ -82,7 +82,8 @@ class ShortestPath {
                         Edge(
                             graph.getVertex(shortestPathElement.predecessor!!),
                             graph.getVertex(shortestPathElement.vertexId),
-                            shortestPathElement.distance
+                            shortestPathElement.distance,
+                            0.0
                         )
                     )
                 }
@@ -97,7 +98,7 @@ class ShortestPath {
         ): Boolean {
             var valueStable = true
             for (edge in graph.getEdges()) {
-                val newDistV = shortestPathElements[edge.source.getId()].distance + edge.capacity!!
+                val newDistV = shortestPathElements[edge.source.getId()].distance + edge.capacity
                 if (newDistV < shortestPathElements[edge.target.getId()].distance) {
                     valueStable = false
                     shortestPathElements[edge.target.getId()].distance = newDistV

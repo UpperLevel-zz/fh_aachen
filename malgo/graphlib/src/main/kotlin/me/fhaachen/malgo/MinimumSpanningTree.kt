@@ -86,7 +86,7 @@ class MinimumSpanningTree : Graph {
         vertices[source.getId()] = source
         val target = vertices.getOrDefault(edge.target.getId(), Vertex(edge.target.getId()))
         vertices[target.getId()] = target
-        val edgeCopy = Edge(source, target, edge.capacity)
+        val edgeCopy = Edge(source, target, edge.capacity, edge.cost)
         source.addOutgoingEdge(edgeCopy)
         edges.add(edgeCopy)
     }
