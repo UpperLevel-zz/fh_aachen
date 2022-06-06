@@ -75,7 +75,7 @@ class ShortestPath {
             shortestPathElementsLaststep: ArrayList<ShortestPathElement>
         ) {
             println("Cycle detected")
-            val diGraph = DiGraph(graph.getVertexCount())
+            val diGraph = DiGraph()
             for (shortestPathElement in shortestPathElementsLaststep) {
                 if (shortestPathElement.predecessor != null) {
                     diGraph.connectVertices(

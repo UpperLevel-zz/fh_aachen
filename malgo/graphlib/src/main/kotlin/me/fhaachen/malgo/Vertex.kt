@@ -47,6 +47,11 @@ class Vertex(private val id: Int, private val balance: Double) {
         return id
     }
 
+    fun getBalance(): Double {
+        return balance
+    }
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

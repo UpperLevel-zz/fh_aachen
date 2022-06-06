@@ -8,8 +8,8 @@ class UndirectedGraph(size: Int) : Graph {
     private var edges: ArrayList<Edge> = ArrayList()
 
     override fun connectVertices(edge: Edge) {
-        val source = vertices.getOrDefault(edge.source.getId(), edge.source)
-        val target = vertices.getOrDefault(edge.target.getId(), edge.target)
+        val source = vertices.getOrPut(edge.source.getId()) { edge.source }
+        val target = vertices.getOrPut(edge.target.getId()) { edge.target }
         val edgeCopy = Edge(source, target, edge.capacity, edge.cost)
         val reversedEdge = Edge(target, source, edge.capacity, edge.cost)
         source.addOutgoingEdge(edgeCopy)

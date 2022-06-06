@@ -43,8 +43,8 @@ class GraphTest {
         fun toGraph(resourceName: String): Graph {
             val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
-            val numberOfVertices = lines.removeAt(0)
-            val graph = UndirectedGraph(numberOfVertices.toInt())
+            val numberOfVertices = lines.removeAt(0).trim().toInt()
+            val graph = UndirectedGraph(numberOfVertices)
             for (line in lines) {
                 val split = line.split("\t")
                 if (split.size == 2)
@@ -52,7 +52,7 @@ class GraphTest {
                 else if (split.size == 3)
                     graph.connectVertices(Edge(Vertex(split[0]), Vertex(split[1]), split[2]))
             }
-            Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices.toInt())
+            Assertions.assertThat(graph.getIds().size).isEqualTo(numberOfVertices)
             return graph
         }
 
@@ -60,7 +60,7 @@ class GraphTest {
             val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
             val numberOfVertices = lines.removeAt(0).trim()
-            val graph = DiGraph(numberOfVertices.toInt())
+            val graph = DiGraph()
             for (line in lines) {
                 val split = line.split("\t")
                 if (split.size == 2)

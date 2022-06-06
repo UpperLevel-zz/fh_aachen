@@ -1,19 +1,36 @@
 package me.fhaachen.malgo
 
 import java.util.*
+import kotlin.collections.HashSet
 
-class DiGraph(size: Int) : Graph {
+class DiGraph : Graph {
 
     private var vertices: HashMap<Int, Vertex> = HashMap()
-    private var edges: ArrayList<Edge> = ArrayList()
+    private var edges: HashSet<Edge> = HashSet()
+    private var sources: HashMap<Int, Double> = HashMap()
+    private var sinks: HashMap<Int, Double> = HashMap()
 
     override fun connectVertices(edge: Edge) {
-        val source = vertices.getOrDefault(edge.source.getId(), edge.source)
-        val target = vertices.getOrDefault(edge.target.getId(), edge.target)
+        val source = vertices.getOrPut(edge.source.getId()) { edge.source }
+        val target = vertices.getOrPut(edge.target.getId()) { edge.target }
+        updateBalance(edge.source, edge.target)
         val edgeCopy = Edge(source, target, edge.capacity, edge.cost)
         source.addOutgoingEdge(edgeCopy)
         target.addIncomingEdge(edgeCopy)
         edges.add(edgeCopy)
+    }
+
+    private fun updateBalance(source: Vertex, target: Vertex) {
+        if (source.getBalance() < 0) {
+            sinks[source.getId()] = source.getBalance()
+        } else if (source.getBalance() > 0) {
+            sources[source.getId()] = source.getBalance()
+        }
+        if (target.getBalance() < 0) {
+            sinks[target.getId()] = target.getBalance()
+        } else if (target.getBalance() > 0) {
+            sources[target.getId()] = target.getBalance()
+        }
     }
 
     override fun getIds(): LinkedList<Int> {
@@ -54,12 +71,6 @@ class DiGraph(size: Int) : Graph {
 
     override fun toString(): String {
         return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
-    }
-
-    init {
-        for (i in 0 until size) {
-            this.vertices[i] = Vertex(i)
-        }
     }
 
 }
