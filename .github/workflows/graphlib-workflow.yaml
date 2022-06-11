@@ -1,7 +1,7 @@
-name: learn-github-actions
-on: [push]
+name: graphlib-workflow
+on: [ push ]
 jobs:
-  check-bats-version:
+  maven-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -11,4 +11,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots package
+        run: mvn -f "./malgo/graphlib/pom.xml" --batch-mode --update-snapshots package
