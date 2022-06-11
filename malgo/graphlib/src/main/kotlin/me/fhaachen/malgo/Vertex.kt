@@ -1,6 +1,6 @@
 package me.fhaachen.malgo
 
-class Vertex(private val id: Int, private val balance: Double) {
+class Vertex(private val id: Int, private var balance: Double) {
     constructor(id: String) : this(
         id.toInt(), 0.0
     )
@@ -51,6 +51,10 @@ class Vertex(private val id: Int, private val balance: Double) {
         return balance
     }
 
+    fun updateBalance(other: Double): Double {
+        balance += other
+        return balance
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

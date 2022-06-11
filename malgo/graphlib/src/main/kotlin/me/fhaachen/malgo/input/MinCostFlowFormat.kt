@@ -2,14 +2,13 @@ package me.fhaachen.malgo.input
 
 import me.fhaachen.malgo.DiGraph
 import me.fhaachen.malgo.Edge
-import me.fhaachen.malgo.Graph
 import me.fhaachen.malgo.Vertex
 import java.io.BufferedReader
 
 class MinCostFlowFormat {
 
     companion object {
-        private fun toGraph(bufferedReader: BufferedReader): Graph {
+        private fun toGraph(bufferedReader: BufferedReader): DiGraph {
             val graph = DiGraph()
             val numberOfVertices = bufferedReader.readLine().toInt()
             bufferedReader.use { reader ->
@@ -36,11 +35,13 @@ class MinCostFlowFormat {
             return graph
         }
 
-        fun toGraph(resourceName: String): Graph {
+        fun toGraph(resourceName: String): DiGraph {
             val bufferedReader = BufferedReader(
                 this::class.java.classLoader.getResourceAsStream(resourceName)!!.bufferedReader(Charsets.UTF_8)
             )
-            return toGraph(bufferedReader)
+            val graph = toGraph(bufferedReader)
+            graph.postInit()
+            return graph
         }
     }
 

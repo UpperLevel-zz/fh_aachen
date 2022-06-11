@@ -1,7 +1,7 @@
 package me.fhaachen.malgo
 
 import java.util.*
-import kotlin.collections.HashSet
+import kotlin.math.abs
 
 class DiGraph : Graph {
 
@@ -9,7 +9,8 @@ class DiGraph : Graph {
     private var edges: HashSet<Edge> = HashSet()
     private var sources: HashMap<Int, Double> = HashMap()
     private var sinks: HashMap<Int, Double> = HashMap()
-
+    private lateinit var superSource: Vertex
+    private lateinit var superSink: Vertex
     override fun connectVertices(edge: Edge) {
         val source = vertices.getOrPut(edge.source.getId()) { edge.source }
         val target = vertices.getOrPut(edge.target.getId()) { edge.target }
@@ -21,6 +22,11 @@ class DiGraph : Graph {
     }
 
     private fun updateBalance(source: Vertex, target: Vertex) {
+        if ((this::superSource.isInitialized && source.getId() == superSource.getId())
+            || (this::superSink.isInitialized && target.getId() == superSink.getId())
+        ) {
+            return
+        }
         if (source.getBalance() < 0) {
             sinks[source.getId()] = source.getBalance()
         } else if (source.getBalance() > 0) {
@@ -57,6 +63,14 @@ class DiGraph : Graph {
         return LinkedList(edges)
     }
 
+    fun getSuperSource(): Vertex {
+        return superSource
+    }
+
+    fun getSuperSink(): Vertex {
+        return superSink
+    }
+
     override fun isEmpty(): Boolean {
         return vertices.isEmpty()
     }
@@ -69,8 +83,39 @@ class DiGraph : Graph {
         return result
     }
 
+    fun postInit() {
+        createSuperSource()
+        createSuperSink()
+    }
+
     override fun toString(): String {
         return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
+    }
+
+    fun createSuperSource(): Int {
+        if (this::superSource.isInitialized) {
+            return superSource.getId()
+        }
+        superSource = Vertex(vertices.size)
+        for (source in sources) {
+            val edge = Edge(superSource, Vertex(source.key), abs(source.value), 0.0)
+            this.connectVertices(edge)
+            superSource.updateBalance(source.value)
+        }
+        return superSource.getId()
+    }
+
+    fun createSuperSink(): Int {
+        if (this::superSink.isInitialized) {
+            return superSink.getId()
+        }
+        superSink = Vertex(vertices.size)
+        for (sink in sinks) {
+            val edge = Edge(Vertex(sink.key), superSink, abs(sink.value), 0.0)
+            this.connectVertices(edge)
+            superSink.updateBalance(sink.value)
+        }
+        return superSink.getId()
     }
 
 }

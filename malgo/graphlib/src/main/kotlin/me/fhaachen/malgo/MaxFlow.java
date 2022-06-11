@@ -4,16 +4,21 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class MaxFlow {
+public final class MaxFlow {
 
-    public static double edmondsKarp(Graph graph, int source, int target) {
+    private MaxFlow() {
+        // Utility class
+    }
+
+    public static double[][] edmondsKarp(Graph graph, int source, int target) {
         double[][] residualGraph = Arrays.copyOf(graph.toAdjacentCapacities(), graph.getVertexCount());
 
         int[] shortestPath = new int[residualGraph.length];
 
         double maximumFlow = 0;
 
-        int u, v;
+        int u;
+        int v;
         while (breathFirstSearch(residualGraph, source, target, shortestPath)) {
             double minResidualCapacity = Double.MAX_VALUE;
             for (v = target; v != source; v = shortestPath[v]) {
@@ -30,7 +35,8 @@ public class MaxFlow {
             maximumFlow += minResidualCapacity;
         }
 
-        return maximumFlow;
+        System.out.printf("MaxFlow: %s%n", maximumFlow);
+        return residualGraph;
     }
 
     static boolean breathFirstSearch(double[][] residualGraph, int source, int sink, int[] parent) {
