@@ -1,6 +1,5 @@
 package me.fhaachen.malgo;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -10,10 +9,13 @@ public final class MaxFlow {
         // Utility class
     }
 
-    public static double[][] edmondsKarp(Graph graph, int source, int target) {
-        double[][] residualGraph = Arrays.copyOf(graph.toAdjacentCapacities(), graph.getVertexCount());
+    public static Graph edmondsKarp(Graph graph, int source, int target) {
+        Graph residualGraph = new DiGraph();
+        for (Edge edge : graph.getEdges()) {
+            residualGraph.connectVertices(edge.copy());
+        }
 
-        int[] shortestPath = new int[residualGraph.length];
+        int[] shortestPath = new int[residualGraph.getVertexCount()];
 
         double maximumFlow = 0;
 
@@ -23,15 +25,18 @@ public final class MaxFlow {
             double minResidualCapacity = Double.MAX_VALUE;
             for (v = target; v != source; v = shortestPath[v]) {
                 u = shortestPath[v];
-                minResidualCapacity = Math.min(minResidualCapacity, residualGraph[u][v]);
+                minResidualCapacity = Math.min(minResidualCapacity, residualGraph.getVertex(u).getEdge(v).getCapacity());
             }
 
             for (v = target; v != source; v = shortestPath[v]) {
                 u = shortestPath[v];
-                residualGraph[v][u] += minResidualCapacity;
-                residualGraph[u][v] -= minResidualCapacity;
+                residualGraph.getVertex(u).getEdge(v).addCapacity(-minResidualCapacity);
+                if (!residualGraph.getVertex(v).hasOutgoingEdge(u)) {
+                    Edge originalEdge = residualGraph.getVertex(u).getEdge(v);
+                    residualGraph.connectVertices(new Edge(residualGraph.getVertex(v), residualGraph.getVertex(u), 0.0, -originalEdge.getCost()));
+                }
+                residualGraph.getVertex(v).getEdge(u).addCapacity(minResidualCapacity);
             }
-
             maximumFlow += minResidualCapacity;
         }
 
@@ -39,8 +44,8 @@ public final class MaxFlow {
         return residualGraph;
     }
 
-    static boolean breathFirstSearch(double[][] residualGraph, int source, int sink, int[] parent) {
-        boolean[] visited = new boolean[residualGraph.length];
+    static boolean breathFirstSearch(Graph residualGraph, int source, int sink, int[] parent) {
+        boolean[] visited = new boolean[residualGraph.getVertexCount()];
 
         Queue<Integer> queue = new LinkedList<>();
         queue.add(source);
@@ -50,8 +55,9 @@ public final class MaxFlow {
         while (!queue.isEmpty()) {
             int currentIndex = queue.poll();
 
-            for (int otherId = 0; otherId < visited.length; otherId++) {
-                if (!visited[otherId] && residualGraph[currentIndex][otherId] > 0) {
+            for (Edge edge : residualGraph.getVertex(currentIndex).getEdges()) {
+                int otherId = edge.getTarget().getId();
+                if (!visited[otherId] && edge.getCapacity() > 0) {
                     if (otherId == sink) {
                         parent[otherId] = currentIndex;
                         return true;

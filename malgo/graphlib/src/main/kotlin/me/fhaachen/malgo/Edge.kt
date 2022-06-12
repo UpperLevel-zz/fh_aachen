@@ -5,8 +5,8 @@ import java.util.*
 class Edge(
     val source: Vertex,
     val target: Vertex,
-    val capacity: Double,
-    val cost: Double
+    var capacity: Double,
+    var cost: Double
 ) : Comparable<Edge> {
     constructor(source: Vertex, target: Vertex) : this(
         source, target, 0.0, 0.0
@@ -19,6 +19,19 @@ class Edge(
     constructor(source: Vertex, target: Vertex, capacity: Double) : this(
         source, target, capacity, 0.0
     )
+
+    fun addCapacity(capacity: Double) {
+        this.capacity += capacity
+    }
+
+    fun copy(): Edge {
+        return Edge(
+            Vertex(source.getId(), source.getBalance()),
+            Vertex(target.getId(), target.getBalance()),
+            capacity,
+            cost
+        )
+    }
 
     override fun compareTo(other: Edge): Int {
         return Objects.compare(this, other, compareBy(Edge::capacity))
@@ -33,6 +46,7 @@ class Edge(
         if (source != other.source) return false
         if (target != other.target) return false
         if (capacity != other.capacity) return false
+        if (cost != other.cost) return false
 
         return true
     }
@@ -41,6 +55,7 @@ class Edge(
         var result = source.hashCode()
         result = 31 * result + target.hashCode()
         result = 31 * result + capacity.hashCode()
+        result = 31 * result + cost.hashCode()
         return result
     }
 

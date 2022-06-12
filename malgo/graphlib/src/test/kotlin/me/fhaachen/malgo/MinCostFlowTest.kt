@@ -12,13 +12,25 @@ internal class MinCostFlowTest {
             "Kostenminimal1.txt",
             "Kostenminimal2.txt",
             "Kostenminimal3.txt",
-            "Kostenminimal4.txt",
+            "Kostenminimal4.txt"
         ]
     )
     internal fun cycleCancelation(resourceName: String) {
         val graph = MinCostFlowFormat.toGraph(resourceName)
-        val minCostFlow = MinCostFlow.cycleCancelation(graph)
-        println(minCostFlow)
+        MinCostFlow.cycleCancelation(graph)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "Kostenminimal_gross1.txt",
+            "Kostenminimal_gross2.txt",
+            "Kostenminimal_gross3.txt",
+        ]
+    )
+    internal fun cycleCancelation_big(resourceName: String) {
+        val graph = MinCostFlowFormat.toGraph(resourceName)
+        MinCostFlow.cycleCancelation(graph)
     }
 
 }

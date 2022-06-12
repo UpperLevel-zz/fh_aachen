@@ -28,10 +28,17 @@ internal class ShortestPathTest {
         }
     }
 
-//    @Test
-//    internal fun name() {
-//        TODO("Beispiel: siehe Foto")
-//    }
+    @Test
+    internal fun name() {
+        val resourceName = "Wege3.txt"
+        val graph = GraphTest.toDiGraph(resourceName)
+        val bellmanFord = BellmanFord()
+        bellmanFord.BellmanFord(graph, graph.toAdjacentCapacities(), 2)
+        val shortestPathTree = ShortestPath.mooreBellmanFord(graph, 2)
+        for (shortestPathElement in shortestPathTree) {
+            println(shortestPathElement)
+        }
+    }
 
     @Test
     internal fun dijkstra_G_1_2() {

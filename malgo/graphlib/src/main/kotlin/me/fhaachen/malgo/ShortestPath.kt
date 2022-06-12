@@ -51,6 +51,7 @@ class ShortestPath {
         }
 
         fun mooreBellmanFord(graph: Graph, startId: Int): List<ShortestPathElement> {
+            val visited = BooleanArray(graph.getVertexCount())
             val shortestPathElements = mutableListOf<ShortestPathElement>()
             for (i in 0 until graph.getVertexCount()) {
                 val shortestPathElement = ShortestPathElement(i, Double.POSITIVE_INFINITY, null)
@@ -59,11 +60,11 @@ class ShortestPath {
             shortestPathElements[startId].distance = 0.0
             shortestPathElements[startId].predecessor = startId
             for (n in 0 until graph.getVertexCount() - 1) {
-                compareAndUpdateDistances(graph, shortestPathElements)
+                compareAndUpdateDistances(graph, shortestPathElements, visited)
             }
 
             val shortestPathElementsLaststep = ArrayList(shortestPathElements)
-            val cycleDetected = compareAndUpdateDistances(graph, shortestPathElementsLaststep)
+            val cycleDetected = compareAndUpdateDistances(graph, shortestPathElementsLaststep, visited)
             if (cycleDetected) {
                 extractCycle(graph, shortestPathElementsLaststep)
             }
@@ -74,7 +75,7 @@ class ShortestPath {
             graph: Graph,
             shortestPathElementsLaststep: ArrayList<ShortestPathElement>
         ) {
-            println("Cycle detected")
+            println("Graph contains negative cycle")
             val diGraph = DiGraph()
             for (shortestPathElement in shortestPathElementsLaststep) {
                 if (shortestPathElement.predecessor != null) {
@@ -94,15 +95,22 @@ class ShortestPath {
 
         private fun compareAndUpdateDistances(
             graph: Graph,
-            shortestPathElements: MutableList<ShortestPathElement>
+            shortestPathElements: MutableList<ShortestPathElement>,
+            visited: BooleanArray
         ): Boolean {
             var valueStable = true
+            var v: Int
+            var w: Int
             for (edge in graph.getEdges()) {
-                val newDistV = shortestPathElements[edge.source.getId()].distance + edge.capacity
-                if (newDistV < shortestPathElements[edge.target.getId()].distance) {
+                v = edge.source.getId()
+                w = edge.target.getId()
+                visited[v] = true
+                visited[w] = true
+                val newDistV = shortestPathElements[v].distance + edge.capacity
+                if (newDistV < shortestPathElements[w].distance) {
                     valueStable = false
-                    shortestPathElements[edge.target.getId()].distance = newDistV
-                    shortestPathElements[edge.target.getId()].predecessor = edge.source.getId()
+                    shortestPathElements[w].distance = newDistV
+                    shortestPathElements[w].predecessor = v
                 }
             }
             return !valueStable

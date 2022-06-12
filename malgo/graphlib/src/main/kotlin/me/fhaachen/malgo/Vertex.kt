@@ -11,6 +11,7 @@ class Vertex(private val id: Int, private var balance: Double) {
 
     private val adjacentVertices = HashMap<Int, Vertex>()
     val outgoingEdges = ArrayList<Edge>()
+    private val targetEdgeMapping = HashMap<Int, Edge>()
     private val incomingEdges = ArrayList<Edge>()
     private val edges = HashMap<Int, Edge>()
 
@@ -19,6 +20,7 @@ class Vertex(private val id: Int, private var balance: Double) {
             this.adjacentVertices[edge.target.getId()] = edge.target
         }
         outgoingEdges.add(edge)
+        targetEdgeMapping[edge.target.getId()] = edge
         edges[edge.target.getId()] = edge
     }
 
@@ -37,6 +39,10 @@ class Vertex(private val id: Int, private var balance: Double) {
 
     fun getEdge(targetId: Int): Edge {
         return edges[targetId]!!
+    }
+
+    fun hasOutgoingEdge(targetId: Int): Boolean {
+        return targetEdgeMapping.containsKey(targetId)
     }
 
     fun getAdjacentVertices(): MutableSet<Int> {

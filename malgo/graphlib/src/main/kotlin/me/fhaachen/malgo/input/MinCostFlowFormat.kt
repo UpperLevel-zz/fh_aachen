@@ -10,7 +10,7 @@ class MinCostFlowFormat {
     companion object {
         private fun toGraph(bufferedReader: BufferedReader): DiGraph {
             val graph = DiGraph()
-            val numberOfVertices = bufferedReader.readLine().toInt()
+            val numberOfVertices = bufferedReader.readLine().trim().toInt()
             bufferedReader.use { reader ->
                 val balances = DoubleArray(numberOfVertices)
                 for (i in 0 until numberOfVertices) {
@@ -25,8 +25,8 @@ class MinCostFlowFormat {
                         Edge(
                             Vertex(idFirst, balances[idFirst]),
                             Vertex(idSecond, balances[idSecond]),
-                            split[2].trim().toDouble(),
-                            split[3].trim().toDouble()
+                            split[3].trim().toDouble(),
+                            split[2].trim().toDouble()
                         )
                     )
                 }
