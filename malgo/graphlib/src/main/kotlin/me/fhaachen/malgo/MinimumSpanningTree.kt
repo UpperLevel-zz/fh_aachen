@@ -14,8 +14,7 @@ class MinimumSpanningTree : Graph {
 
         fun prim(graph: Graph, startId: Int): MinimumSpanningTree {
             val mst = MinimumSpanningTree()
-            val capacityWeighted: Comparator<Edge> = compareBy { it.capacity }
-            val priorityQueue = PriorityQueue(capacityWeighted)
+            val priorityQueue = PriorityQueue<Edge>(compareBy { it.capacity })
             val connected = BooleanArray(graph.getIds().size)
             var currentEdge: Edge
             graph.getVertex(startId).getEdges().forEach { edge -> priorityQueue.add(edge) }
@@ -80,8 +79,6 @@ class MinimumSpanningTree : Graph {
     }
 
     override fun connectVertices(edge: Edge) {
-//        val source = Vertex(edge.source.getId())
-//        val target = Vertex(edge.target.getId())
         val source = vertices.getOrDefault(edge.source.getId(), Vertex(edge.source.getId()))
         vertices[source.getId()] = source
         val target = vertices.getOrDefault(edge.target.getId(), Vertex(edge.target.getId()))

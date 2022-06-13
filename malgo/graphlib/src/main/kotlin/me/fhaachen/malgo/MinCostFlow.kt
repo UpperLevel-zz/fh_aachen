@@ -5,11 +5,15 @@ class MinCostFlow {
         fun cycleCancelation(graph: DiGraph): MinCostFlowResult {
             // Superquellen, Supersenken
             // b-Fluss erzeugen
-            val graphAsMatrix = graph.toAdjacentCapacities()
             val maxFlowResult = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
-            // finde negative Zykel in Residualkosten, falls keine: Fertig
-            val mooreBellmanFord =
-                ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource())
+            // finde negative Zykel in Residualkosten
+            val bellmanFordResult =
+                ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource(), true)
+            if (bellmanFordResult.cycle != null) {
+                for (edge in bellmanFordResult.cycle!!.edges!!) {
+
+                }
+            }
             var cost = 0.0
             for (edge in maxFlowResult.lastResidualGraph.getEdges()) {
                 if (graph.getVertex(edge.source.getId()).hasOutgoingEdge(edge.target.getId())) {
@@ -17,9 +21,6 @@ class MinCostFlow {
                 }
             }
             println("MinCost: $cost")
-            // bestimme gamma
-            // ändere Fluss
-            // gehe zu Schritt neg. Zykel finden
             return MinCostFlowResult(cost, maxFlowResult.lastResidualGraph)
         }
 
