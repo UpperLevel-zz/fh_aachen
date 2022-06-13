@@ -4,6 +4,7 @@ import me.fhaachen.malgo.GraphTest.Companion.toGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import kotlin.test.Ignore
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RelatedComponentCalculatorTest {
@@ -124,6 +125,7 @@ class RelatedComponentCalculatorTest {
         assert(graph, 222, 10000)
     }
 
+    @Ignore
     @Test
     fun Graph_ganzgross() {
         val resourceName = "Graph_ganzgross.txt"
@@ -132,6 +134,7 @@ class RelatedComponentCalculatorTest {
         assert(graph, 9560, 60000)
     }
 
+    @Ignore
     @Test
     fun Graph_ganzganzgross() {
         val resourceName = "Graph_ganzganzgross.txt"

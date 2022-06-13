@@ -44,13 +44,7 @@ class ShortestPath {
             return ArrayList(shortestPathElements)
         }
 
-        class ShortestPathElement(val vertexId: Int, var distance: Double, var predecessor: Int?) {
-            override fun toString(): String {
-                return "ShortestPathElement(vertexId=$vertexId, distance=$distance, predecessor=$predecessor)"
-            }
-        }
-
-        fun mooreBellmanFord(graph: Graph, startId: Int): List<ShortestPathElement> {
+        fun mooreBellmanFord(graph: Graph, startId: Int): ShortestPathResult {
             val visited = BooleanArray(graph.getVertexCount())
             val shortestPathElements = mutableListOf<ShortestPathElement>()
             for (i in 0 until graph.getVertexCount()) {
@@ -65,16 +59,17 @@ class ShortestPath {
 
             val shortestPathElementsLaststep = ArrayList(shortestPathElements)
             val cycleDetected = compareAndUpdateDistances(graph, shortestPathElementsLaststep, visited)
+            var cycle: List<Vertex>? = null
             if (cycleDetected) {
-                extractCycle(graph, shortestPathElementsLaststep)
+                cycle = extractCycle(graph, shortestPathElementsLaststep)
             }
-            return ArrayList(shortestPathElementsLaststep)
+            return ShortestPathResult(ArrayList(shortestPathElementsLaststep), cycle)
         }
 
         private fun extractCycle(
             graph: Graph,
             shortestPathElementsLaststep: ArrayList<ShortestPathElement>
-        ) {
+        ): List<Vertex> {
             println("Graph contains negative cycle")
             val diGraph = DiGraph()
             for (shortestPathElement in shortestPathElementsLaststep) {
@@ -91,6 +86,7 @@ class ShortestPath {
             }
             val depthFirstSearch = RelatedComponentCalculator.depthFirstSearch(diGraph)
             println(depthFirstSearch)
+            return mutableListOf()
         }
 
         private fun compareAndUpdateDistances(
@@ -116,4 +112,15 @@ class ShortestPath {
             return !valueStable
         }
     }
+
+    class ShortestPathElement(val vertexId: Int, var distance: Double, var predecessor: Int?) {
+        override fun toString(): String {
+            return "ShortestPathElement(vertexId=$vertexId, distance=$distance, predecessor=$predecessor)"
+        }
+    }
+
+    class ShortestPathResult(
+        var shortestPath: ArrayList<ShortestPathElement>,
+        var cycle: List<Vertex>?
+    )
 }

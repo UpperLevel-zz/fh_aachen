@@ -29,18 +29,6 @@ internal class ShortestPathTest {
     }
 
     @Test
-    internal fun name() {
-        val resourceName = "Wege3.txt"
-        val graph = GraphTest.toDiGraph(resourceName)
-        val bellmanFord = BellmanFord()
-        bellmanFord.BellmanFord(graph, graph.toAdjacentCapacities(), 2)
-        val shortestPathTree = ShortestPath.mooreBellmanFord(graph, 2)
-        for (shortestPathElement in shortestPathTree) {
-            println(shortestPathElement)
-        }
-    }
-
-    @Test
     internal fun dijkstra_G_1_2() {
         val resourceName = "G_1_2.txt"
         var graph = GraphTest.toDiGraph(resourceName)
@@ -62,8 +50,8 @@ internal class ShortestPathTest {
     )
     internal fun mooreBellmanFord(resourceName: String) {
         val graph = GraphTest.toDiGraph(resourceName)
-        val shortestPathTree = ShortestPath.mooreBellmanFord(graph, 2)
-        for (shortestPathElement in shortestPathTree) {
+        val shortestPathResult = ShortestPath.mooreBellmanFord(graph, 2)
+        for (shortestPathElement in shortestPathResult.shortestPath) {
             println(shortestPathElement)
         }
     }
@@ -72,11 +60,16 @@ internal class ShortestPathTest {
     internal fun mooreBellmanFord_G_1_2() {
         val resourceName = "G_1_2.txt"
         var graph = GraphTest.toDiGraph(resourceName)
-        var shortestPathElement = ShortestPath.mooreBellmanFord(graph, 0)
-        println(shortestPathElement[1])
+        var shortestPathResult = ShortestPath.mooreBellmanFord(graph, 0)
+        for (shortestPathElement in shortestPathResult.shortestPath) {
+            println(shortestPathElement)
+        }
 
         graph = GraphTest.toGraph(resourceName)
-        shortestPathElement = ShortestPath.mooreBellmanFord(graph, 0)
-        println(shortestPathElement[1])
+        shortestPathResult = ShortestPath.mooreBellmanFord(graph, 0)
+        for (shortestPathElement in shortestPathResult.shortestPath) {
+            println(shortestPathElement)
+        }
     }
+
 }
