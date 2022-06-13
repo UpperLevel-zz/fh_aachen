@@ -9,7 +9,7 @@ public final class MaxFlow {
         // Utility class
     }
 
-    public static Graph edmondsKarp(Graph graph, int source, int target) {
+    public static MaxFlowResult edmondsKarp(Graph graph, int source, int target) {
         Graph residualGraph = new DiGraph();
         for (Edge edge : graph.getEdges()) {
             residualGraph.connectVertices(edge.copy());
@@ -39,9 +39,7 @@ public final class MaxFlow {
             }
             maximumFlow += minResidualCapacity;
         }
-
-        System.out.printf("MaxFlow: %s%n", maximumFlow);
-        return residualGraph;
+        return new MaxFlowResult(maximumFlow, residualGraph);
     }
 
     static boolean breathFirstSearch(Graph residualGraph, int source, int sink, int[] parent) {
@@ -69,5 +67,15 @@ public final class MaxFlow {
             }
         }
         return false;
+    }
+
+    static class MaxFlowResult {
+        double maxFlow;
+        Graph lastResidualGraph;
+
+        public MaxFlowResult(double maxFlow, Graph lastResidualGraph) {
+            this.maxFlow = maxFlow;
+            this.lastResidualGraph = lastResidualGraph;
+        }
     }
 }

@@ -1,6 +1,7 @@
 package me.fhaachen.malgo
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.data.Percentage
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -14,9 +15,8 @@ internal class MaximumFlowTest {
     @MethodSource("testParameters")
     internal fun edmondsKarp(resourceName: String, result: Double) {
         val graph = GraphTest.toDiGraph(resourceName)
-        val maximumFlow = MaxFlow.edmondsKarp(graph, 0, 7)
-        assertThat(maximumFlow).isEqualTo(result)
-        println(maximumFlow)
+        val maximumFlowResult = MaxFlow.edmondsKarp(graph, 0, 7)
+        assertThat(maximumFlowResult.maxFlow).isCloseTo(result, Percentage.withPercentage(0.000001))
     }
 
     private fun testParameters(): Stream<Arguments?>? {

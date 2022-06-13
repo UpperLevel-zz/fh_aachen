@@ -10,7 +10,7 @@ internal class HamiltonianTourTest {
         strings = [
             "K_10.txt",
             "K_10e.txt",
-            "K_12.txt"
+//            "K_12.txt"
         ]
     )
     fun findMostFavorable(resourceName: String) {
