@@ -7,7 +7,7 @@ class UndirectedGraph(size: Int) : Graph {
     private var vertices: HashMap<Int, Vertex> = HashMap()
     private var edges: ArrayList<Edge> = ArrayList()
 
-    override fun connectVertices(edge: Edge) {
+    override fun connectVertices(edge: Edge, residual: Boolean) {
         val source = vertices.getOrPut(edge.source.getId()) { edge.source }
         val target = vertices.getOrPut(edge.target.getId()) { edge.target }
         val edgeCopy = Edge(source, target, edge.capacity, edge.cost)

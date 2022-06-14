@@ -26,7 +26,7 @@ class ShortestPath {
                     break
                 }
                 val vertex = graph.getVertex(currentVertex.vertexId)
-                for (outgoingEdge in vertex.outgoingEdges) {
+                for (outgoingEdge in vertex.outgoingEdges.values) {
                     val newDistW = currentDistV + outgoingEdge.capacity
                     val targetId = outgoingEdge.target.getId()
                     if (shortestPathElements[targetId].distance > newDistW) {

@@ -7,20 +7,32 @@ class MinCostFlow {
             // b-Fluss erzeugen
             val maxFlowResult = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
             // finde negative Zykel in Residualkosten
-            val bellmanFordResult =
+            var bellmanFordResult =
                 ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource(), true)
-            if (bellmanFordResult.cycle != null) {
+            while (bellmanFordResult.cycle != null && bellmanFordResult.cycle!!.lowestWeightedEdge.capacity > 0) {
                 for (edge in bellmanFordResult.cycle!!.edges!!) {
-
+                    val target = maxFlowResult.lastResidualGraph.getVertex(edge.target.getId())
+                    if (target.hasOutgoingEdge(edge.source.getId())) {
+                        val residualEdge = target.getOutgoingEdge(edge.source.getId())
+                        residualEdge.capacity += bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
+                    } else {
+                        val residualEdge =
+                            Edge(target, edge.source, bellmanFordResult.cycle!!.lowestWeightedEdge.capacity, -edge.cost)
+                        maxFlowResult.lastResidualGraph.connectVertices(residualEdge, true)
+                    }
+                    val source = maxFlowResult.lastResidualGraph.getVertex(edge.source.getId())
+                    if (source.hasOutgoingEdge(edge.target.getId())) {
+                        val originalEdge = source.getOutgoingEdge(edge.target.getId())
+                        originalEdge.capacity -= bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
+                    }
                 }
+                bellmanFordResult =
+                    ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource(), true)
             }
             var cost = 0.0
-            for (edge in maxFlowResult.lastResidualGraph.getEdges()) {
-                if (graph.getVertex(edge.source.getId()).hasOutgoingEdge(edge.target.getId())) {
-                    cost += edge.cost * edge.capacity
-                }
+            for (edge in maxFlowResult.lastResidualGraph.getResidualEdges()) {
+                cost += -edge.cost * edge.capacity
             }
-            println("MinCost: $cost")
             return MinCostFlowResult(cost, maxFlowResult.lastResidualGraph)
         }
 
@@ -35,5 +47,10 @@ class MinCostFlow {
         }
     }
 
-    class MinCostFlowResult(var minCost: Double, var lastResidualGraph: Graph)
+    class MinCostFlowResult(var minCost: Double, var lastResidualGraph: Graph) {
+
+        override fun toString(): String {
+            return "MinCostFlowResult(minCost=$minCost, lastResidualGraph=$lastResidualGraph)"
+        }
+    }
 }

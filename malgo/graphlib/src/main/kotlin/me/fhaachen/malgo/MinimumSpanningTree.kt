@@ -78,7 +78,7 @@ class MinimumSpanningTree : Graph {
         }
     }
 
-    override fun connectVertices(edge: Edge) {
+    override fun connectVertices(edge: Edge, residual: Boolean) {
         val source = vertices.getOrDefault(edge.source.getId(), Vertex(edge.source.getId()))
         vertices[source.getId()] = source
         val target = vertices.getOrDefault(edge.target.getId(), Vertex(edge.target.getId()))

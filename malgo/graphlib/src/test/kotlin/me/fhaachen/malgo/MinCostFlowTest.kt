@@ -17,7 +17,8 @@ internal class MinCostFlowTest {
     )
     internal fun cycleCancelation(resourceName: String) {
         val graph = MinCostFlowFormat.toGraph(resourceName)
-        MinCostFlow.cycleCancelation(graph)
+        val cycleCancelation = MinCostFlow.cycleCancelation(graph)
+        println(cycleCancelation)
     }
 
     @ParameterizedTest

@@ -10,7 +10,7 @@ public final class MaxFlow {
     }
 
     public static MaxFlowResult edmondsKarp(Graph graph, int source, int target) {
-        Graph residualGraph = new DiGraph();
+        DiGraph residualGraph = new DiGraph();
         for (Edge edge : graph.getEdges()) {
             residualGraph.connectVertices(edge.copy());
         }
@@ -33,9 +33,10 @@ public final class MaxFlow {
                 residualGraph.getVertex(u).getEdge(v).addCapacity(-minResidualCapacity);
                 if (!residualGraph.getVertex(v).hasOutgoingEdge(u)) {
                     Edge originalEdge = residualGraph.getVertex(u).getEdge(v);
-                    residualGraph.connectVertices(new Edge(residualGraph.getVertex(v), residualGraph.getVertex(u), 0.0, -originalEdge.getCost()));
+                    residualGraph.connectVertices(new Edge(residualGraph.getVertex(v), residualGraph.getVertex(u), 0.0, -originalEdge.getCost()), true);
                 }
                 residualGraph.getVertex(v).getEdge(u).addCapacity(minResidualCapacity);
+                System.out.println();
             }
             maximumFlow += minResidualCapacity;
         }
@@ -71,9 +72,9 @@ public final class MaxFlow {
 
     static class MaxFlowResult {
         double maxFlow;
-        Graph lastResidualGraph;
+        DiGraph lastResidualGraph;
 
-        public MaxFlowResult(double maxFlow, Graph lastResidualGraph) {
+        public MaxFlowResult(double maxFlow, DiGraph lastResidualGraph) {
             this.maxFlow = maxFlow;
             this.lastResidualGraph = lastResidualGraph;
         }

@@ -7,7 +7,7 @@ class HamiltonianCycle : Graph {
     private var vertices: HashMap<Int, Vertex> = HashMap()
     private var edges: ArrayList<Edge> = ArrayList()
 
-    override fun connectVertices(edge: Edge) {
+    override fun connectVertices(edge: Edge, residual: Boolean) {
         vertices[edge.source.getId()] = edge.source
         vertices[edge.target.getId()] = edge.target
         edges.add(edge)

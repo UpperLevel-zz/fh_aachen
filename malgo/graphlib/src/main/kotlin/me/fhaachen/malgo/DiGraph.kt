@@ -9,9 +9,11 @@ class DiGraph : Graph {
     private var edges: HashSet<Edge> = HashSet()
     private var sources: HashMap<Int, Double> = HashMap()
     private var sinks: HashMap<Int, Double> = HashMap()
+    private var residualEdges: HashSet<Edge> = HashSet()
     private lateinit var superSource: Vertex
     private lateinit var superSink: Vertex
-    override fun connectVertices(edge: Edge) {
+
+    override fun connectVertices(edge: Edge, residual: Boolean) {
         val source = vertices.getOrPut(edge.source.getId()) { edge.source }
         val target = vertices.getOrPut(edge.target.getId()) { edge.target }
         updateBalance(edge.source, edge.target)
@@ -19,6 +21,9 @@ class DiGraph : Graph {
         source.addOutgoingEdge(edgeCopy)
         target.addIncomingEdge(edgeCopy)
         edges.add(edgeCopy)
+        if (residual) {
+            residualEdges.add(edgeCopy)
+        }
     }
 
     private fun updateBalance(source: Vertex, target: Vertex) {
@@ -61,6 +66,10 @@ class DiGraph : Graph {
 
     override fun getEdges(): LinkedList<Edge> {
         return LinkedList(edges)
+    }
+
+    fun getResidualEdges(): LinkedList<Edge> {
+        return LinkedList(residualEdges)
     }
 
     fun getSuperSource(): Vertex {
