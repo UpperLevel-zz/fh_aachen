@@ -36,7 +36,6 @@ public final class MaxFlow {
                     residualGraph.connectVertices(new Edge(residualGraph.getVertex(v), residualGraph.getVertex(u), 0.0, -originalEdge.getCost()), true);
                 }
                 residualGraph.getVertex(v).getEdge(u).addCapacity(minResidualCapacity);
-                System.out.println();
             }
             maximumFlow += minResidualCapacity;
         }

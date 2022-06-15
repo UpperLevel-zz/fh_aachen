@@ -120,10 +120,10 @@ class ShortestPath {
                 graph.getVertex(shortestPathElement.vertexId).getEdge(shortestPathElement.predecessor!!)
             var currentId = vertexInCycle
             var predecessor = shortestPathElement.predecessor!!
-            val result = ArrayList<Edge>()
+            val cycle = ArrayList<Edge>()
             while (vertexInCycle != predecessor) {
                 val currentEdge = graph.getVertex(predecessor).getEdge(currentId)
-                result.add(currentEdge)
+                cycle.add(currentEdge)
                 if (currentEdge.capacity < lowestWeightedEdge.capacity) {
                     lowestWeightedEdge = currentEdge
                 }
@@ -132,9 +132,11 @@ class ShortestPath {
             }
 
             val currentEdge = graph.getVertex(predecessor).getEdge(currentId)
-            result.add(currentEdge)
+            cycle.add(currentEdge)
 
-            return Cycle(result, lowestWeightedEdge)
+            val result = Cycle(cycle, lowestWeightedEdge)
+            println(result)
+            return result
         }
     }
 
