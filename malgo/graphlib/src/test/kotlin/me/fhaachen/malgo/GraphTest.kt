@@ -56,7 +56,7 @@ class GraphTest {
             return graph
         }
 
-        fun toDiGraph(resourceName: String): Graph {
+        fun toDiGraph(resourceName: String): DiGraph {
             val file = File(this::class.java.classLoader.getResource(resourceName)!!.file)
             val lines = file.readLines(Charsets.UTF_8).toMutableList()
             val numberOfVertices = lines.removeAt(0).trim()

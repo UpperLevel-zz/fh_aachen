@@ -39,6 +39,10 @@ class UndirectedGraph(size: Int) : Graph {
         return vertices.size
     }
 
+    override fun getAdditionalVertexCount(): Int {
+        return 0
+    }
+
     override fun getEdges(): LinkedList<Edge> {
         return LinkedList(edges)
     }

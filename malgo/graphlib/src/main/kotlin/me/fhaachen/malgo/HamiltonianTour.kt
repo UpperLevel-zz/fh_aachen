@@ -33,7 +33,7 @@ class HamiltonianTour {
     ) {
         if (hamiltonianCycle.size == graph.getVertexCount()) {
             hamiltonianCycle.add(graph.getVertices().first)
-            val edge = graph.getVertex(currentId).getEdge(graph.getVertices().first)
+            val edge = graph.getVertex(currentId).getOutgoingEdge(graph.getVertices().first)
             val newAmout = amount + edge.capacity
             if ((lowestAmount > newAmout)) {
                 optimalCycle = LinkedList(hamiltonianCycle)
@@ -44,7 +44,7 @@ class HamiltonianTour {
 
         for (adjecentVertex in graph.getVertex(currentId).getAdjacentVertices()) {
             if (!visitedIndices[adjecentVertex]) {
-                val edge = graph.getVertex(currentId).getEdge(adjecentVertex)
+                val edge = graph.getVertex(currentId).getOutgoingEdge(adjecentVertex)
                 // Branch and Bound Schranke
                 if (useBound && amount + edge.capacity > lowestAmount) {
                     continue

@@ -3,38 +3,41 @@ package me.fhaachen.malgo
 import java.util.*
 
 class Edge(
-    val source: Vertex,
-    val target: Vertex,
+    var source: Vertex,
+    var target: Vertex,
     var capacity: Double,
-    var cost: Double
+    var cost: Double,
+    var flow: Double,
+    var residual: Boolean
 ) : Comparable<Edge> {
     constructor(source: Vertex, target: Vertex) : this(
-        source, target, 0.0, 0.0
+        source, target, 0.0, 0.0, 0.0, false
     )
 
     constructor(source: Vertex, target: Vertex, capacity: String) : this(
-        source, target, capacity.toDouble(), 0.0
+        source, target, capacity.toDouble(), 0.0, 0.0, false
     )
 
     constructor(source: Vertex, target: Vertex, capacity: Double) : this(
-        source, target, capacity, 0.0
+        source, target, capacity, 0.0, 0.0, false
     )
 
-    fun addCapacity(capacity: Double) {
-        this.capacity += capacity
-    }
+    constructor(source: Vertex, target: Vertex, capacity: Double, cost: Double) : this(
+        source, target, capacity, cost, 0.0, false
+    )
 
-    fun copy(): Edge {
-        return Edge(
-            Vertex(source.getId(), source.getBalance()),
-            Vertex(target.getId(), target.getBalance()),
-            capacity,
-            cost
-        )
+    fun updateFlow(flow: Double) {
+        this.capacity += flow
+        this.flow -= flow
     }
 
     override fun compareTo(other: Edge): Int {
         return Objects.compare(this, other, compareBy(Edge::capacity))
+    }
+
+
+    override fun toString(): String {
+        return "Edge(source=$source, target=$target, capacity=$capacity, cost=$cost, flow=$flow, residual=$residual)"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -47,6 +50,8 @@ class Edge(
         if (target != other.target) return false
         if (capacity != other.capacity) return false
         if (cost != other.cost) return false
+        if (flow != other.flow) return false
+        if (residual != other.residual) return false
 
         return true
     }
@@ -56,12 +61,9 @@ class Edge(
         result = 31 * result + target.hashCode()
         result = 31 * result + capacity.hashCode()
         result = 31 * result + cost.hashCode()
+        result = 31 * result + flow.hashCode()
+        result = 31 * result + residual.hashCode()
         return result
     }
-
-    override fun toString(): String {
-        return "Edge(source=$source, target=$target, capacity=$capacity, cost=$cost)"
-    }
-
 
 }

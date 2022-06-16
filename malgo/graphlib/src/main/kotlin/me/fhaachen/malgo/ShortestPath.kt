@@ -49,24 +49,24 @@ class ShortestPath {
 
         fun mooreBellmanFord(graph: Graph, startId: Int, costWeighted: Boolean): BellmanFordResult {
             val visited = BooleanArray(graph.getVertexCount())
-            val shortestPathElements = mutableListOf<ShortestPathElement>()
+            val shortestPathElements = arrayListOf<ShortestPathElement>()
             for (i in 0 until graph.getVertexCount()) {
                 val shortestPathElement = ShortestPathElement(i, Double.POSITIVE_INFINITY, null)
                 shortestPathElements.add(shortestPathElement)
             }
             shortestPathElements[startId].distance = 0.0
             shortestPathElements[startId].predecessor = startId
-            for (n in 0 until graph.getVertexCount() - 1) {
+            val N = graph.getVertexCount() - graph.getAdditionalVertexCount() - 1
+            for (n in 0 until N) {
                 compareAndUpdateDistances(graph, shortestPathElements, visited, costWeighted)
             }
 
-            val shortestPathElementsLaststep = ArrayList(shortestPathElements)
-            val cycleDetectedAt = compareAndUpdateDistances(graph, shortestPathElementsLaststep, visited, costWeighted)
+            val cycleDetectedAt = compareAndUpdateDistances(graph, shortestPathElements, visited, costWeighted)
             var cycle: Cycle? = null
             if (cycleDetectedAt != null) {
-                cycle = extractCycle(graph, shortestPathElementsLaststep, cycleDetectedAt)
+                cycle = extractCycle(graph, shortestPathElements, cycleDetectedAt)
             }
-            return BellmanFordResult(ArrayList(shortestPathElementsLaststep), cycle)
+            return BellmanFordResult(ArrayList(shortestPathElements), cycle)
         }
 
         private fun compareAndUpdateDistances(
@@ -91,7 +91,12 @@ class ShortestPath {
                 }
                 val newDistV = shortestPathElements[v].distance + weight
                 if (newDistV < shortestPathElements[w].distance) {
-                    changedValueAt = w
+                    if (costWeighted && edge.capacity <= 0.0) {
+                        continue
+                    }
+                    if (changedValueAt == null) {
+                        changedValueAt = w
+                    }
                     shortestPathElements[w].distance = newDistV
                     shortestPathElements[w].predecessor = v
                 }
@@ -102,41 +107,43 @@ class ShortestPath {
         private fun extractCycle(
             graph: Graph,
             shortestPathElementsLaststep: ArrayList<ShortestPathElement>,
-            cycleDetectedAt: Int
+            valueChangedAt: Int
         ): Cycle {
-            println("Graph contains negative cycle")
             val map = HashMap<Int, ShortestPathElement>()
             for (shortestPathElement in shortestPathElementsLaststep) {
                 map[shortestPathElement.vertexId] = shortestPathElement
             }
             val visited = BooleanArray(graph.getVertexCount())
-            var shortestPathElement = map[cycleDetectedAt]!!
-            while (shortestPathElement.predecessor != null && !visited[shortestPathElement.vertexId]) {
+            var shortestPathElement = map[valueChangedAt]!!
+            for (i in 0 until shortestPathElementsLaststep.size - 1) {
+                if (visited[shortestPathElement.vertexId]) {
+                    break
+                }
                 visited[shortestPathElement.vertexId] = true
                 shortestPathElement = map[shortestPathElement.predecessor!!]!!
             }
             val vertexInCycle = shortestPathElement.vertexId
-            var lowestWeightedEdge =
-                graph.getVertex(shortestPathElement.vertexId).getEdge(shortestPathElement.predecessor!!)
+            println("Graph contains negative cycle @$vertexInCycle")
+            var lowestWeightedEdge: Edge? = null
             var currentId = vertexInCycle
             var predecessor = shortestPathElement.predecessor!!
             val cycle = ArrayList<Edge>()
             while (vertexInCycle != predecessor) {
-                val currentEdge = graph.getVertex(predecessor).getEdge(currentId)
+                val currentEdge = graph.getVertex(predecessor).getOutgoingEdge(currentId)
                 cycle.add(currentEdge)
-                if (currentEdge.capacity < lowestWeightedEdge.capacity) {
+                if (lowestWeightedEdge == null || currentEdge.capacity < lowestWeightedEdge.capacity) {
                     lowestWeightedEdge = currentEdge
                 }
                 currentId = map[currentId]!!.predecessor!!
                 predecessor = map[currentId]!!.predecessor!!
             }
 
-            val currentEdge = graph.getVertex(predecessor).getEdge(currentId)
+            val currentEdge = graph.getVertex(predecessor).getOutgoingEdge(currentId)
+            if (lowestWeightedEdge == null || currentEdge.capacity < lowestWeightedEdge.capacity) {
+                lowestWeightedEdge = currentEdge
+            }
             cycle.add(currentEdge)
-
-            val result = Cycle(cycle, lowestWeightedEdge)
-            println(result)
-            return result
+            return Cycle(cycle, lowestWeightedEdge)
         }
     }
 
@@ -149,10 +156,18 @@ class ShortestPath {
     class BellmanFordResult(
         var shortestPath: ArrayList<ShortestPathElement>,
         var cycle: Cycle?
-    )
+    ) {
+        override fun toString(): String {
+            return "BellmanFordResult(shortestPath=$shortestPath, cycle=$cycle)"
+        }
+    }
 
     class Cycle(
         val edges: List<Edge>?,
         val lowestWeightedEdge: Edge
-    )
+    ) {
+        override fun toString(): String {
+            return "Cycle(edges=$edges, lowestWeightedEdge=$lowestWeightedEdge)"
+        }
+    }
 }

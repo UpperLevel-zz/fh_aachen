@@ -108,6 +108,10 @@ class MinimumSpanningTree : Graph {
         return vertices.size
     }
 
+    override fun getAdditionalVertexCount(): Int {
+        TODO("Not yet implemented")
+    }
+
     override fun getEdges(): LinkedList<Edge> {
         return LinkedList(edges)
     }

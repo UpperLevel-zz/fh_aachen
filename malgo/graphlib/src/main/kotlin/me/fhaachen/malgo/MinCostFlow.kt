@@ -5,35 +5,39 @@ class MinCostFlow {
         fun cycleCancelation(graph: DiGraph): MinCostFlowResult {
             // Superquellen, Supersenken
             // b-Fluss erzeugen
-            val maxFlowResult = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
-            // finde negative Zykel in Residualkosten
-            var bellmanFordResult =
-                ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource(), true)
-            while (bellmanFordResult.cycle != null && bellmanFordResult.cycle!!.lowestWeightedEdge.capacity > 0) {
-                for (edge in bellmanFordResult.cycle!!.edges!!) {
-                    val target = maxFlowResult.lastResidualGraph.getVertex(edge.target.getId())
-                    if (target.hasOutgoingEdge(edge.source.getId())) {
-                        val residualEdge = target.getOutgoingEdge(edge.source.getId())
-                        residualEdge.capacity += bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
-                    } else {
-                        val residualEdge =
-                            Edge(target, edge.source, bellmanFordResult.cycle!!.lowestWeightedEdge.capacity, -edge.cost)
-                        maxFlowResult.lastResidualGraph.connectVertices(residualEdge, true)
-                    }
-                    val source = maxFlowResult.lastResidualGraph.getVertex(edge.source.getId())
-                    if (source.hasOutgoingEdge(edge.target.getId())) {
-                        val originalEdge = source.getOutgoingEdge(edge.target.getId())
-                        originalEdge.capacity -= bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
-                    }
-                }
-                bellmanFordResult =
-                    ShortestPath.mooreBellmanFord(maxFlowResult.lastResidualGraph, graph.createSuperSource(), true)
+            val edmondsKarp = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
+            if (edmondsKarp == null || !graph.isBalanced()) {
+                return MinCostFlowResult(null)
             }
+            // finde negative Zykel in Residualkosten
+            var bellmanFordResult = ShortestPath.mooreBellmanFord(graph, graph.getSuperNode().getId(), true)
+            var cyclesCancelled = 0
+            var lowestWeight: Double
+            while (bellmanFordResult.cycle != null) {
+                lowestWeight = bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
+                for (edge in bellmanFordResult.cycle!!.edges!!) {
+                    val target = graph.getVertex(edge.target.getId())
+                    if (!target.hasOutgoingEdge(edge.source.getId())) {
+                        graph.createResidualEdge(target, edge.source, -edge.cost)
+                    }
+                    val residualEdge = target.getOutgoingEdge(edge.source.getId())
+                    residualEdge.updateFlow(lowestWeight)
+                    val source = graph.getVertex(edge.source.getId())
+                    var originalEdge: Edge? = null
+                    if (source.hasOutgoingEdge(edge.target.getId())) {
+                        originalEdge = source.getOutgoingEdge(edge.target.getId())
+                    }
+                    originalEdge!!.updateFlow(-lowestWeight)
+                }
+                bellmanFordResult = ShortestPath.mooreBellmanFord(graph, graph.getSuperNode().getId(), true)
+                cyclesCancelled++
+            }
+            println("Cycles cancelled: $cyclesCancelled")
             var cost = 0.0
-            for (edge in maxFlowResult.lastResidualGraph.getResidualEdges()) {
+            for (edge in graph.getResidualEdges()) {
                 cost += -edge.cost * edge.capacity
             }
-            return MinCostFlowResult(cost, maxFlowResult.lastResidualGraph)
+            return MinCostFlowResult(cost)
         }
 
         fun successiveShortestPath(graph: DiGraph): MinCostFlowResult {
@@ -43,14 +47,13 @@ class MinCostFlow {
             // Abbruch, falls nicht möglich
             // ändere Fluss
             // gehe zu Schritt Bestimme b'
-            throw java.lang.UnsupportedOperationException("Not yet implemented")
+            return MinCostFlowResult(null)
         }
     }
 
-    class MinCostFlowResult(var minCost: Double, var lastResidualGraph: Graph) {
-
+    class MinCostFlowResult(var minCost: Double?) {
         override fun toString(): String {
-            return "MinCostFlowResult(minCost=$minCost, lastResidualGraph=$lastResidualGraph)"
+            return "MinCostFlowResult(minCost=$minCost)"
         }
     }
 }

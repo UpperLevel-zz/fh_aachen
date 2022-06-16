@@ -11,24 +11,17 @@ class Vertex(private val id: Int, private var balance: Double) {
 
     private val adjacentVertices = HashMap<Int, Vertex>()
     val outgoingEdges = HashMap<Int, Edge>()
-    private val incomingEdges = ArrayList<Edge>()
-    private val edges = HashMap<Int, Edge>()
+    private val incomingEdges = HashMap<Int, Edge>()
+    var pseudoBalance = 0.0
 
     fun addOutgoingEdge(edge: Edge) {
-        if (this.id != edge.target.getId()) {
-            this.adjacentVertices[edge.target.getId()] = edge.target
-        }
+        this.adjacentVertices[edge.target.getId()] = edge.target
         outgoingEdges[edge.target.getId()] = edge
-        edges[edge.target.getId()] = edge
     }
 
     fun addIncomingEdge(edge: Edge) {
-        if (this.id != edge.source.getId()) {
-            this.adjacentVertices[edge.source.getId()] = edge.source
-        }
-        incomingEdges.add(edge)
-        if (edges[edge.source.getId()] == null)
-            edges[edge.source.getId()] = edge
+        this.adjacentVertices[edge.source.getId()] = edge.source
+        incomingEdges[edge.source.getId()] = edge
     }
 
     fun getEdges(): MutableSet<Edge> {
@@ -39,16 +32,32 @@ class Vertex(private val id: Int, private var balance: Double) {
         return outgoingEdges[targetId]!!
     }
 
-    fun getEdge(targetId: Int): Edge {
-        return edges[targetId]!!
-    }
-
     fun hasOutgoingEdge(targetId: Int): Boolean {
         return outgoingEdges.containsKey(targetId)
     }
 
+    fun getActualBalance(): Double {
+        return getIncomingFlow() + getOutgoingFlow()
+    }
+
+    fun getOutgoingFlow(): Double {
+        var flowOut = 0.0
+        for (outgoingEdge in outgoingEdges.values) {
+            flowOut += outgoingEdge.flow
+        }
+        return flowOut
+    }
+
+    fun getIncomingFlow(): Double {
+        var flowIn = 0.0
+        for (incomingEdge in incomingEdges.values) {
+            flowIn += incomingEdge.flow
+        }
+        return flowIn
+    }
+
     fun getAdjacentVertices(): MutableSet<Int> {
-        return edges.keys
+        return adjacentVertices.keys
     }
 
     fun getId(): Int {
@@ -59,7 +68,7 @@ class Vertex(private val id: Int, private var balance: Double) {
         return balance
     }
 
-    fun updateBalance(other: Double): Double {
+    fun addBalance(other: Double): Double {
         balance += other
         return balance
     }

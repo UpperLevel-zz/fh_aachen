@@ -26,7 +26,7 @@ class TravelingSalesman {
                     currentVertex = lowestEdge.target.getId()
                 }
             }
-            hc.connectVertices(graph.getVertex(currentVertex).getEdge(startId))
+            hc.connectVertices(graph.getVertex(currentVertex).getOutgoingEdge(startId))
             return hc
         }
 
@@ -68,7 +68,7 @@ class TravelingSalesman {
             val result = HamiltonianCycle()
             for (currentVertex in distinctOrderedVertices) {
                 if (currentVertex != previousVertex) {
-                    result.connectVertices(graph.getVertex(previousVertex).getEdge(currentVertex))
+                    result.connectVertices(graph.getVertex(previousVertex).getOutgoingEdge(currentVertex))
                 }
                 previousVertex = currentVertex
             }
