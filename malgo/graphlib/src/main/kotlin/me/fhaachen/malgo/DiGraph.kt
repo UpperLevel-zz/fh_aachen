@@ -116,13 +116,6 @@ class DiGraph : Graph {
         return sources.remove(sources.keys.first())!!
     }
 
-    fun getNextSink(): Vertex? {
-        if (sinks.isEmpty()) {
-            return null
-        }
-        return sinks.remove(sinks.keys.first())!!
-    }
-
     fun isSuperSourceBalanced(): Boolean {
         if (getSuperSource().getBalance() - getSuperSource().getOutgoingFlow() != 0.0) {
             println("Supersource not balanced: ${getSuperSource()} with outgoing flow = ${getSuperSource().getOutgoingFlow()}")
@@ -135,7 +128,12 @@ class DiGraph : Graph {
         sources.clear()
         sinks.clear()
         var balance = 0.0
+        val idsSuperNodes = intArrayOf(getSuperNode().getId(), getSuperSource().getId(), getSuperSink().getId())
+        // todo supernodes must be excluded here
         for (vertex in vertices.values) {
+            if (idsSuperNodes.contains(vertex.getId())) {
+                continue
+            }
             val actualBalance = vertex.getActualBalance()
             if (actualBalance < 0) {
                 println("Vertex not balanced: ${vertex})")

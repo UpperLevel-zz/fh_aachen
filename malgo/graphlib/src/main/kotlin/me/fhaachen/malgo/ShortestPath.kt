@@ -56,8 +56,8 @@ class ShortestPath {
             }
             shortestPathElements[startId].distance = 0.0
             shortestPathElements[startId].predecessor = startId
-            val N = graph.getVertexCount() - graph.getAdditionalVertexCount() - 1
-            for (n in 0 until N) {
+            val vertexCountMinusOne = graph.getVertexCount() - graph.getAdditionalVertexCount() - 1
+            for (n in 0 until vertexCountMinusOne) {
                 compareAndUpdateDistances(graph, shortestPathElements, visited, costWeighted)
                     ?: return BellmanFordResult(ArrayList(shortestPathElements), null)
             }
@@ -92,7 +92,9 @@ class ShortestPath {
                 }
                 val newDistV = shortestPathElements[v].distance + weight
                 if (newDistV < shortestPathElements[w].distance) {
-                    if (costWeighted && edge.capacity <= 0.0) {
+                    if (costWeighted && edge.capacity <= 0.0
+                        || costWeighted && edge.residual && edge.flow != 0.0
+                    ) {
                         continue
                     }
                     if (changedValueAt == null) {

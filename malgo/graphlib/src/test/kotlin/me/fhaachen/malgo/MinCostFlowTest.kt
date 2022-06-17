@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.stream.Stream
-import kotlin.test.Ignore
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class MinCostFlowTest {
@@ -29,7 +28,6 @@ internal class MinCostFlowTest {
         Assertions.assertThat(flowResult.minCost).isNull()
     }
 
-    @Ignore
     @ParameterizedTest
     @MethodSource("possibleFlow")
     internal fun successiveShortestPath(resourceName: String, result: Double) {
@@ -38,7 +36,6 @@ internal class MinCostFlowTest {
         Assertions.assertThat(flowResult.minCost).isCloseTo(result, Percentage.withPercentage(0.000001))
     }
 
-    @Ignore
     @ParameterizedTest
     @MethodSource("noBFlow")
     internal fun successiveShortestPathNoBFlow(resourceName: String, result: Double?) {

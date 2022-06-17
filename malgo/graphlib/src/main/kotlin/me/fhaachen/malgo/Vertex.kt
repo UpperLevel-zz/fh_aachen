@@ -44,7 +44,8 @@ class Vertex(private val id: Int, private var balance: Double) {
     fun getOutgoingFlow(): Double {
         var flowOut = 0.0
         for (outgoingEdge in outgoingEdges.values) {
-            flowOut += outgoingEdge.flow
+            if (!outgoingEdge.residual)
+                flowOut += outgoingEdge.flow
         }
         return flowOut
     }
@@ -52,7 +53,8 @@ class Vertex(private val id: Int, private var balance: Double) {
     fun getIncomingFlow(): Double {
         var flowIn = 0.0
         for (incomingEdge in incomingEdges.values) {
-            flowIn += incomingEdge.flow
+            if (!incomingEdge.residual)
+                flowIn += incomingEdge.flow
         }
         return flowIn
     }

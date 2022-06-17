@@ -1,6 +1,7 @@
 package me.fhaachen.malgo
 
 import java.util.*
+import kotlin.math.min
 
 class MinCostFlow {
     companion object {
@@ -22,13 +23,17 @@ class MinCostFlow {
                 for (edge in bellmanFordResult.cycle!!.edges!!) {
                     val source = graph.getVertex(edge.source.getId())
                     val forwardEdge = source.getOutgoingEdge(edge.target.getId())
-                    forwardEdge.updateFlow(-lowestWeight)
+                    var resultingWeight = lowestWeight
+                    if (forwardEdge.residual) {
+                        resultingWeight = -lowestWeight
+                    }
+                    forwardEdge.updateFlow(resultingWeight)
                     val target = graph.getVertex(edge.target.getId())
                     if (!target.hasOutgoingEdge(edge.source.getId())) {
                         graph.createResidualEdge(target, edge.source, -edge.cost)
                     }
                     val reverseEdge = target.getOutgoingEdge(edge.source.getId())
-                    reverseEdge.updateFlow(lowestWeight)
+                    reverseEdge.updateFlow(resultingWeight)
                 }
                 bellmanFordResult = ShortestPath.mooreBellmanFord(graph, graph.getSuperNode().getId(), true)
                 cyclesCancelled++
@@ -45,13 +50,17 @@ class MinCostFlow {
             for (edge in graph.getEdges()) {
                 if (edge.cost < 0) {
                     edge.updateFlow(edge.capacity)
+                    if (!graph.getVertex(edge.target.getId()).hasOutgoingEdge(edge.source.getId())) {
+                        graph.createResidualEdge(edge.target, edge.source, -edge.cost)
+                    }
+                    val reversedEdge = graph.getVertex(edge.target.getId()).getOutgoingEdge(edge.source.getId())
+                    reversedEdge.updateFlow(edge.flow)
                 } else {
                     edge.updateFlow(0.0)
                 }
             }
             var source: Vertex? = graph.getSuperSource()
             val sink: Vertex = graph.getSuperSink()
-            println(graph.getFlowCost())
             MaxFlow.edmondsKarp(graph, source!!.getId(), sink.getId()) ?: return MinCostFlowResult(null)
             val edmondsKarp = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
             if (edmondsKarp == null || !graph.isSuperSourceBalanced()) {
@@ -60,46 +69,51 @@ class MinCostFlow {
             }
 
             while (!graph.isBalanced()) {
-                // Bestimme b'
-                // Suche Pseudoquelle/Pseudosenke und bestimme ShortestCostPath
-                // Abbruch, falls nicht möglich
-                // ändere Fluss
-                source = graph.getNextSink()
+                source = graph.getNextSource()
                 if (source == null) {
-                    throw java.lang.IllegalStateException(
-                        "If graph is not balanced there" +
-                                " should be an unbalanced pair of sources and sinks"
-                    )
+                    println("No more balancing possible")
+                    return MinCostFlowResult(null)
                 }
 
-                val mooreBellmanFord = ShortestPath.mooreBellmanFord(graph, source.getId(), false)
+                val mooreBellmanFord = ShortestPath.mooreBellmanFord(graph, source.getId(), true)
                 if (mooreBellmanFord.cycle != null) {
                     throw java.lang.IllegalStateException("There should never be a negative cycle in here!")
                 }
                 val queue = LinkedList<Edge>()
-                var lowestCapacity = Double.POSITIVE_INFINITY
+                var lowestFlowPossible = Double.POSITIVE_INFINITY
                 for (sPath in mooreBellmanFord.shortestPath) {
                     if (sPath.distance < Double.POSITIVE_INFINITY
-                        && graph.getVertex(sPath.vertexId).pseudoBalance > 0
+                        && sPath.distance > 0
+                        && graph.getVertex(sPath.vertexId).pseudoBalance < 0
                     ) {
                         var currentElement = sPath
                         while (currentElement.predecessor != null && currentElement.vertexId != source.getId()) {
 
                             val edge = graph.getVertex(currentElement.predecessor!!)
                                 .getOutgoingEdge(currentElement.vertexId)
-                            if (edge.capacity < lowestCapacity) {
-                                lowestCapacity = edge.capacity
+                            if (edge.capacity < lowestFlowPossible) {
+                                lowestFlowPossible = min(edge.capacity, source.pseudoBalance)
                             }
                             queue.add(edge)
                             currentElement = mooreBellmanFord.shortestPath[currentElement.predecessor!!]
                         }
+                        if (queue.isEmpty()) {
+                            println("No more balancing possible")
+                            return MinCostFlowResult(null)
+                        }
                         while (queue.isNotEmpty()) {
                             val edge = queue.poll()
-                            if (lowestCapacity < Double.POSITIVE_INFINITY) {
-                                edge.updateFlow(-lowestCapacity)
-                            } else {
-                                edge.updateFlow(-edge.capacity)
+                            var resultingWeight = lowestFlowPossible
+                            if (edge.residual) {
+                                resultingWeight = -lowestFlowPossible
                             }
+                            if (!graph.getVertex(edge.target.getId()).hasOutgoingEdge(edge.source.getId())) {
+                                graph.createResidualEdge(edge.target, edge.source, -edge.cost)
+                            }
+                            val reversedEdge = graph.getVertex(edge.target.getId()).getOutgoingEdge(edge.source.getId())
+                            // why does the flow have to be negative
+                            edge.updateFlow(resultingWeight)
+                            reversedEdge.updateFlow(resultingWeight)
                         }
                         break
                     }

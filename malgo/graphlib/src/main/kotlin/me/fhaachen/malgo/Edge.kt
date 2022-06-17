@@ -27,11 +27,11 @@ class Edge(
     )
 
     fun updateFlow(flow: Double) {
-        this.capacity += flow
         if (this.residual) {
-            this.flow += flow
+            this.capacity += flow
         } else {
-            this.flow -= flow
+            this.capacity -= flow
+            this.flow += flow
         }
     }
 

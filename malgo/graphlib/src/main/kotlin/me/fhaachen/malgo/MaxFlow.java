@@ -26,12 +26,16 @@ public final class MaxFlow {
             for (v = target; v != source; v = shortestPath[v]) {
                 u = shortestPath[v];
                 Edge originalEdge = graph.getVertex(u).getOutgoingEdge(v);
-                originalEdge.updateFlow(-minResidualCapacity);
+                var resultingWeight = minResidualCapacity;
+                if (originalEdge.getResidual()) {
+                    resultingWeight = -minResidualCapacity;
+                }
+                originalEdge.updateFlow(resultingWeight);
                 if (!graph.getVertex(v).hasOutgoingEdge(u)) {
                     graph.createResidualEdge(graph.getVertex(v), graph.getVertex(u), -originalEdge.getCost());
                 }
                 Edge backwardEdge = graph.getVertex(v).getOutgoingEdge(u);
-                backwardEdge.updateFlow(minResidualCapacity);
+                backwardEdge.updateFlow(resultingWeight);
             }
             maximumFlow += minResidualCapacity;
         }
