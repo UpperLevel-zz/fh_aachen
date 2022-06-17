@@ -28,7 +28,11 @@ class Edge(
 
     fun updateFlow(flow: Double) {
         this.capacity += flow
-        this.flow -= flow
+        if (this.residual) {
+            this.flow += flow
+        } else {
+            this.flow -= flow
+        }
     }
 
     override fun compareTo(other: Edge): Int {

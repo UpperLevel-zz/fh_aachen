@@ -37,7 +37,8 @@ class Vertex(private val id: Int, private var balance: Double) {
     }
 
     fun getActualBalance(): Double {
-        return getIncomingFlow() + getOutgoingFlow()
+        pseudoBalance = getIncomingFlow() - getOutgoingFlow()
+        return pseudoBalance
     }
 
     fun getOutgoingFlow(): Double {
@@ -89,7 +90,7 @@ class Vertex(private val id: Int, private var balance: Double) {
     }
 
     override fun toString(): String {
-        return "Vertex(id=$id, balance=$balance)"
+        return "Vertex(id=$id, balance=$balance, pseudobalance=$pseudoBalance)"
     }
 
 }

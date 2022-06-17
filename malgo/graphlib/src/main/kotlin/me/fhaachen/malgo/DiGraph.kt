@@ -97,19 +97,75 @@ class DiGraph : Graph {
         return result
     }
 
-    fun isBalanced(): Boolean {
+    fun checkOverallBalance(): Boolean {
         var balance = 0.0
         for (vertex in vertices.values) {
-            balance += vertex.getActualBalance()
+            balance += vertex.getBalance()
         }
-        balance += abs(getSuperSource().getBalance() - getSuperSource().getOutgoingFlow())
-        balance += abs(getSuperSink().getBalance() + getSuperSink().getIncomingFlow())
+        if (balance != 0.0) {
+            println("Overall balance must be 0, but was $balance!")
+            return false
+        }
+        return true
+    }
+
+    fun getNextSource(): Vertex? {
+        if (sources.isEmpty()) {
+            return null
+        }
+        return sources.remove(sources.keys.first())!!
+    }
+
+    fun getNextSink(): Vertex? {
+        if (sinks.isEmpty()) {
+            return null
+        }
+        return sinks.remove(sinks.keys.first())!!
+    }
+
+    fun isBalanced(): Boolean {
+        sources.clear()
+        sinks.clear()
+        if (getSuperSource().getBalance() - getSuperSource().getOutgoingFlow() != 0.0) {
+            println("Supersource not balanced: ${getSuperSource()})")
+            return false
+        }
+        if (getSuperSink().getBalance() + getSuperSink().getIncomingFlow() != 0.0) {
+            println("Supersink not balanced: ${getSuperSink()})")
+            return false
+        }
+        var balance = 0.0
+        for (vertex in vertices.values) {
+            val actualBalance = vertex.getActualBalance()
+            if (actualBalance < 0) {
+                println("Vertex not balanced: ${vertex})")
+                sinks[vertex.getId()] = vertex
+            }
+            if (actualBalance > 0) {
+                println("Vertex not balanced: ${vertex})")
+                sources[vertex.getId()] = vertex
+            }
+            balance += actualBalance
+        }
+        if (sources.isNotEmpty()) {
+            println("Unbalanced sources: ${sources.size}")
+            return false
+        }
+        if (sinks.isNotEmpty() && sinks.size != sources.size) {
+            println("Count sources (${sources.size}) != Count sinks (${sinks.size})")
+            return false
+        }
 
         return balance == 0.0
     }
 
-    fun getResidualEdges(): LinkedList<Edge> {
-        return LinkedList(residualEdges)
+    fun getFlowCost(): Double {
+        var cost = 0.0
+        for (edge in edges) {
+            if (!edge.residual)
+                cost += edge.cost * abs(edge.flow)
+        }
+        return cost
     }
 
     fun getSuperSource(): Vertex {

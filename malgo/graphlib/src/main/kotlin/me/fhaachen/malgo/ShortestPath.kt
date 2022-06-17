@@ -59,6 +59,7 @@ class ShortestPath {
             val N = graph.getVertexCount() - graph.getAdditionalVertexCount() - 1
             for (n in 0 until N) {
                 compareAndUpdateDistances(graph, shortestPathElements, visited, costWeighted)
+                    ?: return BellmanFordResult(ArrayList(shortestPathElements), null)
             }
 
             val cycleDetectedAt = compareAndUpdateDistances(graph, shortestPathElements, visited, costWeighted)
