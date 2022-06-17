@@ -5,31 +5,30 @@ import java.util.*
 class MinCostFlow {
     companion object {
         fun cycleCancelation(graph: DiGraph): MinCostFlowResult {
-            // Superquellen, Supersenken
-            // b-Fluss erzeugen
-            val edmondsKarp = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
-            if (edmondsKarp == null || !graph.checkOverallBalance() || !graph.isBalanced()) {
+            if (!graph.checkOverallBalance()) {
                 return MinCostFlowResult(null)
             }
-            // finde negative Zykel in Residualkosten
+            val edmondsKarp = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
+            if (edmondsKarp == null || !graph.isSuperSourceBalanced()) {
+                println("No balanced-Fow possible")
+                return MinCostFlowResult(null)
+            }
+            // find negative cost cycle in residual graph
             var bellmanFordResult = ShortestPath.mooreBellmanFord(graph, graph.getSuperNode().getId(), true)
             var cyclesCancelled = 0
             var lowestWeight: Double
             while (bellmanFordResult.cycle != null) {
                 lowestWeight = bellmanFordResult.cycle!!.lowestWeightedEdge.capacity
                 for (edge in bellmanFordResult.cycle!!.edges!!) {
+                    val source = graph.getVertex(edge.source.getId())
+                    val forwardEdge = source.getOutgoingEdge(edge.target.getId())
+                    forwardEdge.updateFlow(-lowestWeight)
                     val target = graph.getVertex(edge.target.getId())
                     if (!target.hasOutgoingEdge(edge.source.getId())) {
                         graph.createResidualEdge(target, edge.source, -edge.cost)
                     }
-                    val residualEdge = target.getOutgoingEdge(edge.source.getId())
-                    residualEdge.updateFlow(lowestWeight)
-                    val source = graph.getVertex(edge.source.getId())
-                    var originalEdge: Edge? = null
-                    if (source.hasOutgoingEdge(edge.target.getId())) {
-                        originalEdge = source.getOutgoingEdge(edge.target.getId())
-                    }
-                    originalEdge!!.updateFlow(-lowestWeight)
+                    val reverseEdge = target.getOutgoingEdge(edge.source.getId())
+                    reverseEdge.updateFlow(lowestWeight)
                 }
                 bellmanFordResult = ShortestPath.mooreBellmanFord(graph, graph.getSuperNode().getId(), true)
                 cyclesCancelled++
@@ -54,6 +53,12 @@ class MinCostFlow {
             val sink: Vertex = graph.getSuperSink()
             println(graph.getFlowCost())
             MaxFlow.edmondsKarp(graph, source!!.getId(), sink.getId()) ?: return MinCostFlowResult(null)
+            val edmondsKarp = MaxFlow.edmondsKarp(graph, graph.getSuperSource().getId(), graph.getSuperSink().getId())
+            if (edmondsKarp == null || !graph.isSuperSourceBalanced()) {
+                println("No balanced-flow possible")
+                return MinCostFlowResult(null)
+            }
+
             while (!graph.isBalanced()) {
                 // Bestimme b'
                 // Suche Pseudoquelle/Pseudosenke und bestimme ShortestCostPath
@@ -61,14 +66,15 @@ class MinCostFlow {
                 // ändere Fluss
                 source = graph.getNextSink()
                 if (source == null) {
-                    println("Kein weiterer b-Fluss möglich")
-                    return MinCostFlowResult(null)
-
+                    throw java.lang.IllegalStateException(
+                        "If graph is not balanced there" +
+                                " should be an unbalanced pair of sources and sinks"
+                    )
                 }
 
                 val mooreBellmanFord = ShortestPath.mooreBellmanFord(graph, source.getId(), false)
                 if (mooreBellmanFord.cycle != null) {
-                    throw java.lang.IllegalStateException("This should never happen!")
+                    throw java.lang.IllegalStateException("There should never be a negative cycle in here!")
                 }
                 val queue = LinkedList<Edge>()
                 var lowestCapacity = Double.POSITIVE_INFINITY

@@ -124,11 +124,12 @@ class ShortestPath {
                 shortestPathElement = map[shortestPathElement.predecessor!!]!!
             }
             val vertexInCycle = shortestPathElement.vertexId
-            println("Graph contains negative cycle @$vertexInCycle")
+            println("Graph contains negative cycle @Vertex = $vertexInCycle")
             var lowestWeightedEdge: Edge? = null
             var currentId = vertexInCycle
             var predecessor = shortestPathElement.predecessor!!
             val cycle = ArrayList<Edge>()
+            //todo: eventuell bis currentId laufen
             while (vertexInCycle != predecessor) {
                 val currentEdge = graph.getVertex(predecessor).getOutgoingEdge(currentId)
                 cycle.add(currentEdge)

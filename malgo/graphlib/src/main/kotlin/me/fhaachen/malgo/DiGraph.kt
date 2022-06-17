@@ -123,17 +123,17 @@ class DiGraph : Graph {
         return sinks.remove(sinks.keys.first())!!
     }
 
+    fun isSuperSourceBalanced(): Boolean {
+        if (getSuperSource().getBalance() - getSuperSource().getOutgoingFlow() != 0.0) {
+            println("Supersource not balanced: ${getSuperSource()} with outgoing flow = ${getSuperSource().getOutgoingFlow()}")
+            return false
+        }
+        return true
+    }
+
     fun isBalanced(): Boolean {
         sources.clear()
         sinks.clear()
-        if (getSuperSource().getBalance() - getSuperSource().getOutgoingFlow() != 0.0) {
-            println("Supersource not balanced: ${getSuperSource()})")
-            return false
-        }
-        if (getSuperSink().getBalance() + getSuperSink().getIncomingFlow() != 0.0) {
-            println("Supersink not balanced: ${getSuperSink()})")
-            return false
-        }
         var balance = 0.0
         for (vertex in vertices.values) {
             val actualBalance = vertex.getActualBalance()
@@ -151,8 +151,8 @@ class DiGraph : Graph {
             println("Unbalanced sources: ${sources.size}")
             return false
         }
-        if (sinks.isNotEmpty() && sinks.size != sources.size) {
-            println("Count sources (${sources.size}) != Count sinks (${sinks.size})")
+        if (sinks.isNotEmpty()) {
+            println("Unbalanced sinks: ${sinks.size}")
             return false
         }
 
@@ -163,7 +163,7 @@ class DiGraph : Graph {
         var cost = 0.0
         for (edge in edges) {
             if (!edge.residual)
-                cost += edge.cost * abs(edge.flow)
+                cost += edge.cost * edge.flow
         }
         return cost
     }
@@ -196,6 +196,7 @@ class DiGraph : Graph {
         return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
     }
 
+    //todo knoten wieder abbauen bzw. aufbauen, wenn wir sie brauchen
     fun postInit() {
         createSuperSource()
         createSuperSink()
