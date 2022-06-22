@@ -47,7 +47,7 @@ internal class ShortestPathTest {
     internal fun mooreBellmanFord(resourceName: String, from: Int, to: Int, result: Double) {
         val graph = GraphTest.toDiGraph(resourceName)
         val shortestPathResult = ShortestPath.mooreBellmanFord(graph, from)
-        for (shortestPathElement in shortestPathResult.shortestPath) {
+        for (shortestPathElement in shortestPathResult.shortestPathTree) {
             if (shortestPathElement.vertexId == to) {
                 Assertions.assertThat(shortestPathElement.distance)
                     .isCloseTo(result, Percentage.withPercentage(0.000001))
@@ -69,7 +69,7 @@ internal class ShortestPathTest {
         val resourceName = "G_1_2.txt"
         val graph = GraphTest.toGraph(resourceName)
         val shortestPathResult = ShortestPath.mooreBellmanFord(graph, 0)
-        for (shortestPathElement in shortestPathResult.shortestPath) {
+        for (shortestPathElement in shortestPathResult.shortestPathTree) {
             if (shortestPathElement.vertexId == 1) {
                 Assertions.assertThat(shortestPathElement.distance)
                     .isCloseTo(2.36802, Percentage.withPercentage(0.000001))

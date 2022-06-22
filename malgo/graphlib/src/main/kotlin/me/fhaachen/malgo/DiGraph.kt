@@ -10,9 +10,9 @@ class DiGraph : Graph {
     private var sources: HashMap<Int, Vertex> = HashMap()
     private var sinks: HashMap<Int, Vertex> = HashMap()
     private var residualEdges: HashSet<Edge> = HashSet()
-    private lateinit var superSource: Vertex
-    private lateinit var superSink: Vertex
-    private lateinit var superNode: Vertex
+    private var superSource: Vertex? = null
+    private var superSink: Vertex? = null
+    private var superNode: Vertex? = null
 
     override fun connectVertices(edge: Edge, residual: Boolean) {
         val source = vertices.getOrPut(edge.source.getId()) { edge.source }
@@ -41,8 +41,8 @@ class DiGraph : Graph {
     }
 
     private fun updateBalance(source: Vertex, target: Vertex) {
-        if ((this::superSource.isInitialized && source.getId() == superSource.getId())
-            || (this::superSink.isInitialized && target.getId() == superSink.getId())
+        if ((superSource != null && source.getId() == superSource!!.getId())
+            || (superSink != null && target.getId() == superSink!!.getId())
         ) {
             return
         }
@@ -84,13 +84,13 @@ class DiGraph : Graph {
 
     override fun getAdditionalVertexCount(): Int {
         var result = 0
-        if (this::superNode.isInitialized) {
+        if (superNode != null) {
             result++
         }
-        if (this::superSource.isInitialized) {
+        if (superSource != null) {
             result++
         }
-        if (this::superSink.isInitialized) {
+        if (superSink != null) {
             result++
         }
 
@@ -117,8 +117,8 @@ class DiGraph : Graph {
     }
 
     fun isSuperSourceBalanced(): Boolean {
-        if (getSuperSource().getBalance() - getSuperSource().getOutgoingFlow() != 0.0) {
-            println("Supersource not balanced: ${getSuperSource()} with outgoing flow = ${getSuperSource().getOutgoingFlow()}")
+        if (getSuperSource()!!.getBalance() - getSuperSource()!!.getOutgoingFlow() != 0.0) {
+            println("Supersource not balanced: ${getSuperSource()} with outgoing flow = ${getSuperSource()!!.getOutgoingFlow()}")
             return false
         }
         return true
@@ -127,34 +127,20 @@ class DiGraph : Graph {
     fun isBalanced(): Boolean {
         sources.clear()
         sinks.clear()
-        var balance = 0.0
-        val idsSuperNodes = intArrayOf(getSuperNode().getId(), getSuperSource().getId(), getSuperSink().getId())
-        // todo supernodes must be excluded here
         for (vertex in vertices.values) {
-            if (idsSuperNodes.contains(vertex.getId())) {
-                continue
-            }
             val actualBalance = vertex.getActualBalance()
             if (actualBalance < 0) {
-                println("Vertex not balanced: ${vertex})")
                 sinks[vertex.getId()] = vertex
             }
             if (actualBalance > 0) {
-                println("Vertex not balanced: ${vertex})")
                 sources[vertex.getId()] = vertex
             }
-            balance += actualBalance
         }
         if (sources.isNotEmpty()) {
-            println("Unbalanced sources: ${sources.size}")
-            return false
-        }
-        if (sinks.isNotEmpty()) {
-            println("Unbalanced sinks: ${sinks.size}")
             return false
         }
 
-        return balance == 0.0
+        return sinks.isEmpty()
     }
 
     fun getFlowCost(): Double {
@@ -166,15 +152,15 @@ class DiGraph : Graph {
         return cost
     }
 
-    fun getSuperSource(): Vertex {
+    fun getSuperSource(): Vertex? {
         return superSource
     }
 
-    fun getSuperSink(): Vertex {
+    fun getSuperSink(): Vertex? {
         return superSink
     }
 
-    fun getSuperNode(): Vertex {
+    fun getSuperNode(): Vertex? {
         return superNode
     }
 
@@ -194,52 +180,45 @@ class DiGraph : Graph {
         return "DiGraph(countVertex=${vertices.size}, countEdge=${edges.size}, edges=${edges}, vertices=$vertices)"
     }
 
-    //todo knoten wieder abbauen bzw. aufbauen, wenn wir sie brauchen
-    fun postInit() {
-        createSuperSource()
-        createSuperSink()
-        createSuperNode()
-    }
-
-    private fun createSuperNode() {
+    fun createSuperNode() {
         superNode = Vertex(vertices.size)
-        vertices[superNode.getId()] = superNode
+        vertices[superNode!!.getId()] = superNode!!
         // Supernode, SuperSource and SuperSink will be ignored
         for (i in 0 until vertices.size - 3) {
-            connectVertices(Edge(superNode, vertices[i]!!, 1.0))
+            connectVertices(Edge(superNode!!, vertices[i]!!, 1.0))
         }
     }
 
-    private fun createSuperSource(): Int {
-        if (this::superSource.isInitialized) {
-            return superSource.getId()
+    fun createSuperSource(): Int {
+        if (superSource != null) {
+            return superSource!!.getId()
         }
         superSource = Vertex(vertices.size)
         for (source in sources.values) {
             val vertex = vertices[source.getId()]!!
-            val edge = Edge(superSource, vertex, abs(vertex.getBalance()), 0.0)
+            val edge = Edge(superSource!!, vertex, abs(vertex.getBalance()), 0.0)
             this.connectVertices(edge)
-            superSource.addBalance(vertex.getBalance())
+            superSource!!.addBalance(vertex.getBalance())
             vertex.addBalance(-vertex.getBalance())
         }
         sources.clear()
-        return superSource.getId()
+        return superSource!!.getId()
     }
 
-    private fun createSuperSink(): Int {
-        if (this::superSink.isInitialized) {
-            return superSink.getId()
+    fun createSuperSink(): Int {
+        if (superSink != null) {
+            return superSink!!.getId()
         }
         superSink = Vertex(vertices.size)
         for (sink in sinks.values) {
             val vertex = vertices[sink.getId()]!!
-            val edge = Edge(vertex, superSink, abs(vertex.getBalance()), 0.0)
+            val edge = Edge(vertex, superSink!!, abs(vertex.getBalance()), 0.0)
             this.connectVertices(edge)
-            superSink.addBalance(vertex.getBalance())
+            superSink!!.addBalance(vertex.getBalance())
             vertex.addBalance(-vertex.getBalance())
         }
         sinks.clear()
-        return superSink.getId()
+        return superSink!!.getId()
     }
 
 }

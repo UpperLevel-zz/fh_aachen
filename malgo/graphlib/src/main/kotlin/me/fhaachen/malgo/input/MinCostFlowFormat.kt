@@ -40,7 +40,6 @@ class MinCostFlowFormat {
                 this::class.java.classLoader.getResourceAsStream(resourceName)!!.bufferedReader(Charsets.UTF_8)
             )
             val graph = toGraph(bufferedReader)
-            graph.postInit()
             return graph
         }
     }

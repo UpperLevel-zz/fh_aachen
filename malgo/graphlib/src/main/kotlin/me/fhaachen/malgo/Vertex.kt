@@ -37,7 +37,7 @@ class Vertex(private val id: Int, private var balance: Double) {
     }
 
     fun getActualBalance(): Double {
-        pseudoBalance = getIncomingFlow() - getOutgoingFlow()
+        pseudoBalance = balance - (getOutgoingFlow() - getIncomingFlow())
         return pseudoBalance
     }
 

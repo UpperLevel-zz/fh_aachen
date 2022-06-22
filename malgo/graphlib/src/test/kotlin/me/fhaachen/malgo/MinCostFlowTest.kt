@@ -48,15 +48,15 @@ internal class MinCostFlowTest {
         return Stream.of(
             Arguments.of("Kostenminimal1.txt", 3.0),
             Arguments.of("Kostenminimal2.txt", 0.0),
-//            Arguments.of("Kostenminimal_gross1.txt", 1537),
-//            Arguments.of("Kostenminimal_gross2.txt", 1838)
+            Arguments.of("Kostenminimal_gross1.txt", 1537),
+            Arguments.of("Kostenminimal_gross2.txt", 1838)
         )
     }
 
     private fun noBFlow(): Stream<Arguments?>? {
         return Stream.of(
             Arguments.of("Kostenminimal3.txt", null),
-//            Arguments.of("Kostenminimal4.txt", null),
+            Arguments.of("Kostenminimal4.txt", null),
             Arguments.of("Kostenminimal_gross3.txt", null)
         )
     }

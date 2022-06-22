@@ -158,11 +158,11 @@ class ShortestPath {
     }
 
     class BellmanFordResult(
-        var shortestPath: ArrayList<ShortestPathElement>,
+        var shortestPathTree: ArrayList<ShortestPathElement>,
         var cycle: Cycle?
     ) {
         override fun toString(): String {
-            return "BellmanFordResult(shortestPath=$shortestPath, cycle=$cycle)"
+            return "BellmanFordResult(shortestPath=$shortestPathTree, cycle=$cycle)"
         }
     }
 
