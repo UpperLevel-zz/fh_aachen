@@ -342,3 +342,70 @@ auch als Kante (u, v). Der Graph G ohne Orientierung wird als der zugrunde liege
 
 Manchmal unterteilen wir den Grad in den Ingrad d−(v), d.h. die Anzahl der Kanten, die v als Endknoten haben, 
 und den Ausgrad d+(v), d.h. die Anzahl der Kanten, die v als Anfangsknoten haben.
+
+Spricht man von einem Kreis in einem gerichteten Graphen, so muss dieser nicht in eine Richtung orientiert sein
+
+Will man andeuten, dass alle Kanten eines Kreises in die gleiche Richtung zeigen, so bezeichnet man diesen als 
+gerichteten Kreis oder als Zykel.
+
+Ein Schnitt in einem gerichteten Graphen besteht aus Kanten, die zwischen zwei Knotenmengen X und V\X 
+mit X != ∅ und X ( V verlaufen, wobei die Orientierung dieser Kanten keine Rolle spielt. In einem gerichteten Schnitt 
+hingegen sind alle Kanten, die zwischen X und V \X verlaufen, in eine Richtung orientiert.
+
+Ein gerichteter Graph heißt zusammenhängend, wenn sein zugrunde liegender ungerichteter Graph zusammenhängend ist.
+
+Ein gerichteter Graph G = (V, E) heißt stark zusammenhängend, wenn zu je zwei Knoten s, t ∈ V ein gerichteter Weg 
+von s nach t und von t nach s existiert. Eine starke Zusammenhangskomponente H von G ist ein maximal stark
+zusammenhängender Teilgraph von G.
+
+Sei G ein Digraph. Dann sind die folgenden Aussagen äquivalent:
+1. G ist stark zusammenhängend.
+2. G enthält keinen gerichteten Schnitt.
+3. G ist zusammenhängend und jede Kante liegt auf einem gerichteten Kreis.
+
+Satz 8.2. Ein ungerichteter Graph kann genau dann zu einem stark zusammenhängenden Digraphen orientiert werden, 
+wenn er zusammenhängend ist und keine Brücke enthält.
+
+Ein gerichteter Graph G heißt genau dann eulersch, wenn ein gerichteter Kreis in G existiert, der jede Kante 
+des Graphen genau einmal enthält. Ein solcher Kreis wird wieder als Euler-Tour bezeichnet.
+
+Satz 8.3. Ein gerichteter Graph G = (V, E) ist genau dann eulersch, wenn der zugrunde liegende ungerichtete Graph 
+zusammenhängend ist und wenn d+(v) = d−(v) für jeden Knoten v ∈ V gilt.
+
+Ein vollständiger Graph mit einer Orientierung heißt Turniergraph.
+
+Sei G ein gerichteter Gaph. Ein gerichteter Weg, der jeden Knoten genau einmal enthält, heißt Hamilton-Weg.
+
+In jedem Turniergraphen gibt es einen gerichteten Hamilton-Weg.
+
+Ein Turniergraph heißt transitiv, wenn aus (a, b) und (b, c) ∈ E auch (a, c) in E folgt.
+
+In transitiven Turniergraphen gibt es nur einen einzigen Hamilton-Weg.
+
+Jeder stark zusammenhängende Turniergraph ist hamiltonsch.
+
+Ein König in einem Digraphen ist ein Knoten, der alle anderen Knoten über einen gerichteten Weg mit einer 
+maximalen Länge von zwei erreicht.
+
+Satz 8.7 (Hühner-Satz von Landau). In jedem Turniergraphen existiert ein König.
+
+Wir bezeichnen mit N+v die Knoten, die direkt von v aus erreichbar sind, und mit N−v die Menge der Knoten,
+die v direkt über eine Kante erreichen.
+
+Lemma 8.8. Sei G = (V, E) ein Turniergraph und s = maxv∈V {|N + v|}. Dann ist jeder Knoten v ∈ V mit |N + v| = s 
+ein König.
+
+Lemma 8.9. Jeder Knoten eines Turniergraphen, der eine eingehende Kante hat, wird auch direkt von einem König erreicht.
+
+Ein Knoten v ist ein Diktator, wenn er keine eingehenden Kanten hat.
+
+Satz 8.10. Ein Turniergraph hat genau dann nur einen König, wenn es einen Diktator gibt. 
+Dieser Diktator ist dann auch der einzige König.
+
+Satz 8.11. Es existiert kein Turniergraph mit genau zwei Königen.
+
+Lemma 8.12. Jeder Turniergraph mit n ≥ 3 hat mindestens drei Könige, falls kein Knoten einen Ingrad von Null hat.
+
+Satz 8.13. Für jedes n ∈ N\{2, 4} existiert ein Turniergraph mit n Knoten und n Königen.
+
+
