@@ -408,4 +408,247 @@ Lemma 8.12. Jeder Turniergraph mit n ≥ 3 hat mindestens drei Könige, falls ke
 
 Satz 8.13. Für jedes n ∈ N\{2, 4} existiert ein Turniergraph mit n Knoten und n Königen.
 
+# ShortestPathTree
 
+Sei G = (V, E) ein Digraph (gerichteter Graph) mit einer Kantenbewertung c(e) ≥ 0 für jede Kante e ∈ E und 
+seien s, t ∈ V zwei Knoten (s für engl. source und t für engl. target). Ein (s, t)-Weg in G heißt kürzester Weg, 
+falls sein Gewicht verglichen mit dem Gewicht jedes anderen (s, t)-Wegs minimal ist. Das Gewicht c(p) eines 
+Wegs p ist definiert als
+c(p) = Summe c(e)
+e∈p
+
+Lemma 9.1. Sei p ein kürzester (s, t)-Weg. Dann ist jeder zusammenhängende Teilweg von p ein kürzester Weg.
+
+Sei G = (V, E) ein Digraph und c(e) ≥ 0 eine Kantenbewertung für jede Kante e ∈ E und s ∈ V . 
+Ein spannender gerichteter Baum T mit der Wurzel s ist ein Kürzester-Wege-Baum, wenn jeder (s, v)-Weg in T 
+ein kürzester Weg in G ist.
+
+Satz 9.2 (Existenz Kürzester-Wege-Baum). Sei G = (V, E) ein Digraph mit einer positiven Kantenbewertung. 
+Dann sind die folgenden Bedingungen äquivalent:
+1. Für jeden Knoten v ∈ V gibt es einen (s, v)-Weg in G.
+2. Es existiert ein Kürzester-Wege-Baum mit der Wurzel s in G.
+
+Satz 9.3 (Optimalität Kürzester-Wege-Baum). Sei G = (V, E) ein Digraph mit positiven Kantengewichten c(e) 
+zu jeder Kante e ∈ E und sei s ∈ V . Ferner sei T ein gerichteter spannender Baum von G. Dann sind die 
+folgenden Aussagen äquivalent:
+1. Der Baum T ist ein Kürzester-Wege-Baum zum Knoten s.
+2. Für alle Nicht-Baumkanten e = (v, w) gilt die Dreiecksungleichung
+
+dist(v) + c(e) ≥ dist(w).
+
+Der Name Dreiecksungleichung rührt daher, dass man die drei Knoten s, v und w als Dreieck auffasst und dabei beachtet, 
+dass in Dreiecken grundsätzlich die Summe zweier Seiten größer oder gleich der dritten Seite ist
+
+Satz 9.4. Der Dijkstra-Algorithmus berechnet in einem Digraphen mit positiver Kantenbewertung einen Kürzesten-Wege-Baum 
+zu allen Knoten, die von der Wurzel erreichbar sind.
+
+Ob ein kürzester Weg in einem Graphen existiert, hängt also davon ab, ob die gegebene Kostenfunktion einen 
+negativen Zykel, d.h. einen gerichteten Kreis mit negativem Gewicht, in dem Graphen erzeugen. Kantenkosten c 
+bezeichnen wir als konservativ, falls dies nicht der Fall ist. Für konservative Kantenbewertungen gelten die 
+gleichen Aussagen wie für positive.
+
+Satz 9.5. Sei G = (V, E) ein gerichteter Graph, s, t ∈ V und c eine konservative Kantenkostenfunktion. Dann gelten 
+folgende Aussagen:
+1. Jeder zusammenhängende Teilweg eines kürzesten (s, t)-Wegs ist ebenfalls ein
+   kürzester Weg.
+2. Es existiert ein Kürzester-Wege-Baum mit der Wurzel s in G, falls alle Knoten
+   v von s aus erreichbar sind.
+3. Ein spannender, gerichteter Baum vom Knoten s aus ist genau dann ein
+Kürzester-Wege-Baum, wenn für jede Nicht-Baumkante e = (v, w) die Dreiecksungleichung
+
+dist(v) + c((v, w)) ≥ dist(w)
+
+erfüllt ist.
+
+# MaximumFlow
+
+P ist die Menge aller einfachen gerichteten Wege, die von s nach t gehen. Wie viele Einheiten nun entlang eines
+Wegs p ∈ P geschickt werden sollen, geben wir mit x(p) an. Eine solche Zuordnung bezeichnet man auch als Wegfluss.
+
+Einen Wegfluss, der die Kapazitäten einhält, nennen wir auch einen zulässigen Wegfluss.
+
+Die Anzahl der Einheiten, die ein Wegfluss insgesamt von s nach t verschickt, wird auch als Flusswert 
+oder Wert bezeichnet.
+
+Sei G = (V, E) ein gerichteter Graph mit oberen Kapazitäten u(e) für jede Kante e ∈ E und zwei markierte Knoten 
+s, t ∈ V (kurz: Netzwerk (G, u, s, t)). Ein (s, t)-Fluss ist eine Kantenbewertung f : E → R≥0, die die Kantenkapazitäten
+einhält und für die an jedem Knoten v ∈ V \{s, t} Flusserhaltung gilt. Ein (s, t)-Fluss f hält die Kantenkapazitäten 
+ein, wenn f(e) ≤ u(e) ∀e ∈ E. An einem Knoten v ∈ V liegt Flusserhaltung vor, wenn
+
+Summe f(e)
+e∈δ+(v)
+Minus
+Summe f(e) 
+e∈δ−(v)
+= 0
+
+Mit δ−(v) werden die eingehenden Kanten in v bezeichnet und mit δ+(v) die ausgehenden Kanten. Der Wert (engl. value) 
+eines (s, t)-Flusses ist definiert durch
+
+value(f) =
+Summe f(e)
+e∈δ+(s)
+Minus
+Summe f(e)
+e∈δ−(s)
+
+Die Definition hat nichts mehr mit Wegen zu tun, sondern weist jeder Kante einen bestimmten Wert zu. 
+Der Wert von f soll nun angeben, wie viel der Fluss von s nach t transportiert.
+
+Satz 10.1 (Dekompositionssatz für (s, t)-Flüsse, Ford-Fulkerson 1962). Sei f ein (s, t)-Fluss in dem 
+Netzwerk (G, u, s, t). Dann gilt:
+Der Fluss f lässt sich in gerichtete (s, t)-Wege und gerichtete Kreise zerlegen. Die Anzahl der Wege und 
+Kreise kann auf höchstens m beschränkt werden.
+
+Sei G = (V, E) ein Graph. Mit e = (u, v) ∈ E bezeichnen wir die Vorwärtskanten und mit ←−e = (v, u) die Rückwärtskante 
+von e. Der Graph G↔ enthält alle Kanten e ∈ E und alle Rückwärtskanten. Sei nun (G, u, s, t) ein Netzwerk und f 
+ein (s, t)-Fluss. Die Residualkapazität u^f ist definiert für alle Kanten in G↔ durch
+
+u^f(e) = u(e) − f(e) für alle e ∈ E
+u^f(←−e ) = f(e) für alle e ∈ E.
+
+Der Residualgraph G^f zu dem Netzwerk (G, u, s, t) und dem Fluss f ist ein Teilgraph von G↔, der alle Kanten enthält, 
+deren Residualkapazität nicht Null ist.
+
+Satz 10.2. Sei p ein einfacher (s, t)-Weg in Gf des Netzwerks (G, u, s, t) und des Flusses f und es gelte 
+γ ≤ min e∈p u^f(e). Dann ist f′(e) :=
+- f(e) + γ für alle Kanten e ∈ p
+- f(e) + γ für alle Kanten ←−e ∈ p
+- f(e) sonst
+
+ein (s, t)-Fluss in (G, u, s, t). Für den Wert von f′ gilt value(f′) = value(f) + γ
+
+Nach Aussage des Satzes lohnt sich eine Flussveränderung entlang eines (s, t)-Wegs in G^f auf jeden Fall. 
+Aus diesem Grund bezeichnet man einen solchen Weg auch als f-augmentierenden Weg.
+
+Lemma 10.3. Sei (G, u, s, t) ein Netzwerk mit u(e) ∈ N für alle e ∈ E. Dann existiert ein maximaler Fluss f in G 
+mit f(e) ∈ N für alle e ∈ E.
+
+Sei G = (V, E) ein gerichteter Graph, s, t ∈ V und ∅ != X !( V mit s ∈ X und t /∈ X eine Knotenmenge. 
+Dann ist die Kantenmenge δ(X) := {(u, v) ∈ E | u ∈ X und v ∈ V \X bzw. v ∈ X und u ∈ V \X}
+ein (s, t)-Schnitt. Die Vorwärtskanten des Schnittes sind die Kanten δ+(X) := {(u, v) ∈ E | u ∈ X und v ∈ V \X}
+und die Rückwärtskanten δ−(X) := {(u, v) ∈ E | v ∈ X und u ∈ V \X}
+
+Die Kapazität des (s, t)-Schnitts δ(X) im Netzwerk (G, u, s, t) beträgt
+cap(X) := Summe u(e)
+e∈δ+(X)
+
+Lemma 10.4. Sei (G, u, s, t) ein Netzwerk. Für jeden (s, t)-Schnitt δ(X) und jeden (s, t)-Fluss f gilt:
+1. Der Flusswert ergibt sich aus der Belastung der Vorwärtskanten abzüglich der
+   Belastung der Rückwärtskanten des Schnittes, d.h.
+   value(f) =
+
+2. Die Kapazität des Schnittes beschränkt den Flusswert, d.h. value(f) ≤ cap(X)
+
+Satz 10.5 (Optimalitätskriterium für maximale Flüsse). Sei (G, u, s, t) ein Netzwerk. Ein (s, t)-Fluss f ist genau 
+dann maximal, wenn es keinen f-augmentierenden (s, t)-Weg in G^f gibt.
+
+Satz 10.6. Der Algorithmus von Ford-Fulkerson berechnet in jedem Netzwerk (G, u, s, t) einen maximalen (s, t)-Fluss.
+
+Satz 10.7 (Max-Fluss-Min-Schnitt-Satz, Ford-Fulkerson 1956, Elias, Feinstein, Shannon 1956). 
+In einem Flussnetzwerk ist der maximale Flusswert eines (s, t)-Flusses gleich der 
+minimalen Kapazität eines (s, t)-Schnittes.
+
+# Minimum Cost FLow
+
+Gilt b(v) > 0, so stellt dieser Knoten das Angebot (z.B. die Backwaren) b(v) zur Verfügung. Ein solcher Knoten
+heißt auch Quelle. 
+
+Gilt hingegen b(v) < 0, so existiert an dem Knoten v eine Nachfrage von b(v) Einheiten. Diese Knoten werden 
+auch als Senken bezeichnet.
+
+Ein Knoten v mit b(v) = 0 hat weder ein Angebot noch eine Nachfrage
+
+Im Folgenden gehen wir davon aus, dass Summe b(v) = 0, v∈V gilt. Eine solche Knotenbewertung 
+bezeichnen wir auch als Balance.
+
+Sei G = (V, E) ein gerichteter Graph mit oberen Kapazitäten u(e) für jede Kante e ∈ E und b eine Balance. 
+Ein b-Fluss ist eine Kantenbewertung f(e), e ∈ E, die die oberen Kapazitäten einhält und für die der Einfluss in einen
+Knoten v abzüglich des Ausflusses in dem Knoten v dem Wert b(v) entspricht, d.h.
+
+X
+e∈δ+(v)
+f(e) −
+X
+e∈δ−(v)
+f(e) = b(v).
+
+Sei G = (V, E) ein gerichteter Graph mit oberen Kapazitäten u(e) ∈ N und Kosten c(e) ∈ Z für jede Kante e ∈ E. 
+Außerdem sei b eine Balance. Ein kostenminimaler Fluss f ist ein b-Fluss mit minimalen Kosten. Die Kosten eines
+b-Flusses sind gegeben durch c(f) = Summe c(e) · f(e), e∈E
+
+Ein f-augmentierender Zykel ist ein gerichteter Kreis in dem Residualgraphen G^f
+
+Verändert man einen gegebenen b-Fluss f entlang eines solchen Zykels um den
+Wert γ ≤ mine∈Z u^f(e), so erhält man wieder einen zulässigen b-Fluss f′. Dabei definiert man f'(e) =
+- f(e) falls e !∈ Z
+- f(e) + γ falls e ∈ Z
+- f(e) − γ falls ←−e ∈ Z
+
+Residualkosten c
+f
+. Die Vorwärtskanten erhalten dabei die ursprünglichen Kosten und die Rückwärtskanten den negativen
+Wert ihrer Vorwärtskanten, d.h.
+c^f(e) = c(e), ∀e ∈ E
+c^f(←−e ) = −c(e), ∀e ∈ E.
+
+Satz 11.1 (Optimalitätskriterium für MCFP, Klein 1967). Sei G = (V, E) ein gerichteter Graph, u die 
+oberen Kantenkapazitäten, c eine Kostenfunktion auf den Kanten und b eine Balance. Dann ist f genau dann 
+ein kostenminimaler Fluss, wenn kein f-augmentierender Zykel Z mit negativen Kosten in G^f existiert.
+
+Satz 11.2 (Jewell 1958, Iri 1969, Busacker & Gowen 1961). Sei f ein kostenminimaler b-Fluss in dem Digraphen G 
+mit oberen Kapazitäten u, Kantenkosten c und Balancen b. Sei p ein kürzester (s, t)-Weg in G^f
+bzgl. der Kosten c^f und f′ der aus der Veränderung des Flusses f entlang des Wegs p um den Wert γ ≤ mine∈p u^f(e)
+entstandene b′-Fluss. Dann ist f′ ein kostenminimaler Fluss zu den Balancen b′ mit b′(v)
+- b(v), v ∈ V \{s, t}
+- b(v) + γ, v = s
+- b(v) − γ, v = t
+
+# Matchings
+
+Sei G = (V, E) ein ungerichteter Graph. Ein Matching in G ist eine Kantenmenge M ⊆ E, in der je zwei Kanten 
+aus M keinen gemeinsamen Endknoten haben
+
+Ein Matching M heißt maximal, wenn kein Matching M′ mit mehr Kanten existiert.
+
+Ein Matching M heißt perfekt, falls jeder Knoten in G zu einer Kante aus M inzident ist.
+
+Sei G ein Graph und M ein Matching in G. Ein M-alternierender Weg in G ist ein einfacher Weg, der abwechselnd 
+eine Kante aus M und eine Kante, die nicht aus M ist, enthält. Ein Knoten in G heißt (bezüglich M) exponiert,
+wenn er zu keiner Kante aus M inzident ist. Einen M-alternierenden Weg nennt man M-augmentierend, 
+falls beide Endpunkte exponiert sind.
+
+Sei M ein Matching in G und p ein M-augmentierender Weg. Dann hat das Matching M′, das durch das Vertauschen 
+der Matching- und Nicht-Matching-Kanten im Weg p entsteht, eine Kante mehr als M
+
+Satz 12.2 (Berge 1957). Ein Matching M in einem Graphen ist genau dann maximal, wenn es keinen 
+M-augmentierenden Weg gibt.
+
+Ein Graph G = (V, E) heißt bipartit, wenn seine Knoten in zwei Teilmengen A und B zerlegt werden können, 
+sodass für alle Kanten e = (a, b) ∈ E ein Endknoten in der Menge A und einer in der Menge B liegt.
+
+Sei G = (V, E) ein Graph und A ⊆ V. Ein Matching M überdeckt die Knotenmenge A, wenn jeder Konten aus A mit 
+einer Kante aus M inzident ist.
+
+Die Partner Γ(X) einer Menge X sind alle Knoten in B, die mit X durch eine Kante verbunden sind, also
+Γ(X) = {y ∈ B | es gibt ein x ∈ X mit (x, y) ∈ E}.
+
+Satz 12.3 (Hall 1935). Sei G = (A∪ ̇ B, E) bipartit. Dann sind folgende Aussagen äquivalent:
+1. Der Graph G hat ein Matching, das A überdeckt.
+2. Für jede Menge X ⊆ A gilt |X| ≤ |Γ(X)| (Heiratsbedingung).
+
+Ein Graph heißt k-regulär, wenn jeder Knoten den Grad k hat.
+
+Lemma 12.4. Sei G = (A∪ ̇ B, E) ein k-regulärer bipartiter Graph. Dann hat G ein perfektes Matching.
+
+Sei G = (V, E) ein Graph. Eine Knotenüberdeckung (engl. vertex cover) ist eine Knotenmenge V′ ⊆ V, sodass jede Kante 
+von G mindestens einen Endpunkt in V′ hat
+
+Eine Knotenüberdeckung V′ ist minimal, wenn es keine andere Knotenüberdeckung V ̃ gibt, die weniger Knoten hat als V′
+
+Satz 12.5 (König 1931). In einem bipartiten Graphen G ist die Kardinalität eines maximalen Matching ν(G) gleich 
+der Kardinalität einer minimalen Knotenüberdeckung τ (G).
+
+Satz 12.6. Sei G = (A∪ ̇ B, E) ein bipartiter Graph und G′ = (V′, E′) mit V′ = A∪ ̇ B ∪ {s, t} und 
+E′ = E ∪ {(s, v) | v ∈ A} ∪ {(v, t) | v ∈ B}. Sei f ein maximaler Fluss in G′ mit den f(e) ∈ {0, 1}. Dann ist
+M = {e ∈ E | f(e) = 1} ein maximales Matching.
