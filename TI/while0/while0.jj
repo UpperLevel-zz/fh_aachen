@@ -1,0 +1,95 @@
+PARSER_BEGIN(While0)
+
+public class While0 {
+
+  public static void main(String[] args) throws ParseException {
+    While0 parser = new While0(System.in);
+    parser.Input();
+  }
+
+}
+
+PARSER_END(While0)
+/*
+* Examples:
+*
+* NAME=(in V1; out V2);
+* var(V1,V2,V3,V4);
+* while V1 != V2 do
+* while V1 != V2 do V1 = 0 end
+* end
+*
+* NAME=(in V1; out V2); var(V1,V2,V3,V4); while V1 != V2 do V1 = 0 end
+* NAME=(in V1; out V2); var(V1,V2,V3,V4); while V1 != V2 do while V1 != V2 do V1 = 0 end end
+*/
+
+SKIP :
+{
+    " "
+    |
+    "\t"
+    |
+    "\n"
+    |
+    "\r"
+}
+
+TOKEN :
+{
+    <WHILE: "while"> {debugStream.println("while decl");}
+    |
+    <DO: "do"> {debugStream.println("do decl");}
+    |
+    <END: "end"> {debugStream.println("end decl");}
+    |
+    <NEQ: "!="> {debugStream.println("end decl");}
+    |
+    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {debugStream.println("variable decl");}
+    |
+    <ALPHA_: (";" | <VALUE_OPS> )> {debugStream.println("value ops decl");}
+    |
+    <VALUE_OPS: (<VARIABLE_INC> | <VARIABLE_ZERO> )> {debugStream.println("value ops decl");}
+    |
+    <VARIABLE_INC: (<VARIABLE> "=" <VARIABLE> "+ 1")> {debugStream.println("variable incr");}
+    |
+    <VARIABLE_ZERO: (<VARIABLE> "=" "0")> {debugStream.println("variable zeroing");}
+}
+
+void while0Func() :
+{}
+{
+    header()
+    localVars()
+    while0()
+}
+
+void header() :
+{}
+{
+    "NAME=(in" <VARIABLE> "; out" <VARIABLE> ");"
+}
+
+void localVars() :
+{}
+{
+    "var(" <VARIABLE> ("," <VARIABLE>)*");"
+}
+
+void while0() :
+{}
+{
+    <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <END>
+}
+
+void alpha():
+{}
+{
+    <ALPHA_> alpha()
+}
+
+void Input() :
+{}
+{
+  while0Func()
+  { System.out.println("Yaicks"); }
+}
