@@ -13,14 +13,15 @@ PARSER_END(While0)
 /*
 * Examples:
 *
-* NAME=(in V1; out V2);
-* var(V1,V2,V3,V4);
+* NAME=(in V1,V2; out Y);
+* var(H1,H2,HV3,HV4);
 * while V1 != V2 do
 * while V1 != V2 do V1 = 0 end
 * end
 *
-* NAME=(in V1; out V2); var(V1,V2,V3,V4); while V1 != V2 do V1 = 0 end
-* NAME=(in V1; out V2); var(V1,V2,V3,V4); while V1 != V2 do while V1 != V2 do V1 = 0 end end
+* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do end
+* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin V1 = 0 end
+* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin while V1 != V2 do begin V1 = 0 end end
 */
 
 SKIP :
@@ -36,23 +37,29 @@ SKIP :
 
 TOKEN :
 {
-    <WHILE: "while"> {debugStream.println("while decl");}
+    <IN: "in"> {debugStream.println("KEYWORD: " + image);}
     |
-    <DO: "do"> {debugStream.println("do decl");}
+    <WHILE: "while"> {debugStream.println("KEYWORD: " + image);}
     |
-    <END: "end"> {debugStream.println("end decl");}
+    <BEGIN: "begin"> {debugStream.println("KEYWORD: " + image);}
     |
-    <NEQ: "!="> {debugStream.println("end decl");}
+    <DO: "do"> {debugStream.println("KEYWORD: " + image);}
     |
-    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {debugStream.println("variable decl");}
+    <END: "end"> {debugStream.println("KEYWORD: " + image);}
     |
-    <ALPHA_: (";" | <VALUE_OPS> )> {debugStream.println("value ops decl");}
+    <LOC: "var"> {debugStream.println("Local Variables: ");}
     |
-    <VALUE_OPS: (<VARIABLE_INC> | <VARIABLE_ZERO> )> {debugStream.println("value ops decl");}
+    <NEQ: "!="> {debugStream.println("Not equal");}
     |
-    <VARIABLE_INC: (<VARIABLE> "=" <VARIABLE> "+ 1")> {debugStream.println("variable incr");}
+    <EQ: "="> {debugStream.println("Equal");}
     |
-    <VARIABLE_ZERO: (<VARIABLE> "=" "0")> {debugStream.println("variable zeroing");}
+    <SEMICOLON: ";"> {debugStream.println("Semicolon");}
+    |
+    <OPENING_BRACKET: "("> {debugStream.println("Opening bracket");}
+    |
+    <CLOSING_BRACKET: ")"> {debugStream.println("Closing bracket");}
+    |
+    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {debugStream.println("VARIABLE: " + image);}
 }
 
 void while0Func() :
@@ -66,30 +73,42 @@ void while0Func() :
 void header() :
 {}
 {
-    "NAME=(in" <VARIABLE> "; out" <VARIABLE> ");"
+    <VARIABLE> <EQ> <OPENING_BRACKET> <IN> <VARIABLE> ("," <VARIABLE>)* "; out" <VARIABLE> ")"<SEMICOLON>
 }
 
 void localVars() :
 {}
 {
-    "var(" <VARIABLE> ("," <VARIABLE>)*");"
+    <LOC> <OPENING_BRACKET> <VARIABLE> ("," <VARIABLE>)* ")"<SEMICOLON>
 }
 
 void while0() :
 {}
 {
-    <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <END>
+    <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <BEGIN> alpha() <END>
 }
 
 void alpha():
 {}
 {
-    <ALPHA_> alpha()
+    while0() | valueAssignment() alpha_()
+}
+
+void alpha_():
+{}
+{
+    (<SEMICOLON> alpha() alpha_())*
+}
+
+void valueAssignment():
+{}
+{
+    <VARIABLE> "=" ("0"| <VARIABLE> "+1")
 }
 
 void Input() :
 {}
 {
   while0Func()
-  { System.out.println("Yaicks"); }
+  { System.out.println("Correct While0-Program"); }
 }

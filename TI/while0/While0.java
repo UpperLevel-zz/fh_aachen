@@ -14,20 +14,15 @@ public class While0 implements While0Constants {
 }
 
   static final public void header() throws ParseException {
-    jj_consume_token(14);
     jj_consume_token(VARIABLE);
-    jj_consume_token(15);
-    jj_consume_token(VARIABLE);
-    jj_consume_token(16);
-}
-
-  static final public void localVars() throws ParseException {
-    jj_consume_token(17);
+    jj_consume_token(EQ);
+    jj_consume_token(OPENING_BRACKET);
+    jj_consume_token(IN);
     jj_consume_token(VARIABLE);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case 18:{
+      case 17:{
         ;
         break;
         }
@@ -35,10 +30,35 @@ public class While0 implements While0Constants {
         jj_la1[0] = jj_gen;
         break label_1;
       }
-      jj_consume_token(18);
+      jj_consume_token(17);
       jj_consume_token(VARIABLE);
     }
-    jj_consume_token(16);
+    jj_consume_token(18);
+    jj_consume_token(VARIABLE);
+    jj_consume_token(CLOSING_BRACKET);
+    jj_consume_token(SEMICOLON);
+}
+
+  static final public void localVars() throws ParseException {
+    jj_consume_token(LOC);
+    jj_consume_token(OPENING_BRACKET);
+    jj_consume_token(VARIABLE);
+    label_2:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case 17:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[1] = jj_gen;
+        break label_2;
+      }
+      jj_consume_token(17);
+      jj_consume_token(VARIABLE);
+    }
+    jj_consume_token(CLOSING_BRACKET);
+    jj_consume_token(SEMICOLON);
 }
 
   static final public void while0() throws ParseException {
@@ -47,17 +67,70 @@ public class While0 implements While0Constants {
     jj_consume_token(NEQ);
     jj_consume_token(VARIABLE);
     jj_consume_token(DO);
+    jj_consume_token(BEGIN);
+    alpha();
     jj_consume_token(END);
 }
 
   static final public void alpha() throws ParseException {
-    jj_consume_token(ALPHA_);
-    alpha();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case WHILE:{
+      while0();
+      break;
+      }
+    case VARIABLE:{
+      valueAssignment();
+      alpha_();
+      break;
+      }
+    default:
+      jj_la1[2] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  static final public void alpha_() throws ParseException {
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case SEMICOLON:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[3] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(SEMICOLON);
+      alpha();
+      alpha_();
+    }
+}
+
+  static final public void valueAssignment() throws ParseException {
+    jj_consume_token(VARIABLE);
+    jj_consume_token(EQ);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 19:{
+      jj_consume_token(19);
+      break;
+      }
+    case VARIABLE:{
+      jj_consume_token(VARIABLE);
+      jj_consume_token(20);
+      break;
+      }
+    default:
+      jj_la1[4] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
 }
 
   static final public void Input() throws ParseException {
     while0Func();
-System.out.println("Yaicks");
+System.out.println("Correct While0-Program");
 }
 
   static private boolean jj_initialized_once = false;
@@ -70,13 +143,13 @@ System.out.println("Yaicks");
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[1];
+  static final private int[] jj_la1 = new int[5];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x40000,};
+	   jj_la1_0 = new int[] {0x20000,0x20000,0x10040,0x2000,0x90000,};
 	}
 
   /** Constructor with InputStream. */
@@ -97,7 +170,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -111,7 +184,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -128,7 +201,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -146,7 +219,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -162,7 +235,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -171,7 +244,7 @@ System.out.println("Yaicks");
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 1; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -222,12 +295,12 @@ System.out.println("Yaicks");
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[19];
+	 boolean[] la1tokens = new boolean[21];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 1; i++) {
+	 for (int i = 0; i < 5; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -236,7 +309,7 @@ System.out.println("Yaicks");
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 19; i++) {
+	 for (int i = 0; i < 21; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
