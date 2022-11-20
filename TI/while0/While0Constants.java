@@ -11,27 +11,31 @@ public interface While0Constants {
   /** RegularExpression Id. */
   int IN = 5;
   /** RegularExpression Id. */
-  int WHILE = 6;
+  int OUT = 6;
   /** RegularExpression Id. */
-  int BEGIN = 7;
+  int WHILE = 7;
   /** RegularExpression Id. */
-  int DO = 8;
+  int BEGIN = 8;
   /** RegularExpression Id. */
-  int END = 9;
+  int DO = 9;
   /** RegularExpression Id. */
-  int LOC = 10;
+  int END = 10;
   /** RegularExpression Id. */
-  int NEQ = 11;
+  int LOC = 11;
   /** RegularExpression Id. */
-  int EQ = 12;
+  int NEQ = 12;
   /** RegularExpression Id. */
-  int SEMICOLON = 13;
+  int EQ = 13;
   /** RegularExpression Id. */
-  int OPENING_BRACKET = 14;
+  int SEMICOLON = 14;
   /** RegularExpression Id. */
-  int CLOSING_BRACKET = 15;
+  int COMMA = 15;
   /** RegularExpression Id. */
-  int VARIABLE = 16;
+  int OPENING_BRACKET = 16;
+  /** RegularExpression Id. */
+  int CLOSING_BRACKET = 17;
+  /** RegularExpression Id. */
+  int VARIABLE = 18;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -44,6 +48,7 @@ public interface While0Constants {
     "\"\\n\"",
     "\"\\r\"",
     "\"in\"",
+    "\"out\"",
     "\"while\"",
     "\"begin\"",
     "\"do\"",
@@ -52,13 +57,13 @@ public interface While0Constants {
     "\"!=\"",
     "\"=\"",
     "\";\"",
+    "\",\"",
     "\"(\"",
     "\")\"",
     "<VARIABLE>",
-    "\",\"",
-    "\"; out\"",
     "\"0\"",
-    "\"+1\"",
+    "\"+\"",
+    "\"1\"",
   };
 
 }

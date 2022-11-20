@@ -13,15 +13,18 @@ PARSER_END(While0)
 /*
 * Examples:
 *
-* NAME=(in V1,V2; out Y);
+* NAME(in V1,V2; out Y);
 * var(H1,H2,HV3,HV4);
 * while V1 != V2 do
 * while V1 != V2 do V1 = 0 end
 * end
 *
-* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do end
-* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin V1 = 0 end
-* NAME=(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin while V1 != V2 do begin V1 = 0 end end
+* NAME(in; out Y); var();  V1 = 0
+* NAME(in; out Y); var(); while H1 != H2 do begin V1 = 0 end
+* NAME(in; out Y); var(H1,H2,HV3,HV4); while H1 != H2 do begin V1 = 0 end
+* NAME(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin V1 = 0 end
+* NAME(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin while V1 != V2 do begin V1 = 0 end end
+* NAME(in V1,V2; out Y); var(H1,H2,HV3,HV4); while V1 != V2 do begin while V1 != V2 do begin V1 = 0; V2 = V2 +   1 end end
 */
 
 SKIP :
@@ -39,6 +42,8 @@ TOKEN :
 {
     <IN: "in"> {debugStream.println("KEYWORD: " + image);}
     |
+    <OUT: "out"> {debugStream.println("KEYWORD: " + image);}
+    |
     <WHILE: "while"> {debugStream.println("KEYWORD: " + image);}
     |
     <BEGIN: "begin"> {debugStream.println("KEYWORD: " + image);}
@@ -55,6 +60,8 @@ TOKEN :
     |
     <SEMICOLON: ";"> {debugStream.println("Semicolon");}
     |
+    <COMMA: ","> {debugStream.println("Comma");}
+    |
     <OPENING_BRACKET: "("> {debugStream.println("Opening bracket");}
     |
     <CLOSING_BRACKET: ")"> {debugStream.println("Closing bracket");}
@@ -67,43 +74,44 @@ void while0Func() :
 {
     header()
     localVars()
-    while0()
+    alpha()
+    <EOF>
 }
 
 void header() :
 {}
 {
-    <VARIABLE> <EQ> <OPENING_BRACKET> <IN> <VARIABLE> ("," <VARIABLE>)* "; out" <VARIABLE> ")"<SEMICOLON>
+    <VARIABLE> <OPENING_BRACKET> <IN> varList() <SEMICOLON> <OUT> <VARIABLE> <CLOSING_BRACKET> < SEMICOLON>
 }
 
 void localVars() :
 {}
 {
-    <LOC> <OPENING_BRACKET> <VARIABLE> ("," <VARIABLE>)* ")"<SEMICOLON>
+    <LOC> <OPENING_BRACKET> varList() <CLOSING_BRACKET> <SEMICOLON>
 }
 
-void while0() :
+void varList() :
+{}
+{
+    (<VARIABLE> (<COMMA> <VARIABLE>)*)?
+}
+
+void alpha() :
+{}
+{
+     (whileLoop() | valueAssignment()) (<SEMICOLON> alpha())?
+}
+
+void whileLoop() :
 {}
 {
     <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <BEGIN> alpha() <END>
 }
 
-void alpha():
-{}
-{
-    while0() | valueAssignment() alpha_()
-}
-
-void alpha_():
-{}
-{
-    (<SEMICOLON> alpha() alpha_())*
-}
-
 void valueAssignment():
 {}
 {
-    <VARIABLE> "=" ("0"| <VARIABLE> "+1")
+    <VARIABLE> <EQ> ("0"| <VARIABLE> "+" "1")
 }
 
 void Input() :

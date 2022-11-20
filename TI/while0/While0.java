@@ -10,30 +10,17 @@ public class While0 implements While0Constants {
   static final public void while0Func() throws ParseException {
     header();
     localVars();
-    while0();
+    alpha();
+    jj_consume_token(0);
 }
 
   static final public void header() throws ParseException {
     jj_consume_token(VARIABLE);
-    jj_consume_token(EQ);
     jj_consume_token(OPENING_BRACKET);
     jj_consume_token(IN);
-    jj_consume_token(VARIABLE);
-    label_1:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case 17:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[0] = jj_gen;
-        break label_1;
-      }
-      jj_consume_token(17);
-      jj_consume_token(VARIABLE);
-    }
-    jj_consume_token(18);
+    varList();
+    jj_consume_token(SEMICOLON);
+    jj_consume_token(OUT);
     jj_consume_token(VARIABLE);
     jj_consume_token(CLOSING_BRACKET);
     jj_consume_token(SEMICOLON);
@@ -42,26 +29,65 @@ public class While0 implements While0Constants {
   static final public void localVars() throws ParseException {
     jj_consume_token(LOC);
     jj_consume_token(OPENING_BRACKET);
-    jj_consume_token(VARIABLE);
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case 17:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[1] = jj_gen;
-        break label_2;
-      }
-      jj_consume_token(17);
-      jj_consume_token(VARIABLE);
-    }
+    varList();
     jj_consume_token(CLOSING_BRACKET);
     jj_consume_token(SEMICOLON);
 }
 
-  static final public void while0() throws ParseException {
+  static final public void varList() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case VARIABLE:{
+      jj_consume_token(VARIABLE);
+      label_1:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case COMMA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[0] = jj_gen;
+          break label_1;
+        }
+        jj_consume_token(COMMA);
+        jj_consume_token(VARIABLE);
+      }
+      break;
+      }
+    default:
+      jj_la1[1] = jj_gen;
+      ;
+    }
+}
+
+  static final public void alpha() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case WHILE:{
+      whileLoop();
+      break;
+      }
+    case VARIABLE:{
+      valueAssignment();
+      break;
+      }
+    default:
+      jj_la1[2] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case SEMICOLON:{
+      jj_consume_token(SEMICOLON);
+      alpha();
+      break;
+      }
+    default:
+      jj_la1[3] = jj_gen;
+      ;
+    }
+}
+
+  static final public void whileLoop() throws ParseException {
     jj_consume_token(WHILE);
     jj_consume_token(VARIABLE);
     jj_consume_token(NEQ);
@@ -70,42 +96,6 @@ public class While0 implements While0Constants {
     jj_consume_token(BEGIN);
     alpha();
     jj_consume_token(END);
-}
-
-  static final public void alpha() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case WHILE:{
-      while0();
-      break;
-      }
-    case VARIABLE:{
-      valueAssignment();
-      alpha_();
-      break;
-      }
-    default:
-      jj_la1[2] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  static final public void alpha_() throws ParseException {
-    label_3:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case SEMICOLON:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[3] = jj_gen;
-        break label_3;
-      }
-      jj_consume_token(SEMICOLON);
-      alpha();
-      alpha_();
-    }
 }
 
   static final public void valueAssignment() throws ParseException {
@@ -119,6 +109,7 @@ public class While0 implements While0Constants {
     case VARIABLE:{
       jj_consume_token(VARIABLE);
       jj_consume_token(20);
+      jj_consume_token(21);
       break;
       }
     default:
@@ -149,7 +140,7 @@ System.out.println("Correct While0-Program");
 	   jj_la1_init_0();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x20000,0x20000,0x10040,0x2000,0x90000,};
+	   jj_la1_0 = new int[] {0x8000,0x40000,0x40080,0x4000,0xc0000,};
 	}
 
   /** Constructor with InputStream. */
@@ -295,7 +286,7 @@ System.out.println("Correct While0-Program");
   /** Generate ParseException. */
   static public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[21];
+	 boolean[] la1tokens = new boolean[22];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
@@ -309,7 +300,7 @@ System.out.println("Correct While0-Program");
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 21; i++) {
+	 for (int i = 0; i < 22; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
