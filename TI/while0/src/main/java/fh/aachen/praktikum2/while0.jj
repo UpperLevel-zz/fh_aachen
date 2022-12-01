@@ -1,4 +1,11 @@
+options {
+    DEBUG_PARSER = false;
+    STATIC = true;
+}
+
 PARSER_BEGIN(While0)
+
+package fh.aachen.praktikum2;
 
 public class While0 {
 
@@ -15,8 +22,8 @@ PARSER_END(While0)
 *
 * NAME(in V1,V2; out Y);
 * var(H1,H2,HV3,HV4);
-* while V1 != V2 do
-* while V1 != V2 do V1 = 0 end
+* while V1 != V2 do begin
+* while V1 != V2 do begin V1 = 0 end
 * end
 *
 * NAME(in; out Y); var();  V1 = 0
@@ -52,66 +59,75 @@ TOKEN :
     |
     <END: "end"> {debugStream.println("KEYWORD: " + image);}
     |
-    <LOC: "var"> {debugStream.println("Local Variables: ");}
-    |
     <NEQ: "!="> {debugStream.println("Not equal");}
     |
     <EQ: "="> {debugStream.println("Equal");}
     |
-    <SEMICOLON: ";"> {debugStream.println("Semicolon");}
+    <SEMICOLON: ";">
+//    |
+//    <COMMA: ",">
     |
-    <COMMA: ","> {debugStream.println("Comma");}
+    <CLOSING_BRACKET: ")">
     |
-    <OPENING_BRACKET: "("> {debugStream.println("Opening bracket");}
+    <LOC: "var(">
     |
-    <CLOSING_BRACKET: ")"> {debugStream.println("Closing bracket");}
+    <NAME: (["0"-"9","A"-"Z","a"-"z"])+"("> {System.out.println("--Program name:" + image);}
     |
-    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {debugStream.println("VARIABLE: " + image);}
+    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {System.out.println("" + image);}
 }
 
 void while0Func() :
-{}
 {
-    header()
+     URMStorage storage = new URMStorage();
+}
+{
+    header(storage)
     localVars()
     alpha()
     <EOF>
 }
 
-void header() :
-{}
+void header(URMStorage storage) :
+{Token t;}
 {
-    <VARIABLE> <OPENING_BRACKET> <IN> varList() <SEMICOLON> <OUT> <VARIABLE> <CLOSING_BRACKET> < SEMICOLON>
+    t = <NAME> {storage.setProgramName(t.image);}
+    <IN> varList() <SEMICOLON> <OUT> <VARIABLE> <CLOSING_BRACKET> < SEMICOLON>
+    {System.out.println("HEADER eingelesen");}
 }
 
 void localVars() :
 {}
 {
-    <LOC> <OPENING_BRACKET> varList() <CLOSING_BRACKET> <SEMICOLON>
+    <LOC> varList() <CLOSING_BRACKET> <SEMICOLON>
+    {System.out.println("Locale Variablen eingelesen");}
 }
 
 void varList() :
 {}
 {
-    (<VARIABLE> (<COMMA> <VARIABLE>)*)?
+    (<VARIABLE> ("," <VARIABLE>)*)?
+    {System.out.println("Variablenliste eingelesen");}
 }
 
 void alpha() :
 {}
 {
      (whileLoop() | valueAssignment()) (<SEMICOLON> alpha())?
+     {System.out.println("ALPHA eingelesen");}
 }
 
 void whileLoop() :
 {}
 {
     <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <BEGIN> alpha() <END>
+    {System.out.println("whileLoop eingelesen");}
 }
 
 void valueAssignment():
 {}
 {
     <VARIABLE> <EQ> ("0"| <VARIABLE> "+" "1")
+    {System.out.println("valueAssignment eingelesen");}
 }
 
 void Input() :
