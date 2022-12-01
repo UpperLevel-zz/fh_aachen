@@ -31,3 +31,8 @@ target/
 out/
 *.iml
 *.iws
+
+# Gradle
+.gradle
+**/build/
+!src/**/build/
