@@ -1,6 +1,7 @@
 options {
     DEBUG_PARSER = false;
-    STATIC = true;
+    STATIC = false;
+    OUTPUT_DIRECTORY = "../java/fh/aachen/praktikum2";
 }
 
 PARSER_BEGIN(While0)
@@ -11,7 +12,7 @@ public class While0 {
 
   public static void main(String[] args) throws ParseException {
     While0 parser = new While0(System.in);
-    parser.Input();
+    parser.runParser();
   }
 
 }
@@ -130,9 +131,12 @@ void valueAssignment():
     {System.out.println("valueAssignment eingelesen");}
 }
 
-void Input() :
+boolean runParser() :
 {}
 {
   while0Func()
-  { System.out.println("Correct While0-Program"); }
+  {
+    System.out.println("Correct While0-Program");
+    return true;
+  }
 }

@@ -6,17 +6,17 @@ public class While0 implements While0Constants {
 
   public static void main(String[] args) throws ParseException {
     While0 parser = new While0(System.in);
-    parser.Input();
+    parser.runParser();
   }
 
-  static final public void while0Func() throws ParseException {URMStorage storage = new URMStorage();
+  final public void while0Func() throws ParseException {URMStorage storage = new URMStorage();
     header(storage);
     localVars();
     alpha();
     jj_consume_token(0);
 }
 
-  static final public void header(URMStorage storage) throws ParseException {Token t;
+  final public void header(URMStorage storage) throws ParseException {Token t;
     t = jj_consume_token(NAME);
 storage.setProgramName(t.image);
     jj_consume_token(IN);
@@ -29,7 +29,7 @@ storage.setProgramName(t.image);
 System.out.println("HEADER eingelesen");
 }
 
-  static final public void localVars() throws ParseException {
+  final public void localVars() throws ParseException {
     jj_consume_token(LOC);
     varList();
     jj_consume_token(CLOSING_BRACKET);
@@ -37,7 +37,7 @@ System.out.println("HEADER eingelesen");
 System.out.println("Locale Variablen eingelesen");
 }
 
-  static final public void varList() throws ParseException {
+  final public void varList() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case VARIABLE:{
       jj_consume_token(VARIABLE);
@@ -64,7 +64,7 @@ System.out.println("Locale Variablen eingelesen");
 System.out.println("Variablenliste eingelesen");
 }
 
-  static final public void alpha() throws ParseException {
+  final public void alpha() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case WHILE:{
       whileLoop();
@@ -92,7 +92,7 @@ System.out.println("Variablenliste eingelesen");
 System.out.println("ALPHA eingelesen");
 }
 
-  static final public void whileLoop() throws ParseException {
+  final public void whileLoop() throws ParseException {
     jj_consume_token(WHILE);
     jj_consume_token(VARIABLE);
     jj_consume_token(NEQ);
@@ -104,7 +104,7 @@ System.out.println("ALPHA eingelesen");
 System.out.println("whileLoop eingelesen");
 }
 
-  static final public void valueAssignment() throws ParseException {
+  final public void valueAssignment() throws ParseException {
     jj_consume_token(VARIABLE);
     jj_consume_token(EQ);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -126,22 +126,23 @@ System.out.println("whileLoop eingelesen");
 System.out.println("valueAssignment eingelesen");
 }
 
-  static final public void Input() throws ParseException {
+  final public boolean runParser() throws ParseException {
     while0Func();
 System.out.println("Correct While0-Program");
+    {if ("" != null) return true;}
+    throw new Error("Missing return statement in function");
 }
 
-  static private boolean jj_initialized_once = false;
   /** Generated Token Manager. */
-  static public While0TokenManager token_source;
-  static SimpleCharStream jj_input_stream;
+  public While0TokenManager token_source;
+  SimpleCharStream jj_input_stream;
   /** Current token. */
-  static public Token token;
+  public Token token;
   /** Next token. */
-  static public Token jj_nt;
-  static private int jj_ntk;
-  static private int jj_gen;
-  static final private int[] jj_la1 = new int[5];
+  public Token jj_nt;
+  private int jj_ntk;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[5];
   static private int[] jj_la1_0;
   static {
 	   jj_la1_init_0();
@@ -156,13 +157,6 @@ System.out.println("Correct While0-Program");
   }
   /** Constructor with InputStream and supplied encoding */
   public While0(java.io.InputStream stream, String encoding) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser.  ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source = new While0TokenManager(jj_input_stream);
 	 token = new Token();
@@ -172,11 +166,11 @@ System.out.println("Correct While0-Program");
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream) {
+  public void ReInit(java.io.InputStream stream) {
 	  ReInit(stream, null);
   }
   /** Reinitialise. */
-  static public void ReInit(java.io.InputStream stream, String encoding) {
+  public void ReInit(java.io.InputStream stream, String encoding) {
 	 try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
 	 token_source.ReInit(jj_input_stream);
 	 token = new Token();
@@ -187,13 +181,6 @@ System.out.println("Correct While0-Program");
 
   /** Constructor. */
   public While0(java.io.Reader stream) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser. ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	 token_source = new While0TokenManager(jj_input_stream);
 	 token = new Token();
@@ -203,7 +190,7 @@ System.out.println("Correct While0-Program");
   }
 
   /** Reinitialise. */
-  static public void ReInit(java.io.Reader stream) {
+  public void ReInit(java.io.Reader stream) {
 	if (jj_input_stream == null) {
 	   jj_input_stream = new SimpleCharStream(stream, 1, 1);
 	} else {
@@ -222,13 +209,6 @@ System.out.println("Correct While0-Program");
 
   /** Constructor with generated Token Manager. */
   public While0(While0TokenManager tm) {
-	 if (jj_initialized_once) {
-	   System.out.println("ERROR: Second call to constructor of static parser. ");
-	   System.out.println("	   You must either use ReInit() or set the JavaCC option STATIC to false");
-	   System.out.println("	   during parser generation.");
-	   throw new Error();
-	 }
-	 jj_initialized_once = true;
 	 token_source = tm;
 	 token = new Token();
 	 jj_ntk = -1;
@@ -245,7 +225,7 @@ System.out.println("Correct While0-Program");
 	 for (int i = 0; i < 5; i++) jj_la1[i] = -1;
   }
 
-  static private Token jj_consume_token(int kind) throws ParseException {
+  private Token jj_consume_token(int kind) throws ParseException {
 	 Token oldToken;
 	 if ((oldToken = token).next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
@@ -261,7 +241,7 @@ System.out.println("Correct While0-Program");
 
 
 /** Get the next Token. */
-  static final public Token getNextToken() {
+  final public Token getNextToken() {
 	 if (token.next != null) token = token.next;
 	 else token = token.next = token_source.getNextToken();
 	 jj_ntk = -1;
@@ -270,7 +250,7 @@ System.out.println("Correct While0-Program");
   }
 
 /** Get the specific Token. */
-  static final public Token getToken(int index) {
+  final public Token getToken(int index) {
 	 Token t = token;
 	 for (int i = 0; i < index; i++) {
 	   if (t.next != null) t = t.next;
@@ -279,19 +259,19 @@ System.out.println("Correct While0-Program");
 	 return t;
   }
 
-  static private int jj_ntk_f() {
+  private int jj_ntk_f() {
 	 if ((jj_nt=token.next) == null)
 	   return (jj_ntk = (token.next=token_source.getNextToken()).kind);
 	 else
 	   return (jj_ntk = jj_nt.kind);
   }
 
-  static private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
-  static private int[] jj_expentry;
-  static private int jj_kind = -1;
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
 
   /** Generate ParseException. */
-  static public ParseException generateParseException() {
+  public ParseException generateParseException() {
 	 jj_expentries.clear();
 	 boolean[] la1tokens = new boolean[22];
 	 if (jj_kind >= 0) {
@@ -321,19 +301,19 @@ System.out.println("Correct While0-Program");
 	 return new ParseException(token, exptokseq, tokenImage);
   }
 
-  static private boolean trace_enabled;
+  private boolean trace_enabled;
 
 /** Trace enabled. */
-  static final public boolean trace_enabled() {
+  final public boolean trace_enabled() {
 	 return trace_enabled;
   }
 
   /** Enable tracing. */
-  static final public void enable_tracing() {
+  final public void enable_tracing() {
   }
 
   /** Disable tracing. */
-  static final public void disable_tracing() {
+  final public void disable_tracing() {
   }
 
 }
