@@ -1,5 +1,7 @@
 options {
-    DEBUG_PARSER = false;
+//    DEBUG_PARSER = true;
+//    DEBUG_TOKEN_MANAGER = true;
+//    DEBUG_LOOKAHEAD = true;
     STATIC = false;
     OUTPUT_DIRECTORY = "../java/fh/aachen/praktikum2";
 }
@@ -8,7 +10,7 @@ PARSER_BEGIN(While0)
 
 package fh.aachen.praktikum2;
 
-public class While0 {
+import java.util.Objects;public class While0 {
 
   public static void main(String[] args) throws ParseException {
     While0 parser = new While0(System.in);
@@ -48,33 +50,33 @@ SKIP :
 
 TOKEN :
 {
-    <IN: "in"> {debugStream.println("KEYWORD: " + image);}
+    <IN: "in">
     |
-    <OUT: "out"> {debugStream.println("KEYWORD: " + image);}
+    <OUT: "out">
     |
-    <WHILE: "while"> {debugStream.println("KEYWORD: " + image);}
+    <WHILE: "while">
     |
-    <BEGIN: "begin"> {debugStream.println("KEYWORD: " + image);}
+    <BEGIN: "begin">
     |
-    <DO: "do"> {debugStream.println("KEYWORD: " + image);}
+    <DO: "do">
     |
-    <END: "end"> {debugStream.println("KEYWORD: " + image);}
+    <END: "end">
     |
-    <NEQ: "!="> {debugStream.println("Not equal");}
+    <NEQ: "!=">
     |
-    <EQ: "="> {debugStream.println("Equal");}
+    <EQ: "=">
     |
     <SEMICOLON: ";">
-//    |
-//    <COMMA: ",">
+    |
+    <COMMA: ",">
+    |
+    <OPENING_BRACKET: "(">
     |
     <CLOSING_BRACKET: ")">
     |
-    <LOC: "var(">
+    <LOC: "var">
     |
-    <NAME: (["0"-"9","A"-"Z","a"-"z"])+"("> {System.out.println("--Program name:" + image);}
-    |
-    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*> {System.out.println("" + image);}
+    <VARIABLE: ["A"-"Z","a"-"z"](["0"-"9","A"-"Z","a"-"z"])*>
 }
 
 void while0Func() :
@@ -83,52 +85,73 @@ void while0Func() :
 }
 {
     header(storage)
-    localVars()
-    alpha()
+    localVars(storage)
+    alpha(storage)
     <EOF>
+    {System.out.println(storage);}
 }
 
 void header(URMStorage storage) :
 {Token t;}
 {
-    t = <NAME> {storage.setProgramName(t.image);}
-    <IN> varList() <SEMICOLON> <OUT> <VARIABLE> <CLOSING_BRACKET> < SEMICOLON>
-    {System.out.println("HEADER eingelesen");}
+    t = <VARIABLE> {storage.setProgramName(t.image);} <OPENING_BRACKET> <IN> varList(storage) <SEMICOLON> <OUT> singleVar(storage, true) <CLOSING_BRACKET> < SEMICOLON>
 }
 
-void localVars() :
+void localVars(URMStorage storage) :
 {}
 {
-    <LOC> varList() <CLOSING_BRACKET> <SEMICOLON>
-    {System.out.println("Locale Variablen eingelesen");}
+    <LOC> <OPENING_BRACKET> varList(storage) <CLOSING_BRACKET> <SEMICOLON>
 }
 
-void varList() :
-{}
+void varList(URMStorage storage) :
+{Token t;}
 {
-    (<VARIABLE> ("," <VARIABLE>)*)?
-    {System.out.println("Variablenliste eingelesen");}
+    (singleVar(storage, false) (<COMMA> singleVar(storage, false))*)?
 }
 
-void alpha() :
-{}
+void singleVar(URMStorage storage, boolean outVar) :
+{Token t;}
 {
-     (whileLoop() | valueAssignment()) (<SEMICOLON> alpha())?
-     {System.out.println("ALPHA eingelesen");}
+    t = <VARIABLE>
+    {
+        if(outVar){
+            storage.setOutputVariable(t.image);
+        } else {
+            storage.addVariable(t.image);
+        }
+    }
 }
 
-void whileLoop() :
+void alpha(URMStorage storage) :
 {}
 {
-    <WHILE> <VARIABLE> <NEQ> <VARIABLE> <DO> <BEGIN> alpha() <END>
-    {System.out.println("whileLoop eingelesen");}
+     (whileLoop(storage) | valueAssignment(storage)) (<SEMICOLON> alpha(storage))?
 }
 
-void valueAssignment():
-{}
+void whileLoop(URMStorage storage) :
 {
-    <VARIABLE> <EQ> ("0"| <VARIABLE> "+" "1")
-    {System.out.println("valueAssignment eingelesen");}
+    Token from;
+    Token to;
+}
+{
+    <WHILE> from = <VARIABLE> <NEQ> to = <VARIABLE>
+    {storage.enterWhileLoop(from.image, to.image);}
+    <DO> <BEGIN> alpha(storage) <END>
+    {storage.leaveWhileLoop();}
+}
+
+void valueAssignment(URMStorage storage):
+{
+    Token first;
+    Token second;
+}
+{
+    first = <VARIABLE> <EQ> ("0" {storage.addAssignmentZero(first.image);} | second = <VARIABLE> "+" "1"
+    {
+    if(second.image != null && !Objects.equals(first.image,second.image)){System.out.println("First: "+ first.image);
+        throw new IllegalArgumentException();}
+        storage.addAssignmentPlusOne(first.image);
+    })
 }
 
 boolean runParser() :

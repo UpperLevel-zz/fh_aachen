@@ -1,5 +1,12 @@
-ProgramNameSimpleMultiline(in V1,V2; out Y);
+ProgramNameMultiline(in V1,V2; out Y);
 var(H1,H2,HV3,HV4);
+HV3 = 0;
 while V1 != V2 do begin
-while V1 != V2 do begin V1 = 0 end
+    while V1 != V2 do
+    begin
+        V1 = 0;
+        H1 = H1 +     1;
+        H2 = H2 + 1
+    end;
+    HV4 = HV4 + 1
 end

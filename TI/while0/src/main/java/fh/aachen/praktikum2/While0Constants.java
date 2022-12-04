@@ -29,13 +29,15 @@ public interface While0Constants {
   /** RegularExpression Id. */
   int SEMICOLON = 13;
   /** RegularExpression Id. */
-  int CLOSING_BRACKET = 14;
+  int COMMA = 14;
   /** RegularExpression Id. */
-  int LOC = 15;
+  int OPENING_BRACKET = 15;
   /** RegularExpression Id. */
-  int NAME = 16;
+  int CLOSING_BRACKET = 16;
   /** RegularExpression Id. */
-  int VARIABLE = 17;
+  int LOC = 17;
+  /** RegularExpression Id. */
+  int VARIABLE = 18;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -56,11 +58,11 @@ public interface While0Constants {
     "\"!=\"",
     "\"=\"",
     "\";\"",
-    "\")\"",
-    "\"var(\"",
-    "<NAME>",
-    "<VARIABLE>",
     "\",\"",
+    "\"(\"",
+    "\")\"",
+    "\"var\"",
+    "<VARIABLE>",
     "\"0\"",
     "\"+\"",
     "\"1\"",
