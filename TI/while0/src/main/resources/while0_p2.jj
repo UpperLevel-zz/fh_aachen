@@ -88,7 +88,7 @@ void while0Func() :
     localVars(storage)
     alpha(storage)
     <EOF>
-    {System.out.println(storage);}
+    {System.out.println(storage.toURMCode());}
 }
 
 void header(URMStorage storage) :
@@ -135,9 +135,9 @@ void whileLoop(URMStorage storage) :
 }
 {
     <WHILE> from = <VARIABLE> <NEQ> to = <VARIABLE>
-    {storage.enterWhileLoop(from.image, to.image);}
+    {String label = storage.enterWhileLoop(from.image, to.image);}
     <DO> <BEGIN> alpha(storage) <END>
-    {storage.leaveWhileLoop();}
+    {storage.leaveWhileLoop(from.image, to.image, label);}
 }
 
 void valueAssignment(URMStorage storage):

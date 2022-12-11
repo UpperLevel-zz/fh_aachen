@@ -1,6 +1,5 @@
 package fh.aachen.praktikum2;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,10 +22,10 @@ class While0_P2Test {
     @MethodSource("testSources")
     private static Stream<Arguments> testSources(){
         return Stream.of(
-                Arguments.of(ClassLoader.getSystemResourceAsStream("simple_test.txt"), true),
-                Arguments.of(ClassLoader.getSystemResourceAsStream("complex_test_single_row.txt"), true),
-                Arguments.of(ClassLoader.getSystemResourceAsStream("asdasd.txt"), true),
-                Arguments.of(ClassLoader.getSystemResourceAsStream("complex_test_multiple_row.txt"), true)
+//                Arguments.of(ClassLoader.getSystemResourceAsStream("simple_test.txt"), true),
+//                Arguments.of(ClassLoader.getSystemResourceAsStream("complex_test_single_row.txt"), true),
+                Arguments.of(ClassLoader.getSystemResourceAsStream("addTillEven.txt"), true)
+//                Arguments.of(ClassLoader.getSystemResourceAsStream("complex_test_multiple_row.txt"), true)
         );
     }
 }

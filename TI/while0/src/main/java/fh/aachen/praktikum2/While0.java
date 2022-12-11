@@ -14,7 +14,7 @@ import java.util.Objects;public class While0 implements While0Constants {
     localVars(storage);
     alpha(storage);
     jj_consume_token(0);
-System.out.println(storage);
+System.out.println(storage.toURMCode());
 }
 
   final public void header(URMStorage storage) throws ParseException {Token t;
@@ -106,12 +106,12 @@ if(outVar){
     from = jj_consume_token(VARIABLE);
     jj_consume_token(NEQ);
     to = jj_consume_token(VARIABLE);
-storage.enterWhileLoop(from.image, to.image);
+String label = storage.enterWhileLoop(from.image, to.image);
     jj_consume_token(DO);
     jj_consume_token(BEGIN);
     alpha(storage);
     jj_consume_token(END);
-storage.leaveWhileLoop();
+storage.leaveWhileLoop(from.image, to.image, label);
 }
 
   final public void valueAssignment(URMStorage storage) throws ParseException {Token first;
