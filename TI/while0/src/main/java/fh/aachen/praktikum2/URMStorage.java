@@ -49,8 +49,6 @@ public class URMStorage {
                     labelRowMapping.put(label, (i + 1 - 2));
                     String element = row.replaceAll(label, "").trim();
                     output.set(i, element);
-                } else if (row.contains(String.format("; ENTER WHILE with label: %s", label))) {
-                    labelRowMapping.put(label, (i + 1 - 2));
                 }
             }
         }
@@ -58,7 +56,7 @@ public class URMStorage {
         for (int i = 0; i < output.size(); i++) {
             String row = output.get(i);
             for (String label : labels) {
-                if (!row.contains("endWhile") && row.contains(label)) {
+                if (row.contains(label)) {
                     String element = row.replaceAll(label, labelRowMapping.getOrDefault(label, 0).toString()).trim();
                     output.set(i, element);
                 }
@@ -97,7 +95,7 @@ public class URMStorage {
     }
 
     private List<String> makroEndWhile(Statement statement) {
-        return List.of(String.format("goto %s \t\t; endWhile %s", ((ExitWhile) statement).label, ((ExitWhile) statement).label));
+        return List.of(String.format("goto %s \t\t; EXIT WHILE", ((ExitWhile) statement).label));
     }
 
     private List<String> makroEqual(Statement statement) {
@@ -113,10 +111,11 @@ public class URMStorage {
         String label7 = generateLabel();
         String label10 = generateLabel();
 
+        makro.add(String.format("%s %s-- \t\t; ENTER WHILE", enterWhile.label, rz));
         makro.addAll(makroCopy(enterWhile.from, HFrom));
         makro.addAll(makroCopy(enterWhile.to, HTo));
 
-        makro.add(String.format("%s if  %s == 0 goto %s \t\t; ENTER WHILE with label: %s", label1, HFrom, label7, enterWhile.label));
+        makro.add(String.format("%s if  %s == 0 goto %s", label1, HFrom, label7));
         makro.add(String.format("%s if  %s == 0 goto %s", label2, HTo, label6));
         makro.add(String.format("%s--", HFrom));
         makro.add(String.format("%s--", HTo));
@@ -146,7 +145,7 @@ public class URMStorage {
         makro.add(String.format("%s++", variables.get(to)));
         makro.add(String.format("%s++", variables.get(from)));
         makro.add(String.format("goto %s", label6));
-        makro.add(String.format("%s %s-- \t\t; RANDOM-Variable without sense", label11, rz));
+        makro.add(String.format("%s %s-- \t\t; RANDOM-Operation to force URM-Sim-Action", label11, rz));
         return makro;
     }
 
