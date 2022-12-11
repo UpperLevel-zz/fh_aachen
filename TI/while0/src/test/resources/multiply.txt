@@ -1,0 +1,12 @@
+Mult(in X,Z; out Y);
+var(H1, H2);
+while X != H1 do
+begin
+  H1 = H1 + 1;
+  H2 = 0;
+  while Z != H2 do
+  begin
+    H2 = H2 + 1;
+    Y = Y + 1
+  end
+end

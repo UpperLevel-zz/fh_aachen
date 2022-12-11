@@ -1,0 +1,19 @@
+ZWEIER(in X1; out Y);
+var(H1, H2, H3);
+Y = Y + 1;
+while X1 != H1 do
+begin
+  while H2 != Y do
+  begin
+    H2 = H2 + 1
+  end;
+  while H2 != H3 do
+  begin
+    Y = Y + 1;
+    H3 = H3 + 1
+  end;
+  H1 = H1 + 1;
+  H2 = 0;
+  H3 = 0
+end;
+X1 = 0

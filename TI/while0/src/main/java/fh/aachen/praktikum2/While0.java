@@ -67,7 +67,7 @@ storage.setProgramName(t.image);
   final public void singleVar(URMStorage storage, boolean outVar) throws ParseException {Token t;
     t = jj_consume_token(VARIABLE);
 if(outVar){
-            storage.setOutputVariable(t.image);
+            storage.addOutputVariable(t.image);
         } else {
             storage.addVariable(t.image);
         }
@@ -106,12 +106,12 @@ if(outVar){
     from = jj_consume_token(VARIABLE);
     jj_consume_token(NEQ);
     to = jj_consume_token(VARIABLE);
-String label = storage.enterWhileLoop(from.image, to.image);
+URMStorage.EnterWhile statement = storage.enterWhileLoop(from.image, to.image);
     jj_consume_token(DO);
     jj_consume_token(BEGIN);
     alpha(storage);
     jj_consume_token(END);
-storage.leaveWhileLoop(from.image, to.image, label);
+storage.leaveWhileLoop(statement);
 }
 
   final public void valueAssignment(URMStorage storage) throws ParseException {Token first;
