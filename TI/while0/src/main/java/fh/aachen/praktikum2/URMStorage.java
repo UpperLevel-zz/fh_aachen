@@ -13,7 +13,7 @@ public class URMStorage {
     private String outputVariable;
     private List<Statement> statements = new ArrayList<>();
 
-    private List<String> output = new ArrayList<>();
+    private List<String> urmOutput = new ArrayList<>();
     private List<String> labels = new ArrayList<>();
     private Map<String, Integer> labelRowMapping = new HashMap<>();
 
@@ -49,43 +49,43 @@ public class URMStorage {
     }
 
     public String toURMCode() {
-        output.add("; ".concat(programName));
-        output.add("; in(".concat(String.join(",", String.format("%s", this.inputVariables))).concat(")"));
-        output.add(String.format("; out(%s=%s)", outputVariable, variables.get(outputVariable)));
-        output.add("; allVariables(".concat(String.join(",", String.format("%s", this.variables.entrySet()))).concat(")"));
-        output.add(String.format("%s=0", variables.get(outputVariable)));
-        statements.forEach(x -> output.addAll(makroSwitch(x)));
+        urmOutput.add("; ".concat(programName));
+        urmOutput.add("; in(".concat(String.join(",", String.format("%s", this.inputVariables))).concat(")"));
+        urmOutput.add(String.format("; out(%s=%s)", outputVariable, variables.get(outputVariable)));
+        urmOutput.add("; allVariables(".concat(String.join(",", String.format("%s", this.variables.entrySet()))).concat(")"));
+        urmOutput.add(String.format("%s=0", variables.get(outputVariable)));
+        statements.forEach(x -> urmOutput.addAll(makroSwitch(x)));
         replaceLabels();
-        return String.join("\n", output);
+        return String.join("\n", urmOutput);
     }
 
     private void replaceLabels() {
-        for (int i = 0; i < output.size(); i++) {
-            String row = output.get(i);
+        for (int i = 0; i < urmOutput.size(); i++) {
+            String row = urmOutput.get(i);
             for (String label : labels) {
                 if (row.startsWith(label)) {
                     labelRowMapping.put(label, (i + 1 - 4));
                     String element = row.replaceAll(label, "").trim();
-                    output.set(i, element);
+                    urmOutput.set(i, element);
                 }
             }
         }
         List<Integer> emptyLines = new ArrayList<>();
-        for (int i = 0; i < output.size(); i++) {
-            String row = output.get(i);
+        for (int i = 0; i < urmOutput.size(); i++) {
+            String row = urmOutput.get(i);
             for (String label : labels) {
                 if (row.contains(label)) {
                     String element = row.replaceAll(label, labelRowMapping.get(label).toString()).trim();
-                    output.set(i, element);
+                    urmOutput.set(i, element);
                 }
             }
-            if (output.get(i).isEmpty()) {
+            if (urmOutput.get(i).isEmpty()) {
                 emptyLines.add(i);
             }
         }
         emptyLines.sort(Comparator.reverseOrder());
         for (Integer emptyLine : emptyLines) {
-            output.remove(emptyLine.intValue());
+            urmOutput.remove(emptyLine.intValue());
         }
     }
 
